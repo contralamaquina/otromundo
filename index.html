@@ -1,8 +1,60 @@
+**Prototipo Local con IA (requiere back-end Node.js)**
+
+Este prototipo utiliza un **servidor Express** para remover el fondo del logo con la API rembg de remove-background-ai, y un **front-end HTML/JS** con diseño **punk** para cargar archivos, solicitar la remoción de fondo y superponer el logo.
+
+---
+
+### 1) Archivo `server.js` (Node + Express)
+```js
+import express from 'express';
+import multer from 'multer';
+import { rembg } from '@remove-background-ai/rembg.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+const app = express();
+const upload = multer();
+const API_KEY = process.env.API_KEY; // tu API Key en .env
+
+app.post('/api/remove-bg', upload.single('logo'), async (req, res) => {
+  try {
+    const inputBuffer = req.file.buffer;
+    const output = await rembg({
+      apiKey: API_KEY,
+      inputImage: inputBuffer,
+      options: { returnBase64: false }
+    });
+    res.type('image/png').send(output);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Fallo al remover fondo' });
+  }
+});
+
+app.use(express.static('public'));
+const PORT = 3000;
+app.listen(PORT, () => console.log(`Servidor en http://localhost:${PORT}`));
+```
+
+- Instala dependencias:
+  ```bash
+  npm install express multer dotenv @remove-background-ai/rembg.js
+  ```
+- Crea un archivo `.env` con:
+  ```env
+  API_KEY=TU_REMOVEBG_API_KEY
+  ```
+
+---
+
+### 2) Carpeta `public/` con `index.html` y `logo.png` (opcional)
+
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Insertar Logo con IA</title>
   <style>
     body {
@@ -115,3 +167,13 @@
   </script>
 </body>
 </html>
+```
+
+---
+
+**Cómo probar:**
+1. Ejecutar `node server.js`.
+2. Abrir `http://localhost:3000` en tu navegador.
+3. Cargar logo → espera procesamiento IA → cargar fotos → clic en "Hacer la magia".
+
+Con este flujo evitas problemas de CORS y tienes un entorno local completo para remover el fondo y superponer el logo con IA, todo con una estética **punk**.
