@@ -1,23 +1,56 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Insertar Logo con IA</title>
   <style>
-    body { font-family: sans-serif; padding: 1rem; }
-    .controls { margin-bottom: 1rem; }
-    .gallery { display: flex; flex-wrap: wrap; gap: 1rem; }
-    .thumb { position: relative; width: 150px; height: 150px; overflow: hidden; border: 1px solid #ccc; }
-    .result-link { display: block; margin-top: 0.5rem; }
+    body {
+      font-family: 'Courier New', monospace;
+      background: #111;
+      color: #eee;
+      padding: 1rem;
+    }
+    h1 {
+      color: hotpink;
+      text-shadow: 2px 2px 0 black;
+    }
+    .controls {
+      margin-bottom: 1rem;
+    }
+    input, button {
+      font-family: inherit;
+      margin-right: 0.5rem;
+      background: black;
+      border: 1px solid hotpink;
+      color: hotpink;
+      padding: 0.5rem;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .thumb {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      overflow: hidden;
+      border: 2px dashed hotpink;
+    }
+    .result-link {
+      display: block;
+      margin-top: 0.5rem;
+      color: lime;
+    }
   </style>
 </head>
 <body>
-  <h1>Insertar Logo en Fotos con IA</h1>
+  <h1>🌵 Otro Mundo Punk 🌵</h1>
   <div class="controls">
     <input type="file" id="logo-input" accept="image/*">
     <input type="file" id="images-input" accept="image/*" multiple>
-    <button id="do-magic">Hacer la magia</button>
+    <button id="do-magic">🔥 Hacer la magia</button>
   </div>
   <div class="gallery" id="gallery"></div>
 

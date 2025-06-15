@@ -1,3 +1,4 @@
+
 import express from 'express';
 import multer from 'multer';
 import { rembg } from '@remove-background-ai/rembg.js';
@@ -6,7 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 const app = express();
 const upload = multer();
-const API_KEY = process.env.API_KEY; // tu API Key en .env
+const API_KEY = process.env.API_KEY;
 
 app.post('/api/remove-bg', upload.single('logo'), async (req, res) => {
   try {
