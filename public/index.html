@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insertar Logo con IA</title>
+  <style>
+    body { font-family: sans-serif; padding: 1rem; }
+    .controls { margin-bottom: 1rem; }
+    .gallery { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .thumb { position: relative; width: 150px; height: 150px; overflow: hidden; border: 1px solid #ccc; }
+    .result-link { display: block; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Insertar Logo en Fotos con IA</h1>
+  <div class="controls">
+    <input type="file" id="logo-input" accept="image/*">
+    <input type="file" id="images-input" accept="image/*" multiple>
+    <button id="do-magic">Hacer la magia</button>
+  </div>
+  <div class="gallery" id="gallery"></div>
+
+  <script>
+    let logoProcessed = null;
+    document.getElementById('logo-input').addEventListener('change', async e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const form = new FormData();
+      form.append('logo', file);
+
+      const resp = await fetch('/api/remove-bg', { method: 'POST', body: form });
+      if (!resp.ok) return alert('Error al remover fondo');
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      logoProcessed = new Image();
+      logoProcessed.src = url;
+      logoProcessed.onload = () => console.log('Logo listo');
+    });
+
+    document.getElementById('do-magic').addEventListener('click', () => {
+      if (!logoProcessed) return alert('Procesá primero el logo');
+      const files = document.getElementById('images-input').files;
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = '';
+
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = evt => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const scale = 0.2;
+            const w = img.width * scale;
+            const h = logoProcessed.height * (w / logoProcessed.width);
+            const x = img.width - w - 10;
+            const y = img.height - h - 10;
+            ctx.globalAlpha = 0.8;
+            ctx.drawImage(logoProcessed, x, y, w, h);
+            const thumb = document.createElement('div');
+            thumb.className = 'thumb';
+            const outImg = document.createElement('img');
+            outImg.src = canvas.toDataURL('image/png');
+            thumb.appendChild(outImg);
+            const link = document.createElement('a');
+            link.href = outImg.src;
+            link.download = 'with_logo_' + Date.now() + '.png';
+            link.className = 'result-link';
+            link.textContent = 'Descargar';
+            thumb.appendChild(link);
+            gallery.appendChild(thumb);
+          };
+          img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  </script>
+</body>
+</html>
