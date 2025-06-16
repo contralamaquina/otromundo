@@ -1,76 +1,61 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <title>Quitar fondo con remove.bg</title>
-</head>
-<body>
-  <h1>Sube una imagen para quitarle el fondo</h1>
+import fetch from 'node-fetch';
 
-  <input type="file" id="inputFile" accept="image/*" />
-  <br /><br />
-  <button id="btnProcess">Procesar imagen</button>
-  <br /><br />
+export default async function handler(req, res) {
+  // Habilitar CORS para GitHub Pages
+  const allowedOrigins = ['https://aleotromundo.github.io', 'http://localhost:5500'];
+  const origin = req.headers.origin;
 
-  <img id="resultImage" style="max-width: 300px; display:none;" />
-  <br />
-  <a id="downloadLink" style="display:none;" download="sin-fondo.png">Descargar PNG sin fondo</a>
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
 
-  <script>
-    const inputFile = document.getElementById('inputFile');
-    const btnProcess = document.getElementById('btnProcess');
-    const resultImage = document.getElementById('resultImage');
-    const downloadLink = document.getElementById('downloadLink');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    let base64Image = null;
+  // Manejar preflight (CORS)
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
 
-    inputFile.addEventListener('change', () => {
-      const file = inputFile.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        base64Image = e.target.result;
-      };
-      reader.readAsDataURL(file);
+  // Solo permitir POST
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Solo se permite POST' });
+  }
+
+  // Clave de remove.bg desde variable de entorno
+  const apiKey = process.env.REMOVE_BG_API_KEY;
+  if (!apiKey) {
+    return res.status(500).json({ error: 'Falta la API key de remove.bg' });
+  }
+
+  try {
+    const { imageBase64 } = req.body;
+
+    if (!imageBase64) {
+      return res.status(400).json({ error: 'Falta la imagen (base64)' });
+    }
+
+    const response = await fetch('https://api.remove.bg/v1.0/removebg', {
+      method: 'POST',
+      headers: {
+        'X-Api-Key': apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        image_file_b64: imageBase64.split(',')[1], // eliminar "data:image/...;base64,"
+        size: 'auto',
+      }),
     });
 
-    btnProcess.addEventListener('click', async () => {
-      if (!base64Image) {
-        alert('Por favor, selecciona una imagen primero.');
-        return;
-      }
+    if (!response.ok) {
+      const errorJson = await response.json();
+      return res.status(response.status).json({ error: errorJson.errors || 'Error en la API de remove.bg' });
+    }
 
-      btnProcess.disabled = true;
-      btnProcess.textContent = 'Procesando...';
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const base64 = buffer.toString('base64');
 
-      try {
-        const response = await fetch('https://github.com/aleotromundo/aleotromundo/tree/main', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ imageBase64: base64Image }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          alert('Error: ' + (data.error || 'Error desconocido'));
-          btnProcess.disabled = false;
-          btnProcess.textContent = 'Procesar imagen';
-          return;
-        }
-
-        resultImage.src = data.imageBase64;
-        resultImage.style.display = 'block';
-
-        downloadLink.href = data.imageBase64;
-        downloadLink.style.display = 'inline';
-      } catch (error) {
-        alert('Error al conectar con el servidor: ' + error.message);
-      }
-
-      btnProcess.disabled = false;
-      btnProcess.textContent = 'Procesar imagen';
-    });
-  </script>
-</body>
-</html>
+    res.status(200).json({ imageBase64: 'data:image/png;base64,' + base64 });
+  } catch (error) {
+    res.status(500).json({ error: error.message || 'Error des

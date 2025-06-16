@@ -2,19 +2,38 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Quitar fondo con remove.bg</title>
+  <title>Quitar Fondo a tu Imagen</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      text-align: center;
+      background-color: #111;
+      color: #eee;
+    }
+    input, button {
+      margin-top: 1rem;
+    }
+    #resultImage {
+      margin-top: 2rem;
+      max-width: 100%;
+      display: none;
+    }
+    #downloadLink {
+      display: none;
+      margin-top: 1rem;
+    }
+  </style>
 </head>
 <body>
-  <h1>Sube una imagen para quitarle el fondo</h1>
-
+  <h1>Eliminar fondo blanco de un logo</h1>
   <input type="file" id="inputFile" accept="image/*" />
-  <br /><br />
-  <button id="btnProcess">Procesar imagen</button>
-  <br /><br />
-
-  <img id="resultImage" style="max-width: 300px; display:none;" />
   <br />
-  <a id="downloadLink" style="display:none;" download="sin-fondo.png">Descargar PNG sin fondo</a>
+  <button id="btnProcess">Procesar imagen</button>
+  <br />
+  <img id="resultImage" />
+  <br />
+  <a id="downloadLink" download="sin-fondo.png">Descargar imagen sin fondo</a>
 
   <script>
     const inputFile = document.getElementById('inputFile');
@@ -36,7 +55,7 @@
 
     btnProcess.addEventListener('click', async () => {
       if (!base64Image) {
-        alert('Por favor, selecciona una imagen primero.');
+        alert('Por favor, seleccioná una imagen.');
         return;
       }
 
@@ -44,10 +63,10 @@
       btnProcess.textContent = 'Procesando...';
 
       try {
-        const response = await fetch('https://github.com/aleotromundo/aleotromundo/tree/main', {
+        const response = await fetch('https://aleotromundo.vercel.app/api/remove-bg', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ imageBase64: base64Image }),
+          body: JSON.stringify({ imageBase64 }),
         });
 
         const data = await response.json();
@@ -64,8 +83,9 @@
 
         downloadLink.href = data.imageBase64;
         downloadLink.style.display = 'inline';
+
       } catch (error) {
-        alert('Error al conectar con el servidor: ' + error.message);
+        alert('Error: ' + error.message);
       }
 
       btnProcess.disabled = false;
