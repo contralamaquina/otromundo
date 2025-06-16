@@ -1,8 +1,6 @@
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -14,11 +12,10 @@ export default async function handler(req, res) {
 
   try {
     const { logoBase64, fondoBase64 } = req.body;
+    if (!logoBase64 || !fondoBase64) return res.status(400).json({ error: "Faltan imágenes" });
 
-    // Crear una descripción textual para la IA
-    const prompt = "Integra el logo en la imagen de fondo de manera realista, como si estuviera impreso, pegado o estampado. El resultado debe parecer una fotografía auténtica.";
+    const prompt = "Integra este logo en la imagen de fondo de manera realista, como si estuviera impreso, pegado o estampado en la superficie.";
 
-    // Combinar ambas imágenes en un mensaje para GPT-4 + DALL·E 3
     const response = await openai.images.generate({
       model: "dall-e-3",
       prompt,
@@ -26,9 +23,9 @@ export default async function handler(req, res) {
       n: 1,
     });
 
-    res.status(200).json({ image: response.data[0].url });
-
-  } catch (error) {
-    res.status(500).json({ error: error.message || "Error interno del servidor" });
+    return res.status(200).json({ image: response.data[0].url });
+  }
+  catch (err) {
+    return res.status(500).json({ error: err.message });
   }
 }
