@@ -11,13 +11,15 @@
     text-align: center;
     padding: 2rem;
   }
-  button {
+  input, button {
     margin: 1rem;
     padding: 0.7rem 1.2rem;
     font-size: 1.1rem;
     border-radius: 6px;
     border: none;
     cursor: pointer;
+  }
+  button {
     background: #f03a3a;
     color: white;
   }
@@ -33,6 +35,9 @@
 <body>
 
 <h1>Quitar fondo con Replicate API + Proxy CORS</h1>
+
+<input type="file" id="fileInput" accept="image/*" />
+<br />
 <button id="btnRemoveBg">🧹 Quitar fondo</button>
 <br />
 <img id="resultImg" alt="Logo sin fondo" />
@@ -40,6 +45,7 @@
 <script>
   const btn = document.getElementById('btnRemoveBg');
   const resultImg = document.getElementById('resultImg');
+  const fileInput = document.getElementById('fileInput');
 
   const API_TOKEN = 'r8_LXxyHy8ThawFp2Qn0uf67ujKjxZr8zO3ooxNH';
   const MODEL_VERSION = 'a029dff38972b5fda4ec5d75d7d1cd25aeff621d2cf4946a41055d7db66b80bc';
@@ -47,12 +53,29 @@
   const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
   const apiUrl = 'https://api.replicate.com/v1/predictions';
 
+  // Convierte archivo a base64
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
   btn.onclick = async () => {
+    if (!fileInput.files.length) {
+      alert('Por favor, seleccioná una imagen primero.');
+      return;
+    }
+
     btn.disabled = true;
     btn.textContent = 'Procesando...';
     resultImg.style.display = 'none';
 
     try {
+      const base64Image = await fileToBase64(fileInput.files[0]);
+
       const response = await fetch(proxyUrl + apiUrl, {
         method: 'POST',
         headers: {
@@ -63,7 +86,7 @@
         body: JSON.stringify({
           version: MODEL_VERSION,
           input: {
-            image: 'https://replicate.delivery/pbxt/MAqakpYnuaS5IxU4WZAh5irkSn92wuYc5bdU1TNV5xzIJ8sM/gzp35qt55t4aatwznmccv2ssgds2.png'
+            image: 'data:image/png;base64,' + base64Image
           }
         })
       });
