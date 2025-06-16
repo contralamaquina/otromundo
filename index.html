@@ -1,88 +1,62 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Generar Imagen con Logo IA</title>
+  <meta charset="UTF-8">
+  <title>Integrar Logo con IA</title>
 </head>
 <body>
+  <h2>Subí tu logo y fondo</h2>
 
-<h1>Subí tu logo y la imagen de fondo</h1>
+  <input type="file" id="logoInput" accept="image/*" /><br><br>
+  <input type="file" id="fondoInput" accept="image/*" /><br><br>
+  <button id="generarIA">Generar imagen con IA</button>
 
-<input type="file" id="logoInput" accept="image/*" />
-<input type="file" id="fondoInput" accept="image/*" />
-<button id="generarIA">Generar imagen con IA</button>
-<br/><br/>
+  <h3>Resultado:</h3>
+  <img id="resultadoIA" style="max-width:100%; display:none; margin-top:1rem;" />
 
-<img id="resultadoIA" style="max-width:100%; margin-top:1rem; display:none;" />
-<br/>
-
-<button id="descargarBtn" style="display:none;">Descargar PNG</button>
-
-<script>
-  let logoBase64 = null;
-  let fondoBase64 = null;
-  let resultadoURL = null;
-
-  document.getElementById("logoInput").addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => logoBase64 = reader.result;
-    reader.readAsDataURL(file);
-  });
-
-  document.getElementById("fondoInput").addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => fondoBase64 = reader.result;
-    reader.readAsDataURL(file);
-  });
-
-  document.getElementById("generarIA").addEventListener("click", async () => {
-    if (!logoBase64 || !fondoBase64) {
-      alert("Por favor subí el logo y la imagen de fondo.");
-      return;
+  <script>
+    async function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
     }
 
-    try {
-      const response = await fetch("https://corsproxy.io/?https://aleotromundo.vercel.app/api/integrar-logo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ logoBase64, fondoBase64 }),
-      });
+    document.getElementById("generarIA").addEventListener("click", async () => {
+      const logoFile = document.getElementById("logoInput").files[0];
+      const fondoFile = document.getElementById("fondoInput").files[0];
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert("Error: " + data.error);
+      if (!logoFile || !fondoFile) {
+        alert("Subí ambas imágenes.");
         return;
       }
 
-      const img = document.getElementById("resultadoIA");
-      img.src = data.image;
-      img.style.display = "block";
+      const logoBase64 = await toBase64(logoFile);
+      const fondoBase64 = await toBase64(fondoFile);
 
-      resultadoURL = data.image;
-      document.getElementById("descargarBtn").style.display = "inline-block";
+      try {
+        const res = await fetch("https://aleotromundo.vercel.app/api/integrar-logo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ logoBase64, fondoBase64 })
+        });
 
-    } catch (error) {
-      alert("Hubo un error al generar la imagen con IA.");
-      console.error(error);
-    }
-  });
+        const data = await res.json();
 
-  document.getElementById("descargarBtn").addEventListener("click", () => {
-    if (!resultadoURL) return;
-    const a = document.createElement("a");
-    a.href = resultadoURL;
-    a.download = "imagen_con_logo.png";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  });
-</script>
-
+        if (data.image) {
+          const img = document.getElementById("resultadoIA");
+          img.src = data.image;
+          img.style.display = "block";
+        } else {
+          alert("No se generó la imagen.");
+        }
+      } catch (err) {
+        console.error("Error al generar:", err);
+        alert("Falló la integración.");
+      }
+    });
+  </script>
 </body>
 </html>
