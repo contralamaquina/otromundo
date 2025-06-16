@@ -1,179 +1,76 @@
-**Prototipo Local con IA (requiere back-end Node.js)**
-
-Este prototipo utiliza un **servidor Express** para remover el fondo del logo con la API rembg de remove-background-ai, y un **front-end HTML/JS** con diseño **punk** para cargar archivos, solicitar la remoción de fondo y superponer el logo.
-
----
-
-### 1) Archivo `server.js` (Node + Express)
-```js
-import express from 'express';
-import multer from 'multer';
-import { rembg } from '@remove-background-ai/rembg.js';
-import dotenv from 'dotenv';
-
-dotenv.config();
-const app = express();
-const upload = multer();
-const API_KEY = process.env.API_KEY; // tu API Key en .env
-
-app.post('/api/remove-bg', upload.single('logo'), async (req, res) => {
-  try {
-    const inputBuffer = req.file.buffer;
-    const output = await rembg({
-      apiKey: API_KEY,
-      inputImage: inputBuffer,
-      options: { returnBase64: false }
-    });
-    res.type('image/png').send(output);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Fallo al remover fondo' });
-  }
-});
-
-app.use(express.static('public'));
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Servidor en http://localhost:${PORT}`));
-```
-
-- Instala dependencias:
-  ```bash
-  npm install express multer dotenv @remove-background-ai/rembg.js
-  ```
-- Crea un archivo `.env` con:
-  ```env
-  API_KEY=TU_REMOVEBG_API_KEY
-  ```
-
----
-
-### 2) Carpeta `public/` con `index.html` y `logo.png` (opcional)
-
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Insertar Logo con IA</title>
-  <style>
-    body {
-      font-family: 'Courier New', monospace;
-      background: #111;
-      color: #eee;
-      padding: 1rem;
-    }
-    h1 {
-      color: hotpink;
-      text-shadow: 2px 2px 0 black;
-    }
-    .controls {
-      margin-bottom: 1rem;
-    }
-    input, button {
-      font-family: inherit;
-      margin-right: 0.5rem;
-      background: black;
-      border: 1px solid hotpink;
-      color: hotpink;
-      padding: 0.5rem;
-    }
-    .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .thumb {
-      position: relative;
-      width: 150px;
-      height: 150px;
-      overflow: hidden;
-      border: 2px dashed hotpink;
-    }
-    .result-link {
-      display: block;
-      margin-top: 0.5rem;
-      color: lime;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <title>Quitar fondo con remove.bg</title>
 </head>
 <body>
-  <h1>🌵 Otro Mundo Punk 🌵</h1>
-  <div class="controls">
-    <input type="file" id="logo-input" accept="image/*">
-    <input type="file" id="images-input" accept="image/*" multiple>
-    <button id="do-magic">🔥 Hacer la magia</button>
-  </div>
-  <div class="gallery" id="gallery"></div>
+  <h1>Sube una imagen para quitarle el fondo</h1>
+
+  <input type="file" id="inputFile" accept="image/*" />
+  <br /><br />
+  <button id="btnProcess">Procesar imagen</button>
+  <br /><br />
+
+  <img id="resultImage" style="max-width: 300px; display:none;" />
+  <br />
+  <a id="downloadLink" style="display:none;" download="sin-fondo.png">Descargar PNG sin fondo</a>
 
   <script>
-    let logoProcessed = null;
-    document.getElementById('logo-input').addEventListener('change', async e => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const form = new FormData();
-      form.append('logo', file);
+    const inputFile = document.getElementById('inputFile');
+    const btnProcess = document.getElementById('btnProcess');
+    const resultImage = document.getElementById('resultImage');
+    const downloadLink = document.getElementById('downloadLink');
 
-      const resp = await fetch('/api/remove-bg', { method: 'POST', body: form });
-      if (!resp.ok) return alert('Error al remover fondo');
-      const blob = await resp.blob();
-      const url = URL.createObjectURL(blob);
-      logoProcessed = new Image();
-      logoProcessed.src = url;
-      logoProcessed.onload = () => console.log('Logo listo');
+    let base64Image = null;
+
+    inputFile.addEventListener('change', () => {
+      const file = inputFile.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        base64Image = e.target.result;
+      };
+      reader.readAsDataURL(file);
     });
 
-    document.getElementById('do-magic').addEventListener('click', () => {
-      if (!logoProcessed) return alert('Procesá primero el logo');
-      const files = document.getElementById('images-input').files;
-      const gallery = document.getElementById('gallery');
-      gallery.innerHTML = '';
+    btnProcess.addEventListener('click', async () => {
+      if (!base64Image) {
+        alert('Por favor, selecciona una imagen primero.');
+        return;
+      }
 
-      Array.from(files).forEach(file => {
-        const reader = new FileReader();
-        reader.onload = evt => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            const scale = 0.2;
-            const w = img.width * scale;
-            const h = logoProcessed.height * (w / logoProcessed.width);
-            const x = img.width - w - 10;
-            const y = img.height - h - 10;
-            ctx.globalAlpha = 0.8;
-            ctx.drawImage(logoProcessed, x, y, w, h);
-            const thumb = document.createElement('div');
-            thumb.className = 'thumb';
-            const outImg = document.createElement('img');
-            outImg.src = canvas.toDataURL('image/png');
-            thumb.appendChild(outImg);
-            const link = document.createElement('a');
-            link.href = outImg.src;
-            link.download = 'with_logo_' + Date.now() + '.png';
-            link.className = 'result-link';
-            link.textContent = 'Descargar';
-            thumb.appendChild(link);
-            gallery.appendChild(thumb);
-          };
-          img.src = evt.target.result;
-        };
-        reader.readAsDataURL(file);
-      });
+      btnProcess.disabled = true;
+      btnProcess.textContent = 'Procesando...';
+
+      try {
+        const response = await fetch('https://TU-DOMINIO-VERCEL/api/remove-bg', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageBase64: base64Image }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert('Error: ' + (data.error || 'Error desconocido'));
+          btnProcess.disabled = false;
+          btnProcess.textContent = 'Procesar imagen';
+          return;
+        }
+
+        resultImage.src = data.imageBase64;
+        resultImage.style.display = 'block';
+
+        downloadLink.href = data.imageBase64;
+        downloadLink.style.display = 'inline';
+      } catch (error) {
+        alert('Error al conectar con el servidor: ' + error.message);
+      }
+
+      btnProcess.disabled = false;
+      btnProcess.textContent = 'Procesar imagen';
     });
   </script>
 </body>
 </html>
-```
-
----
-
-**Cómo probar:**
-1. Ejecutar `node server.js`.
-2. Abrir `http://localhost:3000` en tu navegador.
-3. Cargar logo → espera procesamiento IA → cargar fotos → clic en "Hacer la magia".
-
-Con este flujo evitas problemas de CORS y tienes un entorno local completo para remover el fondo y superponer el logo con IA, todo con una estética **punk**.
