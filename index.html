@@ -1,70 +1,97 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Quitar fondo con CORS Anywhere y Replicate API</title>
-  <style>
-    body {
-      background: #111;
-      color: #eee;
-      font-family: 'Courier New', monospace;
-      text-align: center;
-      padding: 2rem;
-    }
-    input, button {
-      margin: 1rem;
-      padding: 0.7rem 1.2rem;
-      font-size: 1.1rem;
-      cursor: pointer;
-      border-radius: 6px;
-      border: none;
-    }
-    button {
-      background: #f03a3a;
-      color: white;
-    }
-    img {
-      margin-top: 1rem;
-      max-width: 300px;
-      border: 2px solid #0f0;
-      border-radius: 8px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>Quitar fondo con Replicate API + CORS Proxy</title>
+<style>
+  body {
+    background: #111;
+    color: #eee;
+    font-family: monospace;
+    text-align: center;
+    padding: 2rem;
+  }
+  button {
+    margin: 1rem;
+    padding: 0.7rem 1.2rem;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background: #f03a3a;
+    color: white;
+  }
+  img {
+    margin-top: 1rem;
+    max-width: 300px;
+    border: 2px solid #0f0;
+    border-radius: 8px;
+    display: none;
+  }
+</style>
 </head>
 <body>
 
-<h1>Quitar fondo con CORS Anywhere y Replicate API</h1>
-<input type="file" id="fileInput" accept="image/*" />
-<br />
+<h1>Quitar fondo con Replicate API + Proxy CORS</h1>
 <button id="btnRemoveBg">🧹 Quitar fondo</button>
-
-<div>
-  <h2>Resultado</h2>
-  <img id="resultImg" alt="Logo sin fondo" />
-</div>
+<br />
+<img id="resultImg" alt="Logo sin fondo" />
 
 <script>
-  const fileInput = document.getElementById('fileInput');
-  const btnRemoveBg = document.getElementById('btnRemoveBg');
+  const btn = document.getElementById('btnRemoveBg');
   const resultImg = document.getElementById('resultImg');
 
-  const API_KEY = "r8_LXxyHy8ThawFp2Qn0uf67ujKjxZr8zO3ooxNH";
-  const MODEL_VERSION = "7de4b15d1a064d9d8c488d0e2df10baf5c3b6a8e66e46f0d2e9b9e2cc287e735";
+  const API_TOKEN = 'r8_LXxyHy8ThawFp2Qn0uf67ujKjxZr8zO3ooxNH';
+  const MODEL_VERSION = 'a029dff38972b5fda4ec5d75d7d1cd25aeff621d2cf4946a41055d7db66b80bc';
 
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result); // devolvemos todo, no cortamos
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
+  const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+  const apiUrl = 'https://api.replicate.com/v1/predictions';
 
-  async function removeBackground(base64Image) {
-    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-    const apiUrl = "https://api.replicate.com/v1/predictions";
+  btn.onclick = async () => {
+    btn.disabled = true;
+    btn.textContent = 'Procesando...';
+    resultImg.style.display = 'none';
 
-    const response = await fetch(proxyUrl + apiUrl, {
-      method: "POST",
-      headers: {
-        Authorization:
+    try {
+      const response = await fetch(proxyUrl + apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + API_TOKEN,
+          'Content-Type': 'application/json',
+          'Prefer': 'wait'
+        },
+        body: JSON.stringify({
+          version: MODEL_VERSION,
+          input: {
+            image: 'https://replicate.delivery/pbxt/MAqakpYnuaS5IxU4WZAh5irkSn92wuYc5bdU1TNV5xzIJ8sM/gzp35qt55t4aatwznmccv2ssgds2.png'
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Error HTTP ${response.status}: ${errText}`);
+      }
+
+      const data = await response.json();
+      console.log('Respuesta:', data);
+
+      if (data.output && data.output.length > 0) {
+        resultImg.src = data.output[0];
+        resultImg.style.display = 'block';
+      } else {
+        alert('No se recibió imagen procesada.');
+      }
+
+    } catch (err) {
+      alert('Error: ' + err.message);
+      console.error(err);
+    }
+
+    btn.disabled = false;
+    btn.textContent = '🧹 Quitar fondo';
+  };
+</script>
+
+</body>
+</html>
