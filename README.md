@@ -1,19 +1,9 @@
-# Aleotromundo IA Integration
+# aleotromundo-vercel-api
 
-Este proyecto incluye:
-
-- `/api/integrar-logo.js`: Función backend para integrar un logo en una imagen de fondo usando la API de OpenAI (DALL·E 3).
-- `index.html`: Frontend para subir el logo y la imagen de fondo, generar la imagen con IA y descargarla.
+Backend minimalista para integrar imágenes con OpenAI y permitir peticiones CORS desde GitHub Pages.
 
 ## Uso
 
-1. Configurar variable de entorno `OPENAI_API_KEY` en Vercel con tu clave OpenAI.
-2. Subir `/api/integrar-logo.js` a tu backend en Vercel.
-3. Subir `index.html` a tu repo GitHub Pages o servidor estático.
-4. Cambiar la URL en `fetch()` del frontend a tu dominio real de Vercel.
-
-## Tecnologías
-
-- Node.js (Vercel Serverless Functions)
-- OpenAI API (DALL·E 3)
-- HTML + JavaScript Vanilla
+1. Subí este proyecto a Vercel (debería detectar automáticamente como proyecto Node.js con funciones serverless).
+2. En GitHub Pages hacé las peticiones a:  
+   `https://<tu-vercel>.vercel.app/api/integrar-logo`

@@ -21,12 +21,12 @@ export default async function handler(req, res) {
 
   try {
     const { logoBase64, fondoBase64 } = req.body;
+
     if (!logoBase64 || !fondoBase64) {
       return res.status(400).json({ error: "Faltan imágenes" });
     }
 
-    const prompt =
-      "Integra este logo en la imagen de fondo de manera realista, como si estuviera impreso, pegado o estampado en la superficie.";
+    const prompt = "Integra este logo en la imagen de fondo de manera realista, como si estuviera impreso, pegado o estampado en la superficie.";
 
     const response = await openai.images.generate({
       model: "dall-e-3",
@@ -37,6 +37,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ image: response.data[0].url });
   } catch (err) {
+    console.error("Error:", err.message);
     return res.status(500).json({ error: err.message });
   }
 }
