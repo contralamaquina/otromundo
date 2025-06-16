@@ -1,62 +1,134 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Integrar Logo con IA</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aleotromundo Punk AI</title>
+<style>
+  body {
+    background: #121212;
+    color: #e63946;
+    font-family: "Courier New", Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+  h1 {
+    text-shadow: 0 0 5px #e63946;
+  }
+  input, button {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: #1d1d1d;
+    border: 1px solid #e63946;
+    color: #e63946;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #e63946;
+    color: #121212;
+  }
+  img {
+    max-width: 90vw;
+    margin-top: 1rem;
+    border: 2px solid #e63946;
+  }
+  #downloadBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #e63946;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    display: none;
+  }
+</style>
 </head>
 <body>
-  <h2>Subí tu logo y fondo</h2>
 
-  <input type="file" id="logoInput" accept="image/*" /><br><br>
-  <input type="file" id="fondoInput" accept="image/*" /><br><br>
-  <button id="generarIA">Generar imagen con IA</button>
+<h1>Integrá tu logo punk con IA</h1>
 
-  <h3>Resultado:</h3>
-  <img id="resultadoIA" style="max-width:100%; display:none; margin-top:1rem;" />
+<label>Logo (archivo o URL):</label><br/>
+<input type="file" id="logoFile" accept="image/*" />
+<input type="url" id="logoUrl" placeholder="O pega la URL del logo" style="width: 300px; margin-top: 0.5rem;" />
 
-  <script>
-    async function toBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+<label>Imagen de fondo (URL):</label><br/>
+<input type="url" id="fondoUrl" placeholder="Pega URL de imagen de fondo" style="width: 300px; margin-top: 0.5rem;" />
+
+<button id="generarBtn">Generar imagen con IA</button>
+
+<img id="resultado" style="display:none;" alt="Resultado IA"/>
+
+<button id="downloadBtn">Descargar imagen final</button>
+
+<script>
+  const generarBtn = document.getElementById("generarBtn");
+  const resultado = document.getElementById("resultado");
+  const downloadBtn = document.getElementById("downloadBtn");
+
+  generarBtn.addEventListener("click", async () => {
+    let logoUrl = document.getElementById("logoUrl").value.trim();
+    const logoFile = document.getElementById("logoFile").files[0];
+    const fondoUrl = document.getElementById("fondoUrl").value.trim();
+
+    if (!fondoUrl) {
+      alert("Poné la URL de la imagen de fondo");
+      return;
     }
 
-    document.getElementById("generarIA").addEventListener("click", async () => {
-      const logoFile = document.getElementById("logoInput").files[0];
-      const fondoFile = document.getElementById("fondoInput").files[0];
+    if (!logoUrl && !logoFile) {
+      alert("Subí un archivo de logo o pegá su URL");
+      return;
+    }
 
-      if (!logoFile || !fondoFile) {
-        alert("Subí ambas imágenes.");
+    if (logoFile && !logoUrl) {
+      // Subir archivo logo a algún hosting o convertir a base64 aquí (simplifico con URL para demo)
+      alert("Por ahora solo funciona con URLs. Subí tu logo a un hosting y pegá la URL.");
+      return;
+    }
+
+    generarBtn.disabled = true;
+    generarBtn.textContent = "Generando...";
+
+    try {
+      const resp = await fetch("https://aleotromundo.vercel.app/api/integrar-logo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ logoUrl, fondoUrl }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json();
+        alert("Error: " + (err.error || "Error desconocido"));
+        generarBtn.disabled = false;
+        generarBtn.textContent = "Generar imagen con IA";
         return;
       }
 
-      const logoBase64 = await toBase64(logoFile);
-      const fondoBase64 = await toBase64(fondoFile);
+      const data = await resp.json();
+      resultado.src = data.imageUrl;
+      resultado.style.display = "block";
 
-      try {
-        const res = await fetch("https://aleotromundo.vercel.app/api/integrar-logo", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ logoBase64, fondoBase64 })
-        });
+      downloadBtn.style.display = "inline-block";
+      downloadBtn.onclick = () => {
+        const a = document.createElement("a");
+        a.href = data.imageUrl;
+        a.download = "imagen-punk.png";
+        a.click();
+      };
+    } catch (e) {
+      alert("Error al generar: " + e.message);
+    }
 
-        const data = await res.json();
+    generarBtn.disabled = false;
+    generarBtn.textContent = "Generar imagen con IA";
+  });
+</script>
 
-        if (data.image) {
-          const img = document.getElementById("resultadoIA");
-          img.src = data.image;
-          img.style.display = "block";
-        } else {
-          alert("No se generó la imagen.");
-        }
-      } catch (err) {
-        console.error("Error al generar:", err);
-        alert("Falló la integración.");
-      }
-    });
-  </script>
 </body>
 </html>
