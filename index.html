@@ -47,7 +47,7 @@
     }
 
     try {
-      const response = await fetch("https://aleotromundo.vercel.app/api/integrar-logo", {
+      const response = await fetch("https://corsproxy.io/?https://aleotromundo.vercel.app/api/integrar-logo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ logoBase64, fondoBase64 }),
