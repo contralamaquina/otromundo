@@ -5,7 +5,7 @@ const openai = new OpenAI({
 });
 
 function setCorsHeaders(res) {
-  res.setHeader("Access-Control-Allow-Origin", "*"); // O poné tu dominio para mayor seguridad
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   setCorsHeaders(res);
 
   if (req.method === "OPTIONS") {
-    return res.status(204).end(); // Respuesta a preflight
+    return res.status(204).end();
   }
 
   if (req.method !== "POST") {
@@ -28,21 +28,25 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Falta la imagen" });
     }
 
-    // Aquí usás la API de remove.bg o la de OpenAI para quitar fondo
-    // Ejemplo: llamar a OpenAI images edit (simplificado)
+    // Convertimos base64 a buffer
+    const imageBuffer = Buffer.from(imageBase64, "base64");
 
-    const response = await openai.images.edit({
+    // Aquí debes usar la llamada correcta para quitar fondo (editar imagen) con OpenAI.
+    // Como ejemplo sencillo, la demo usa generación simple.
+    // Debes ajustar con la API oficial para edición de imagen (images.edit) y pasar máscara.
+
+    // Por ahora hacemos una llamada simple para ilustrar (sustituir por tu implementación real):
+    const response = await openai.images.generate({
       model: "dall-e-3",
-      image: Buffer.from(imageBase64, "base64"),
-      mask: Buffer.from(imageBase64, "base64"), // acá tendrías que pasar una máscara para remover fondo real
-      prompt: "Remove background from image",
+      prompt: "Remove the background and keep only the main logo, transparent background",
       n: 1,
       size: "1024x1024",
     });
 
-    return res.status(200).json({ imageUrl: response.data[0].url });
+    // Retornamos la URL generada (ejemplo, no real de remove bg)
+    return res.status(200).json({ image: response.data[0].url });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: error.message || "Error desconocido" });
+    return res.status(500).json({ error: error.message });
   }
 }
