@@ -2,134 +2,123 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<title>Quitar fondo con Replicate API</title>
+<title>Quitar fondo con CORS Anywhere y Replicate API</title>
 <style>
   body {
-    font-family: Arial, sans-serif;
-    background: #222;
+    background: #111;
     color: #eee;
+    font-family: 'Courier New', monospace;
     text-align: center;
     padding: 2rem;
   }
   input, button {
     margin: 1rem;
-    padding: 0.5rem 1rem;
+    padding: 0.7rem 1.2rem;
     font-size: 1.1rem;
     cursor: pointer;
+    border-radius: 6px;
+    border: none;
+  }
+  button {
+    background: #f03a3a;
+    color: white;
   }
   img {
-    max-width: 300px;
     margin-top: 1rem;
-    border: 3px solid #0f0;
+    max-width: 300px;
+    border: 2px solid #0f0;
     border-radius: 8px;
   }
 </style>
 </head>
 <body>
 
-<h1>Quitar fondo con Replicate API</h1>
-<input type="file" id="logoInput" accept="image/*" />
+<h1>Quitar fondo con CORS Anywhere y Replicate API</h1>
+<input type="file" id="fileInput" accept="image/*" />
 <br />
-<button id="removeBgBtn">🧹 Quitar fondo</button>
+<button id="btnRemoveBg">🧹 Quitar fondo</button>
 
 <div>
-  <h2>Vista previa</h2>
-  <img id="cleanLogo" alt="Logo sin fondo" />
+  <h2>Resultado</h2>
+  <img id="resultImg" alt="Logo sin fondo" />
 </div>
 
-<br />
-<button id="downloadBtn" disabled>💾 Descargar logo limpio PNG</button>
-
 <script>
-  const apiKey = "r8_67eJcaJIKe7KLdanwqufG28wBbQ2Xmd03Z2fd"; // Tu clave Replicate
-  const modelVersion = "7de4b15d1a064d9d8c488d0e2df10baf5c3b6a8e66e46f0d2e9b9e2cc287e735"; // u2net remove bg
+  const fileInput = document.getElementById('fileInput');
+  const btnRemoveBg = document.getElementById('btnRemoveBg');
+  const resultImg = document.getElementById('resultImg');
 
-  const logoInput = document.getElementById("logoInput");
-  const removeBgBtn = document.getElementById("removeBgBtn");
-  const cleanLogo = document.getElementById("cleanLogo");
-  const downloadBtn = document.getElementById("downloadBtn");
+  // Cambiá por tu API Key de Replicate
+  const API_KEY = "r8_LXxyHy8ThawFp2Qn0uf67ujKjxZr8zO3ooxNH";
+  const MODEL_VERSION = "7de4b15d1a064d9d8c488d0e2df10baf5c3b6a8e66e46f0d2e9b9e2cc287e735";
 
-  let selectedFile = null;
-  let cleanImageURL = null;
-
-  logoInput.addEventListener("change", (e) => {
-    selectedFile = e.target.files[0];
-    cleanLogo.src = "";
-    downloadBtn.disabled = true;
-  });
-
-  async function fileToBase64(file) {
+  function fileToBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(",")[1]); // solo base64 sin encabezado
+      reader.onload = () => resolve(reader.result.split(',')[1]);
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
   }
 
-  async function pollPrediction(url) {
+  async function removeBackground(base64Image) {
+    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+    const apiUrl = "https://api.replicate.com/v1/predictions";
+
+    // Crear la predicción
+    const response = await fetch(proxyUrl + apiUrl, {
+      method: "POST",
+      headers: {
+        Authorization: "Token " + API_KEY,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        version: MODEL_VERSION,
+        input: { image: "data:image/png;base64," + base64Image },
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      throw new Error("Error al crear predicción: " + err);
+    }
+
+    const prediction = await response.json();
+
+    // Polling hasta que la predicción esté lista
     while (true) {
-      const res = await fetch(url, {
-        headers: { Authorization: "Token " + apiKey }
+      const statusRes = await fetch(proxyUrl + prediction.urls.get, {
+        headers: { Authorization: "Token " + API_KEY },
       });
-      const data = await res.json();
-      if (data.status === "succeeded") return data;
-      if (data.status === "failed") throw new Error("La predicción falló");
+      const statusData = await statusRes.json();
+
+      if (statusData.status === "succeeded") return statusData.output;
+      if (statusData.status === "failed") throw new Error("La predicción falló");
+
       await new Promise(r => setTimeout(r, 1000));
     }
   }
 
-  removeBgBtn.addEventListener("click", async () => {
-    if (!selectedFile) {
-      alert("Primero cargá un logo.");
+  btnRemoveBg.addEventListener('click', async () => {
+    if (!fileInput.files.length) {
+      alert("Primero subí una imagen");
       return;
     }
-    removeBgBtn.disabled = true;
-    removeBgBtn.textContent = "Procesando...";
+    btnRemoveBg.disabled = true;
+    btnRemoveBg.textContent = "Procesando...";
 
     try {
-      const base64Img = await fileToBase64(selectedFile);
+      const base64Img = await fileToBase64(fileInput.files[0]);
+      const outputUrls = await removeBackground(base64Img);
 
-      const res = await fetch("https://api.replicate.com/v1/predictions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Token " + apiKey
-        },
-        body: JSON.stringify({
-          version: modelVersion,
-          input: { image: "data:image/png;base64," + base64Img }
-        })
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText);
-      }
-
-      const prediction = await res.json();
-      const result = await pollPrediction(prediction.urls.get);
-
-      if (cleanImageURL) URL.revokeObjectURL(cleanImageURL);
-      cleanImageURL = result.output;
-      cleanLogo.src = cleanImageURL;
-      downloadBtn.disabled = false;
-
+      // outputUrls es un array con URLs, mostramos la primera
+      resultImg.src = outputUrls[0];
     } catch (e) {
       alert("Error: " + e.message);
     }
 
-    removeBgBtn.disabled = false;
-    removeBgBtn.textContent = "🧹 Quitar fondo";
-  });
-
-  downloadBtn.addEventListener("click", () => {
-    if (!cleanImageURL) return;
-    // El output de replicate ya es URL directa
-    const link = document.createElement("a");
-    link.href = cleanImageURL;
-    link.download = "logo-sin-fondo.png";
-    link.click();
+    btnRemoveBg.disabled = false;
+    btnRemoveBg.textContent = "🧹 Quitar fondo";
   });
 </script>
 
