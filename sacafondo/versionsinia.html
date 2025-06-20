@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Quitar fondo y superponer logo estilo Punk</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
+  body {
+    background: #0f0f0f;
+    color: #f72585;
+    font-family: 'Special Elite', monospace, monospace;
+    text-align: center;
+    padding: 2rem;
+    user-select: none;
+  }
+  h1 {
+    font-size: 3rem;
+    text-shadow: 2px 2px #720026;
+    margin-bottom: 1rem;
+  }
+  input[type="file"] {
+    margin: 1rem auto;
+    display: block;
+    border: 2px dashed #f72585;
+    padding: 1rem;
+    border-radius: 12px;
+    background: #1a1a1a;
+    color: #f72585;
+    cursor: pointer;
+    width: 300px;
+  }
+  button {
+    background: #f72585;
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #0f0f0f;
+    cursor: pointer;
+    box-shadow: 0 0 10px #f72585;
+    transition: background 0.3s ease;
+    user-select: none;
+    margin-top: 1rem;
+  }
+  button:hover:not(:disabled) {
+    background: #720026;
+    box-shadow: 0 0 20px #f72585;
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  img {
+    margin-top: 1.5rem;
+    max-width: 320px;
+    border: 4px solid #f72585;
+    border-radius: 20px;
+    display: none;
+    filter: drop-shadow(3px 3px 2px #720026);
+  }
+  #finalCanvas {
+    margin-top: 2rem;
+    border: 5px solid #f72585;
+    border-radius: 25px;
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+  #downloadFinalBtn {
+    margin-top: 1rem;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<h1>🖤 Quitar fondo y superponer logo Punk 🖤</h1>
+
+<label>1️⃣ Seleccioná el logo con fondo:</label>
+<input type="file" id="fileInputLogo" accept="image/*" />
+
+<button id="btnRemoveBg">🧹 Quitar fondo del logo</button>
+
+<img id="resultLogo" alt="Logo sin fondo" />
+
+<hr style="border-color:#720026; margin:2rem 0;" />
+
+<label>2️⃣ Seleccioná la imagen de fondo:</label>
+<input type="file" id="fileInputBg" accept="image/*" />
+
+<img id="resultBg" alt="Imagen de fondo" />
+
+<hr style="border-color:#720026; margin:2rem 0;" />
+
+<button id="btnMakeMagic" disabled>✨ Hacer la magia</button>
+
+<br/>
+<canvas id="finalCanvas"></canvas>
+<br/>
+<button id="downloadFinalBtn">💾 Descargar imagen final</button>
+
+<script>
+  const API_KEY = '6sS7uBJFkGLMWYboPJm3N6Me';
+
+  const fileInputLogo = document.getElementById('fileInputLogo');
+  const btnRemoveBg = document.getElementById('btnRemoveBg');
+  const resultLogo = document.getElementById('resultLogo');
+
+  const fileInputBg = document.getElementById('fileInputBg');
+  const resultBg = document.getElementById('resultBg');
+
+  const btnMakeMagic = document.getElementById('btnMakeMagic');
+  const finalCanvas = document.getElementById('finalCanvas');
+  const downloadFinalBtn = document.getElementById('downloadFinalBtn');
+
+  let logoUrl = null;
+  let bgUrl = null;
+
+  // --- Quitar fondo logo ---
+  btnRemoveBg.onclick = async () => {
+    if (!fileInputLogo.files.length) {
+      alert('Primero seleccioná el logo.');
+      return;
+    }
+
+    btnRemoveBg.disabled = true;
+    btnRemoveBg.textContent = 'Procesando...';
+    resultLogo.style.display = 'none';
+    btnMakeMagic.disabled = true;
+    downloadFinalBtn.style.display = 'none';
+
+    const file = fileInputLogo.files[0];
+    const formData = new FormData();
+    formData.append('image_file', file);
+    formData.append('size', 'auto');
+
+    try {
+      const response = await fetch('https://api.remove.bg/v1.0/removebg', {
+        method: 'POST',
+        headers: {
+          'X-Api-Key': API_KEY
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error HTTP ${response.status}: ${errorText}`);
+      }
+
+      const blob = await response.blob();
+      if (logoUrl) URL.revokeObjectURL(logoUrl);
+      logoUrl = URL.createObjectURL(blob);
+
+      resultLogo.src = logoUrl;
+      resultLogo.style.display = 'inline-block';
+
+      // Si ya hay fondo cargado, habilitar el botón magia
+      if (bgUrl) btnMakeMagic.disabled = false;
+
+    } catch (err) {
+      alert('Error: ' + err.message);
+      console.error(err);
+    }
+
+    btnRemoveBg.disabled = false;
+    btnRemoveBg.textContent = '🧹 Quitar fondo del logo';
+  };
+
+  // --- Cargar imagen fondo ---
+  fileInputBg.onchange = () => {
+    if (!fileInputBg.files.length) return;
+    if (bgUrl) URL.revokeObjectURL(bgUrl);
+    bgUrl = URL.createObjectURL(fileInputBg.files[0]);
+    resultBg.src = bgUrl;
+    resultBg.style.display = 'inline-block';
+
+    // Solo habilitar botón magia si logo ya está sin fondo
+    btnMakeMagic.disabled = !logoUrl;
+    downloadFinalBtn.style.display = 'none';
+  };
+
+  // --- Hacer la magia (combinar imágenes en canvas) ---
+  btnMakeMagic.onclick = () => {
+    if (!logoUrl || !bgUrl) {
+      alert('Debes cargar el logo sin fondo y la imagen de fondo.');
+      return;
+    }
+
+    const canvas = finalCanvas;
+    const ctx = canvas.getContext('2d');
+
+    const bgImg = new Image();
+    const logoImg = new Image();
+
+    bgImg.crossOrigin = 'anonymous';
+    logoImg.crossOrigin = 'anonymous';
+
+    bgImg.src = bgUrl;
+    logoImg.src = logoUrl;
+
+    bgImg.onload = () => {
+      // Configuramos tamaño del canvas al fondo (limitamos tamaño para que no sea gigante)
+      const maxWidth = 800;
+      const maxHeight = 600;
+
+      let w = bgImg.width;
+      let h = bgImg.height;
+
+      if (w > maxWidth) {
+        h = h * (maxWidth / w);
+        w = maxWidth;
+      }
+      if (h > maxHeight) {
+        w = w * (maxHeight / h);
+        h = maxHeight;
+      }
+
+      canvas.width = w;
+      canvas.height = h;
+
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.drawImage(bgImg, 0, 0, w, h);
+
+      logoImg.onload = () => {
+        // Escalamos logo para que no sea muy grande (p. ej. 25% ancho fondo)
+        const logoMaxWidth = w * 0.25;
+        let logoW = logoImg.width;
+        let logoH = logoImg.height;
+
+        if (logoW > logoMaxWidth) {
+          logoH = logoH * (logoMaxWidth / logoW);
+          logoW = logoMaxWidth;
+        }
+
+        // Posicionamos logo en el centro (por ahora)
+        const x = (w - logoW) / 2;
+        const y = (h - logoH) / 2;
+
+        // Sombra para que se vea más natural
+        ctx.shadowColor = 'rgba(0,0,0,0.6)';
+        ctx.shadowBlur = 12;
+        ctx.shadowOffsetX = 5;
+        ctx.shadowOffsetY = 5;
+
+        // Pequeña rotación leve para más "realidad"
+        ctx.save();
+        ctx.translate(x + logoW / 2, y + logoH / 2);
+        ctx.rotate(0.05); // unos grados
+        ctx.drawImage(logoImg, -logoW / 2, -logoH / 2, logoW, logoH);
+        ctx.restore();
+
+        downloadFinalBtn.style.display = 'inline-block';
+      };
+      logoImg.onerror = () => alert('Error cargando logo para superponer');
+    };
+
+    bgImg.onerror = () => alert('Error cargando imagen de fondo');
+  };
+
+  // --- Descargar imagen final ---
+  downloadFinalBtn.onclick = () => {
+    const link = document.createElement('a');
+    link.download = 'imagen-final-punk.png';
+    link.href = finalCanvas.toDataURL('image/png');
+    link.click();
+  };
+</script>
+
+</body>
+</html>

@@ -1,120 +1,181 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<title>Quitar fondo con Replicate API + CORS Proxy</title>
-<style>
-  body {
-    background: #111;
-    color: #eee;
-    font-family: monospace;
-    text-align: center;
-    padding: 2rem;
-  }
-  input, button {
-    margin: 1rem;
-    padding: 0.7rem 1.2rem;
-    font-size: 1.1rem;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-  }
-  button {
-    background: #f03a3a;
-    color: white;
-  }
-  img {
-    margin-top: 1rem;
-    max-width: 300px;
-    border: 2px solid #0f0;
-    border-radius: 8px;
-    display: none;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Suculentas</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="main-content-wrapper">
+        <div class="slider slider-top">
+            <div class="slider-inner">
+                <img src="fotos/cactus-mani.jpg" alt="Cactus maní" data-large-src="fotos/cactus-mani.jpg">
+                <img src="fotos/graptosedum-california-sunset.jpg" alt="Graptosedum California Sunset" data-large-src="fotos/graptosedum-california-sunset.jpg">
+                <img src="fotos/huernia.jpg" alt="Huernia" data-large-src="fotos/huernia.jpg">
+                <img src="fotos/callisia-navicularis.jpg" alt="Callisia Navicularis" data-large-src="fotos/callisia-navicularis.jpg">
+                <img src="fotos/cactus-coral.jpg" alt="Cactus Coral" data-large-src="fotos/cactus-coral.jpg">
+                <img src="fotos/madreperla.jpg" alt="Madreperla" data-large-src="fotos/madreperla.jpg">
+                <img src="fotos/mammillaria-vetula.jpg" alt="Mammillaria vetula" data-large-src="fotos/mammillaria-vetula.jpg">
+                <img src="fotos/mammillaria-prolifera.jpg" alt="Mammillaria prolifera" data-large-src="fotos/mammillaria-prolifera.jpg">
+                <img src="fotos/echeveria-elegans.jpg" alt="Echeveria elegans" data-large-src="fotos/echeveria-elegans.jpg">
+                <img src="fotos/crassula-fragilis.jpg" alt="Crassula expansa fragilis" data-large-src="fotos/crassula-fragilis.jpg">
+                <img src="fotos/opuntia-monacantha-monstruosa.jpg" alt="Opuntia monacantha monstruosa" data-large-src="fotos/opuntia-monacantha-monstruosa.jpg">
+                <img src="fotos/senecio-articulatus.png" alt="Senecio articulatus" data-large-src="fotos/senecio-articulatus.png">
+                <img src="fotos/sedum-rubrotinctum-jelly-beans.jpg" alt="Sedum rubrotinctum" data-large-src="fotos/sedum-rubrotinctum-jelly-beans.jpg">
+                <img src="fotos/sedum-luteoviride.jpg" alt="Sedum luteoviride" data-large-src="fotos/sedum-luteoviride.jpg">
+                <img src="fotos/sedum-clavatum.jpg" alt="Sedum clavatum" data-large-src="fotos/sedum-clavatum.jpg">
+                <img src="fotos/pachyphytum-compactum.jpg" alt="Pachyphytum compactum" data-large-src="fotos/pachyphytum-compactum.jpg">
+                <img src="fotos/opuntia-microdasys.jpg" alt="Opuntia microdasys" data-large-src="fotos/opuntia-microdasys.jpg">
+                <img src="fotos/haworthia-cuspidata.jpg" alt="Haworthia Cuspidata" data-large-src="fotos/haworthia-cuspidata.jpg">
+                <img src="fotos/gasteria-pillansii.jpg" alt="Gasteria pillansi" data-large-src="fotos/gasteria-pillansii.jpg">
+                <img src="fotos/echeveria-setosa.jpg" alt="Echeveria Setosa" data-large-src="fotos/echeveria-setosa.jpg">
+                <img src="fotos/crassula-pellucida.jpg" alt="Crassula Pellucida" data-large-src="fotos/crassula-pellucida.jpg">
+                <img src="fotos/corpuscularia-lehmannii.jpg" alt="Corpuscularia lehmannii" data-large-src="fotos/corpuscularia-lehmannii.jpg">
+            </div>
+        </div>
 
-<h1>Quitar fondo con Replicate API + Proxy CORS</h1>
+        <div class="quiz">
+            <h2>Descubre tu Suculenta Ideal</h2>
+            <div class="question">
+                <label for="signo">¿Cuál es tu signo zodiacal?</label>
+                <select id="signo">
+                    <option value="">Selecciona tu signo</option>
+                    <option value="aries">Aries</option>
+                    <option value="tauro">Tauro</option>
+                    <option value="geminis">Géminis</option>
+                    <option value="cancer">Cáncer</option>
+                    <option value="leo">Leo</option>
+                    <option value="virgo">Virgo</option>
+                    <option value="libra">Libra</option>
+                    <option value="escorpio">Escorpio</option>
+                    <option value="sagitario">Sagitario</option>
+                    <option value="capricornio">Capricornio</option>
+                    <option value="acuario">Acuario</option>
+                    <option value="piscis">Piscis</option>
+                </select>
+            </div>
+            <div class="question">
+                <label for="aspecto">¿Qué aspecto de tu vida buscas potenciar?</label>
+                <select id="aspecto">
+                    <option value="">Selecciona un aspecto</option>
+                    <option value="calma">Calma</option>
+                    <option value="crecimiento">Crecimiento</option>
+                    <option value="energia">Energía</option>
+                    <option value="equilibrio">Equilibrio</option>
+                    <option value="frescura">Frescura</option>
+                    <option value="vitalidad">Vitalidad</option>
+                    <option value="transformacion">Transformación</option>
+                </select>
+            </div>
+            <div class="question">
+                <label for="elemento">¿Con qué elemento te identificas más?</label>
+                <select id="elemento">
+                    <option value="">Selecciona un elemento</option>
+                    <option value="fuego">Fuego</option>
+                    <option value="tierra">Tierra</option>
+                    <option value="aire">Aire</option>
+                    <option value="agua">Agua</option>
+                </select>
+            </div>
+            <div class="question">
+                <label for="nivel">¿Qué tipo de energía buscas en tu planta?</label>
+                <select id="nivel">
+                    <option value="">Selecciona un nivel</option>
+                    <option value="fisico">Físico</option>
+                    <option value="emocional">Emocional</option>
+                    <option value="mental">Mental</option>
+                    <option value="espiritual">Espiritual</option>
+                </select>
+            </div>
+            <button onclick="mostrarResultado()">Ver mi Suculenta Ideal</button>
+            <div id="resultado">
+                </div>
+        </div>
 
-<input type="file" id="fileInput" accept="image/*" />
-<br />
-<button id="btnRemoveBg">🧹 Quitar fondo</button>
-<br />
-<img id="resultImg" alt="Logo sin fondo" />
+        <div class="slider slider-bottom">
+            <div class="slider-inner">
+                <img src="fotos/cactus-mani.jpg" alt="Cactus maní" data-large-src="fotos/cactus-mani.jpg">
+                <img src="fotos/graptosedum-california-sunset.jpg" alt="Graptosedum California Sunset" data-large-src="fotos/graptosedum-california-sunset.jpg">
+                <img src="fotos/huernia.jpg" alt="Huernia" data-large-src="fotos/huernia.jpg">
+                <img src="fotos/callisia-navicularis.jpg" alt="Callisia Navicularis" data-large-src="fotos/callisia-navicularis.jpg">
+                <img src="fotos/cactus-coral.jpg" alt="Cactus Coral" data-large-src="fotos/cactus-coral.jpg">
+                <img src="fotos/madreperla.jpg" alt="Madreperla" data-large-src="fotos/madreperla.jpg">
+                <img src="fotos/mammillaria-vetula.jpg" alt="Mammillaria vetula" data-large-src="fotos/mammillaria-vetula.jpg">
+                <img src="fotos/mammillaria-prolifera.jpg" alt="Mammillaria prolifera" data-large-src="fotos/mammillaria-prolifera.jpg">
+                <img src="fotos/echeveria-elegans.jpg" alt="Echeveria elegans" data-large-src="fotos/echeveria-elegans.jpg">
+                <img src="fotos/crassula-fragilis.jpg" alt="Crassula expansa fragilis" data-large-src="fotos/crassula-fragilis.jpg">
+                <img src="fotos/opuntia-monacantha-monstruosa.jpg" alt="Opuntia monacantha monstruosa" data-large-src="fotos/opuntia-monacantha-monstruosa.jpg">
+                <img src="fotos/senecio-articulatus.png" alt="Senecio articulatus" data-large-src="fotos/senecio-articulatus.png">
+                <img src="fotos/sedum-rubrotinctum-jelly-beans.jpg" alt="Sedum rubrotinctum" data-large-src="fotos/sedum-rubrotinctum-jelly-beans.jpg">
+                <img src="fotos/sedum-luteoviride.jpg" alt="Sedum luteoviride" data-large-src="fotos/sedum-luteoviride.jpg">
+                <img src="fotos/sedum-clavatum.jpg" alt="Sedum clavatum" data-large-src="fotos/sedum-clavatum.jpg">
+                <img src="fotos/pachyphytum-compactum.jpg" alt="Pachyphytum compactum" data-large-src="fotos/pachyphytum-compactum.jpg">
+                <img src="fotos/opuntia-microdasys.jpg" alt="Opuntia microdasys" data-large-src="fotos/opuntia-microdasys.jpg">
+                <img src="fotos/haworthia-cuspidata.jpg" alt="Haworthia Cuspidata" data-large-src="fotos/haworthia-cuspidata.jpg">
+                <img src="fotos/gasteria-pillansii.jpg" alt="Gasteria pillansi" data-large-src="fotos/gasteria-pillansii.jpg">
+                <img src="fotos/echeveria-setosa.jpg" alt="Echeveria Setosa" data-large-src="fotos/echeveria-setosa.jpg">
+                <img src="fotos/crassula-pellucida.jpg" alt="Crassula Pellucida" data-large-src="fotos/crassula-pellucida.jpg">
+                <img src="fotos/corpuscularia-lehmannii.jpg" alt="Corpuscularia lehmannii" data-large-src="fotos/corpuscularia-lehmannii.jpg">
 
-<script>
-  const btn = document.getElementById('btnRemoveBg');
-  const resultImg = document.getElementById('resultImg');
-  const fileInput = document.getElementById('fileInput');
+                <img src="fotos/cactus-mani.jpg" alt="Cactus maní" data-large-src="fotos/cactus-mani.jpg">
+                <img src="fotos/graptosedum-california-sunset.jpg" alt="Graptosedum California Sunset" data-large-src="fotos/graptosedum-california-sunset.jpg">
+                <img src="fotos/huernia.jpg" alt="Huernia" data-large-src="fotos/huernia.jpg">
+                <img src="fotos/callisia-navicularis.jpg" alt="Callisia Navicularis" data-large-src="fotos/callisia-navicularis.jpg">
+                <img src="fotos/cactus-coral.jpg" alt="Cactus Coral" data-large-src="fotos/cactus-coral.jpg">
+                <img src="fotos/madreperla.jpg" alt="Madreperla" data-large-src="fotos/madreperla.jpg">
+                <img src="fotos/mammillaria-vetula.jpg" alt="Mammillaria vetula" data-large-src="fotos/mammillaria-vetula.jpg">
+                <img src="fotos/mammillaria-prolifera.jpg" alt="Mammillaria prolifera" data-large-src="fotos/mammillaria-prolifera.jpg">
+                <img src="fotos/echeveria-elegans.jpg" alt="Echeveria elegans" data-large-src="fotos/echeveria-elegans.jpg">
+                <img src="fotos/crassula-fragilis.jpg" alt="Crassula expansa fragilis" data-large-src="fotos/crassula-fragilis.jpg">
+                <img src="fotos/opuntia-monacantha-monstruosa.jpg" alt="Opuntia monacantha monstruosa" data-large-src="fotos/opuntia-monacantha-monstruosa.jpg">
+                <img src="fotos/senecio-articulatus.png" alt="Senecio articulatus" data-large-src="fotos/senecio-articulatus.png">
+                <img src="fotos/sedum-rubrotinctum-jelly-beans.jpg" alt="Sedum rubrotinctum" data-large-src="fotos/sedum-rubrotinctum-jelly-beans.jpg">
+                <img src="fotos/sedum-luteoviride.jpg" alt="Sedum luteoviride" data-large-src="fotos/sedum-luteoviride.jpg">
+                <img src="fotos/sedum-clavatum.jpg" alt="Sedum clavatum" data-large-src="fotos/sedum-clavatum.jpg">
+                <img src="fotos/pachyphytum-compactum.jpg" alt="Pachyphytum compactum" data-large-src="fotos/pachyphytum-compactum.jpg">
+                <img src="fotos/opuntia-microdasys.jpg" alt="Opuntia microdasys" data-large-src="fotos/opuntia-microdasys.jpg">
+                <img src="fotos/haworthia-cuspidata.jpg" alt="Haworthia Cuspidata" data-large-src="fotos/haworthia-cuspidata.jpg">
+                <img src="fotos/gasteria-pillansii.jpg" alt="Gasteria pillansi" data-large-src="fotos/gasteria-pillansii.jpg">
+                <img src="fotos/echeveria-setosa.jpg" alt="Echeveria Setosa" data-large-src="fotos/echeveria-setosa.jpg">
+                <img src="fotos/crassula-pellucida.jpg" alt="Crassula Pellucida" data-large-src="fotos/crassula-pellucida.jpg">
+                <img src="fotos/corpuscularia-lehmannii.jpg" alt="Corpuscularia lehmannii" data-large-src="fotos/corpuscularia-lehmannii.jpg">
 
-  const API_TOKEN = 'r8_LXxyHy8ThawFp2Qn0uf67ujKjxZr8zO3ooxNH';
-  const MODEL_VERSION = 'a029dff38972b5fda4ec5d75d7d1cd25aeff621d2cf4946a41055d7db66b80bc';
+                <img src="fotos/cactus-mani.jpg" alt="Cactus maní" data-large-src="fotos/cactus-mani.jpg">
+                <img src="fotos/graptosedum-california-sunset.jpg" alt="Graptosedum California Sunset" data-large-src="fotos/graptosedum-california-sunset.jpg">
+                <img src="fotos/huernia.jpg" alt="Huernia" data-large-src="fotos/huernia.jpg">
+                <img src="fotos/callisia-navicularis.jpg" alt="Callisia Navicularis" data-large-src="fotos/callisia-navicularis.jpg">
+                <img src="fotos/cactus-coral.jpg" alt="Cactus Coral" data-large-src="fotos/cactus-coral.jpg">
+                <img src="fotos/madreperla.jpg" alt="Madreperla" data-large-src="fotos/madreperla.jpg">
+                <img src="fotos/mammillaria-vetula.jpg" alt="Mammillaria vetula" data-large-src="fotos/mammillaria-vetula.jpg">
+                <img src="fotos/mammillaria-prolifera.jpg" alt="Mammillaria prolifera" data-large-src="fotos/mammillaria-prolifera.jpg">
+                <img src="fotos/echeveria-elegans.jpg" alt="Echeveria elegans" data-large-src="fotos/echeveria-elegans.jpg">
+                <img src="fotos/crassula-fragilis.jpg" alt="Crassula expansa fragilis" data-large-src="fotos/crassula-fragilis.jpg">
+                <img src="fotos/opuntia-monacantha-monstruosa.jpg" alt="Opuntia monacantha monstruosa" data-large-src="fotos/opuntia-monacantha-monstruosa.jpg">
+                <img src="fotos/senecio-articulatus.png" alt="Senecio articulatus" data-large-src="fotos/senecio-articulatus.png">
+                <img src="fotos/sedum-rubrotinctum-jelly-beans.jpg" alt="Sedum rubrotinctum" data-large-src="fotos/sedum-rubrotinctum-jelly-beans.jpg">
+                <img src="fotos/sedum-luteoviride.jpg" alt="Sedum luteoviride" data-large-src="fotos/sedum-luteoviride.jpg">
+                <img src="fotos/sedum-clavatum.jpg" alt="Sedum clavatum" data-large-src="fotos/sedum-clavatum.jpg">
+                <img src="fotos/pachyphytum-compactum.jpg" alt="Pachyphytum compactum" data-large-src="fotos/pachyphytum-compactum.jpg">
+                <img src="fotos/opuntia-microdasys.jpg" alt="Opuntia microdasys" data-large-src="fotos/opuntia-microdasys.jpg">
+                <img src="fotos/haworthia-cuspidata.jpg" alt="Haworthia Cuspidata" data-large-src="fotos/haworthia-cuspidata.jpg">
+                <img src="fotos/gasteria-pillansii.jpg" alt="Gasteria pillansi" data-large-src="fotos/gasteria-pillansii.jpg">
+                <img src="fotos/echeveria-setosa.jpg" alt="Echeveria Setosa" data-large-src="fotos/echeveria-setosa.jpg">
+                <img src="fotos/crassula-pellucida.jpg" alt="Crassula Pellucida" data-large-src="fotos/crassula-pellucida.jpg">
+                <img src="fotos/corpuscularia-lehmannii.jpg" alt="Corpuscularia lehmannii" data-large-src="fotos/corpuscularia-lehmannii.jpg">
+            </div>
+        </div>
+    </div>
 
-  const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-  const apiUrl = 'https://api.replicate.com/v1/predictions';
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img" src="" alt="Imagen grande" style="display: none;">
+        <div class="lightbox-content" id="lightbox-content-quiz" style="display: none;">
+            </div>
+    </div>
 
-  // Convierte archivo a base64
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  btn.onclick = async () => {
-    if (!fileInput.files.length) {
-      alert('Por favor, seleccioná una imagen primero.');
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Procesando...';
-    resultImg.style.display = 'none';
-
-    try {
-      const base64Image = await fileToBase64(fileInput.files[0]);
-
-      const response = await fetch(proxyUrl + apiUrl, {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + API_TOKEN,
-          'Content-Type': 'application/json',
-          'Prefer': 'wait'
-        },
-        body: JSON.stringify({
-          version: MODEL_VERSION,
-          input: {
-            image: 'data:image/png;base64,' + base64Image
-          }
-        })
-      });
-
-      if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`Error HTTP ${response.status}: ${errText}`);
-      }
-
-      const data = await response.json();
-      console.log('Respuesta:', data);
-
-      if (data.output && data.output.length > 0) {
-        resultImg.src = data.output[0];
-        resultImg.style.display = 'block';
-      } else {
-        alert('No se recibió imagen procesada.');
-      }
-
-    } catch (err) {
-      alert('Error: ' + err.message);
-      console.error(err);
-    }
-
-    btn.disabled = false;
-    btn.textContent = '🧹 Quitar fondo';
-  };
-</script>
-
+    <script src="plantascompletas.js"></script>
+    <script src="signoszodiacales.js"></script> 
+<script src="script.js"></script>
 </body>
 </html>

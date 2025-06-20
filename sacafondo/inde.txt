@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Logo sobre fondo con IA</title>
+  <style>
+    body {
+      background: #111;
+      color: #eee;
+      font-family: monospace;
+      text-align: center;
+      padding: 2rem;
+    }
+    input, button {
+      margin: 1rem;
+      padding: 0.7rem 1.2rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      background: #f03a3a;
+      color: white;
+    }
+    img {
+      margin: 1rem;
+      max-width: 300px;
+      border: 2px solid #0f0;
+      border-radius: 8px;
+    }
+    canvas {
+      margin-top: 1rem;
+      border: 2px dashed #eee;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Magia Punk: Logo sobre fondo</h1>
+
+  <h3>1. Subí tu logo</h3>
+  <input type="file" id="logoInput" accept="image/*" />
+  <button id="removeBgBtn">🧹 Quitar fondo</button>
+  <br />
+
+  <h3>2. Subí imagen de fondo</h3>
+  <input type="file" id="fondoInput" accept="image/*" />
+  <button id="hacerMagiaBtn">✨ Hacer la magia</button>
+
+  <h2>Resultado</h2>
+  <canvas id="canvas"></canvas>
+  <br />
+  <a id="downloadLink" style="display:none" download="resultado.png">
+    <button>📥 Descargar imagen final</button>
+  </a>
+
+<script>
+const API_KEY = "TU_TOKEN_REPLICATE";
+const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+const MODEL_VERSION_YOLO = "d6f8838c5bd8fdfdb6ec3d702171eac2a4a1c943fe2b5d1f4a7d1d2061f4790c";
+
+const logoInput = document.getElementById('logoInput');
+const fondoInput = document.getElementById('fondoInput');
+const removeBgBtn = document.getElementById('removeBgBtn');
+const hacerMagiaBtn = document.getElementById('hacerMagiaBtn');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const downloadLink = document.getElementById('downloadLink');
+
+let logoSinFondo = null;
+let fondoImage = null;
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function quitarFondo(base64Img) {
+  const res = await fetch("https://api.remove.bg/v1.0/removebg", {
+    method: "POST",
+    headers: {
+      "X-Api-Key": "6sS7uBJFkGLMWYboPJm3N6Me"
+    },
+    body: new URLSearchParams({
+      image_file_b64: base64Img.split(",")[1],
+      size: "auto"
+    })
+  });
+  if (!res.ok) throw new Error("Error quitando fondo");
+  const blob = await res.blob();
+  return await blobToImage(blob);
+}
+
+function blobToImage(blob) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.src = URL.createObjectURL(blob);
+  });
+}
+
+async function detectarObjetos(base64Img) {
+  const response = await fetch(CORS_PROXY + "https://api.replicate.com/v1/predictions", {
+    method: "POST",
+    headers: {
+      "Authorization": "Token " + API_KEY,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      version: MODEL_VERSION_YOLO,
+      input: { image: base64Img }
+    })
+  });
+  const prediction = await response.json();
+
+  while (true) {
+    const statusRes = await fetch(CORS_PROXY + prediction.urls.get, {
+      headers: { Authorization: "Token " + API_KEY }
+    });
+    const data = await statusRes.json();
+    if (data.status === "succeeded") return data.output;
+    if (data.status === "failed") throw new Error("Fallo la predicción");
+    await new Promise(r => setTimeout(r, 1000));
+  }
+}
+
+removeBgBtn.onclick = async () => {
+  if (!logoInput.files.length) return alert("Cargá un logo primero");
+  removeBgBtn.textContent = "Procesando...";
+  const base64 = await fileToBase64(logoInput.files[0]);
+  logoSinFondo = await quitarFondo(base64);
+  removeBgBtn.textContent = "🧹 Quitar fondo";
+  alert("Logo listo!");
+};
+
+hacerMagiaBtn.onclick = async () => {
+  if (!fondoInput.files.length || !logoSinFondo) return alert("Cargá logo y fondo primero");
+  const base64 = await fileToBase64(fondoInput.files[0]);
+  fondoImage = new Image();
+  fondoImage.onload = async () => {
+    canvas.width = fondoImage.width;
+    canvas.height = fondoImage.height;
+    ctx.drawImage(fondoImage, 0, 0);
+
+    const deteccion = await detectarObjetos(base64);
+    if (!deteccion.boxes || !deteccion.boxes.length) return alert("No se detectaron objetos");
+    const box = deteccion.boxes[0];
+    const [x, y, w, h] = box;
+
+    ctx.drawImage(logoSinFondo, x, y, w, h);
+    downloadLink.href = canvas.toDataURL();
+    downloadLink.style.display = "inline-block";
+  };
+  fondoImage.src = base64;
+};
+</script>
+
+</body>
+</html>

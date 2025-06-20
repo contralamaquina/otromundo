@@ -1,0 +1,948 @@
+/* General Body Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.main-content-wrapper {
+    width: 100%;
+    max-width: 1200px; /* Ancho máximo para el contenido principal */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; /* Espacio entre secciones (carruseles y quiz) */
+    padding: 20px 0;
+}
+
+/* Slider (Carousel) Styles */
+.slider {
+    width: 100%;
+    overflow: hidden; /* Oculta las imágenes que están fuera de la vista */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 10px 0;
+}
+
+.slider-inner {
+    display: flex;
+    animation: scroll 30s linear infinite; /* Animación de desplazamiento */
+    white-space: nowrap; /* Asegura que las imágenes se mantengan en una sola línea */
+    will-change: transform; /* Optimización para animaciones */
+    /* Aseguramos que las imágenes ocupen un espacio consistente */
+    /* Removido `height: 150px;` de aquí si estaba, para dejarlo en la media query. */
+}
+
+.slider-inner img {
+    height: 150px; /* Altura predeterminada para escritorio y pantallas más grandes */
+    width: auto; /* Mantener la proporción */
+    object-fit: cover; /* Asegura que la imagen cubra el espacio sin distorsionarse */
+    flex-shrink: 0; /* Evita que las imágenes se encojan */
+    margin: 0 5px; /* Espacio entre imágenes */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.slider-inner img:hover {
+    transform: scale(1.05);
+}
+
+/* Quiz Section Styles */
+.quiz {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 800px;
+    width: 90%; /* Ajuste para que ocupe más ancho en pantallas grandes, pero siga siendo responsive */
+}
+
+.quiz h2 {
+    color: #4CAF50;
+    margin-bottom: 25px;
+    font-size: 2.2em;
+}
+
+.pregunta-contenedor {
+    margin-bottom: 25px;
+}
+
+.pregunta-texto {
+    font-size: 1.3em;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.opciones-contenedor {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las opciones se envuelvan en pantallas pequeñas */
+    justify-content: center;
+    gap: 15px; /* Espacio entre los botones de opción */
+    margin-bottom: 30px;
+}
+
+.opcion-btn {
+    background-color: #e0e0e0;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: #555;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    flex-grow: 1; /* Permite que los botones crezcan para llenar el espacio */
+    max-width: 48%; /* Dos botones por fila en escritorio */
+    box-sizing: border-box; /* Incluye padding y border en el width */
+}
+
+.opcion-btn:hover {
+    background-color: #d0d0d0;
+    transform: translateY(-2px);
+}
+
+.opcion-btn.selected {
+    background-color: #81C784;
+    color: white;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 15px; /* Espacio superior para botones de acción */
+}
+
+button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Resultado Section Styles (hidden by default) */
+.resultado {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 800px;
+    width: 90%; /* Ajuste similar al .quiz */
+    display: none; /* Hidden by default */
+}
+
+.resultado h2 {
+    color: #4CAF50;
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+.resultado-contenido {
+    display: flex;
+    flex-direction: column; /* Cambiado a columna para móviles por defecto */
+    align-items: center;
+    gap: 20px;
+}
+
+.resultado-imagen {
+    max-width: 300px; /* Tamaño máximo para la imagen del resultado */
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.resultado-texto h3 {
+    color: #6a0dad; /* Púrpura para el nombre de la planta */
+    margin-bottom: 10px;
+    font-size: 1.8em;
+}
+
+.resultado-texto p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    text-align: left; /* Alineado a la izquierda para mejor lectura */
+}
+
+.resultado-texto ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+    text-align: left; /* Alineado a la izquierda */
+}
+
+.resultado-texto ul li {
+    font-size: 1em;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.resultado-texto ul li strong {
+    color: #4CAF50;
+}
+
+/* Lightbox Styles */
+.lightbox {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.lightbox-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 30px; /* Ajuste para móviles */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+    max-width: 600px; /* Ancho máximo para el lightbox */
+    width: 90%; /* Ajuste para que ocupe más ancho en pantallas grandes */
+    box-sizing: border-box; /* Asegura que padding y border se incluyan en el ancho */
+    max-height: 90vh; /* Limita la altura para que quepa en la pantalla */
+    overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+}
+
+.lightbox-content img {
+    max-width: 100%; /* Asegura que la imagen se ajuste al lightbox */
+    height: auto;
+    display: block;
+    margin: 0 auto 20px auto; /* Centra la imagen y añade espacio abajo */
+    border-radius: 8px;
+}
+
+.lightbox-content h3 {
+    color: #6a0dad;
+    margin-bottom: 10px;
+    font-size: 1.8em;
+}
+
+.lightbox-content p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.lightbox-content ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.lightbox-content ul li {
+    font-size: 1em;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.lightbox-content ul li strong {
+    color: #4CAF50;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #aaa;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.lightbox-close:hover,
+.lightbox-close:focus {
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Specific styles for lightbox when showing quiz result */
+.lightbox-quiz-result .plant-name {
+    background-color: #6a0dad; /* Color de fondo para el nombre de la planta */
+    color: white;
+    padding: 15px 25px; /* Más padding para que se vea mejor */
+    border-radius: 8px;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    /* Ajustes para que no se salga del lightbox-content en móviles */
+    margin-left: -30px; /* Compensa el padding del lightbox-content */
+    margin-right: -30px; /* Compensa el padding del lightbox-content */
+    width: calc(100% + 60px); /* Ancho completo más el doble del padding */
+    box-sizing: border-box;
+}
+
+.lightbox-quiz-result .resultado-imagen {
+    max-width: 80%; /* Ajuste para la imagen dentro del resultado del quiz en lightbox */
+    margin-bottom: 20px;
+}
+
+/* Media Queries for Responsiveness */
+
+/* Small devices (phones, 768px and down) */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px; /* Un poco más pequeño para mejorar la legibilidad */
+    }
+
+    .main-content-wrapper {
+        padding: 10px 0;
+        gap: 20px;
+    }
+
+    /* Sliders */
+    .slider-inner img {
+        height: 100px; /* Ajusta la altura de las imágenes del carrusel */
+        margin: 0 3px; /* Reduce el espacio entre imágenes */
+    }
+    
+    .quiz {
+        padding: 20px;
+    }
+
+    .quiz h2 {
+        font-size: 1.6em; /* Ajusta el tamaño del título del quiz */
+        margin-bottom: 15px;
+    }
+
+    .pregunta-texto {
+        font-size: 1.1em; /* Reduce el tamaño del texto de la pregunta */
+        margin-bottom: 15px;
+    }
+
+    .opciones-contenedor {
+        flex-direction: column; /* Apila los botones de opción verticalmente */
+        gap: 10px; /* Reduce el espacio entre opciones */
+    }
+
+    .opcion-btn {
+        max-width: 100%; /* Ocupa todo el ancho disponible */
+        font-size: 1em; /* Ajusta el tamaño de fuente de los botones */
+        padding: 12px 20px; /* Ajusta el padding de los botones */
+    }
+
+    button { /* Botones de acción como "Siguiente" o "Reiniciar" */
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+
+    /* Resultado Section */
+    .resultado {
+        padding: 20px;
+    }
+    
+    .resultado h2 {
+        font-size: 1.8em;
+    }
+
+    .resultado-imagen {
+        max-width: 80%; /* Asegura que la imagen del resultado se ajuste */
+    }
+
+    .resultado-texto h3 {
+        font-size: 1.5em; /* Ajusta el tamaño del nombre de la planta en el resultado */
+    }
+
+    .resultado-texto p, .resultado-texto ul li {
+        font-size: 0.95em; /* Ajusta el tamaño del texto de descripción */
+    }
+
+    /* Lightbox (for images and quiz result) */
+    .lightbox-content {
+        padding: 20px; /* Reduce el padding del lightbox en móviles */
+        max-width: 95%; /* Ocupa casi todo el ancho de la pantalla */
+        max-height: 90vh; /* Ajuste de altura en móviles */
+    }
+
+    .lightbox-content h3 {
+        font-size: 1.6em;
+    }
+
+    .lightbox-content p {
+        font-size: 1em;
+    }
+
+    .lightbox-quiz-result .plant-name {
+        font-size: 1.5em; /* Asegura que el nombre de la planta sea legible */
+        padding: 10px 15px;
+        /* Aseguramos que los márgenes negativos se ajusten al padding del lightbox */
+        margin-left: -20px;
+        margin-right: -20px;
+        width: calc(100% + 40px); /* Ajuste basado en el nuevo padding del lightbox */
+    }
+
+    .lightbox-quiz-result .resultado-imagen {
+        max-width: 90%; /* Ajuste para la imagen dentro del resultado del quiz en lightbox */
+        margin-bottom: 15px;
+    }
+}
+
+/* Extra small devices (phones, 480px and down) */
+@media (max-width: 480px) {
+    body {
+        font-size: 13px;
+    }
+
+    .quiz {
+        padding: 15px;
+    }
+
+    .quiz h2 {
+        font-size: 1.4em;
+    }
+
+    .pregunta-texto {
+        font-size: 1em;
+    }
+
+    .opcion-btn {
+        padding: 10px 15px;
+        font-size: 0.95em;
+    }
+
+    button {
+        padding: 10px 15px;
+        font-size: 0.95em;
+    }
+
+    .slider-inner img {
+        height: 80px; /* Reduce altura de imágenes en móviles */
+    }
+
+    .resultado h2 {
+        font-size: 1.6em;
+    }
+
+    .resultado-texto h3 {
+        font-size: 1.3em;
+    }
+
+    .resultado-texto p, .resultado-texto ul li {
+        font-size: 0.9em;
+    }
+
+    .lightbox-content {
+        padding: 15px;
+    }
+
+    .lightbox-content h3 {
+        font-size: 1.4em;
+    }
+
+    .lightbox-content p {
+        font-size: 0.95em;
+    }
+
+    .lightbox-quiz-result .plant-name {
+        font-size: 1.3em;
+        padding: 8px 12px;
+        margin-left: -15px; /* Ajuste por el padding del lightbox */
+        margin-right: -15px; /* Ajuste por el padding del lightbox */
+        width: calc(100% + 30px); /* Ajuste basado en el nuevo padding del lightbox */
+    }
+}/* General Body Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.main-content-wrapper {
+    width: 100%;
+    max-width: 1200px; /* Ancho máximo para el contenido principal */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; /* Espacio entre secciones (carruseles y quiz) */
+    padding: 20px 0;
+}
+
+/* Slider (Carousel) Styles */
+.slider {
+    width: 100%;
+    overflow: hidden; /* Oculta las imágenes que están fuera de la vista */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 10px 0;
+}
+
+.slider-inner {
+    display: flex;
+    animation: scroll 30s linear infinite; /* Animación de desplazamiento */
+    white-space: nowrap; /* Asegura que las imágenes se mantengan en una sola línea */
+    will-change: transform; /* Optimización para animaciones */
+}
+
+.slider-inner img {
+    height: 150px; /* Altura predeterminada para escritorio y pantallas más grandes */
+    width: auto; /* Mantener la proporción */
+    object-fit: cover; /* Asegura que la imagen cubra el espacio sin distorsionarse */
+    flex-shrink: 0; /* Evita que las imágenes se encojan */
+    margin: 0 5px; /* Espacio entre imágenes */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.slider-inner img:hover {
+    transform: scale(1.05);
+}
+
+/* Quiz Section Styles */
+.quiz {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 800px;
+    width: 90%; /* Ajuste para que ocupe más ancho en pantallas grandes, pero siga siendo responsive */
+}
+
+.quiz h2 {
+    color: #4CAF50;
+    margin-bottom: 25px;
+    font-size: 2.2em;
+}
+
+.pregunta-contenedor {
+    margin-bottom: 25px;
+}
+
+.pregunta-texto {
+    font-size: 1.3em;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.opciones-contenedor {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las opciones se envuelvan en pantallas pequeñas */
+    justify-content: center;
+    gap: 15px; /* Espacio entre los botones de opción */
+    margin-bottom: 30px;
+}
+
+.opcion-btn {
+    background-color: #e0e0e0;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: #555;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    flex-grow: 1; /* Permite que los botones crezcan para llenar el espacio */
+    max-width: 48%; /* Dos botones por fila en escritorio */
+    box-sizing: border-box; /* Incluye padding y border en el width */
+}
+
+.opcion-btn:hover {
+    background-color: #d0d0d0;
+    transform: translateY(-2px);
+}
+
+.opcion-btn.selected {
+    background-color: #81C784;
+    color: white;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 15px; /* Espacio superior para botones de acción */
+}
+
+button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Resultado Section Styles (hidden by default) */
+.resultado {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 800px;
+    width: 90%; /* Ajuste similar al .quiz */
+    display: none; /* Hidden by default */
+}
+
+.resultado h2 {
+    color: #4CAF50;
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+.resultado-contenido {
+    display: flex;
+    flex-direction: column; /* Cambiado a columna para móviles por defecto */
+    align-items: center;
+    gap: 20px;
+}
+
+.resultado-imagen {
+    max-width: 300px; /* Tamaño máximo para la imagen del resultado */
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.resultado-texto h3 {
+    color: #6a0dad; /* Púrpura para el nombre de la planta */
+    margin-bottom: 10px;
+    font-size: 1.8em;
+}
+
+.resultado-texto p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    text-align: left; /* Alineado a la izquierda para mejor lectura */
+}
+
+.resultado-texto ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+    text-align: left; /* Alineado a la izquierda */
+}
+
+.resultado-texto ul li {
+    font-size: 1em;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.resultado-texto ul li strong {
+    color: #4CAF50;
+}
+
+/* Lightbox Styles */
+.lightbox {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.lightbox-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 30px; /* Ajuste para móviles */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+    max-width: 600px; /* Ancho máximo para el lightbox */
+    width: 90%; /* Ajuste para que ocupe más ancho en pantallas grandes */
+    box-sizing: border-box; /* Asegura que padding y border se incluyan en el ancho */
+    max-height: 90vh; /* Limita la altura para que quepa en la pantalla */
+    overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+}
+
+.lightbox-content img {
+    max-width: 100%; /* Asegura que la imagen se ajuste al lightbox */
+    height: auto;
+    display: block;
+    margin: 0 auto 20px auto; /* Centra la imagen y añade espacio abajo */
+    border-radius: 8px;
+}
+
+.lightbox-content h3 {
+    color: #6a0dad;
+    margin-bottom: 10px;
+    font-size: 1.8em;
+}
+
+.lightbox-content p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.lightbox-content ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.lightbox-content ul li {
+    font-size: 1em;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.lightbox-content ul li strong {
+    color: #4CAF50;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #aaa;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.lightbox-close:hover,
+.lightbox-close:focus {
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Specific styles for lightbox when showing quiz result */
+.lightbox-quiz-result .plant-name {
+    background-color: #6a0dad; /* Color de fondo para el nombre de la planta */
+    color: white;
+    padding: 15px 25px; /* Más padding para que se vea mejor */
+    border-radius: 8px;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    /* Ajustes para que no se salga del lightbox-content en móviles */
+    margin-left: -30px; /* Compensa el padding del lightbox-content */
+    margin-right: -30px; /* Compensa el padding del lightbox-content */
+    width: calc(100% + 60px); /* Ancho completo más el doble del padding */
+    box-sizing: border-box;
+}
+
+.lightbox-quiz-result .resultado-imagen {
+    max-width: 80%; /* Ajuste para la imagen dentro del resultado del quiz en lightbox */
+    margin-bottom: 20px;
+}
+
+/* Media Queries for Responsiveness */
+
+/* Small devices (phones, 768px and down) */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px; /* Un poco más pequeño para mejorar la legibilidad */
+    }
+
+    .main-content-wrapper {
+        padding: 10px 0;
+        gap: 20px;
+    }
+
+    /* Sliders */
+    .slider-inner img {
+        height: 100px; /* Ajusta la altura de las imágenes del carrusel */
+        margin: 0 3px; /* Reduce el espacio entre imágenes */
+    }
+    
+    .quiz {
+        padding: 20px;
+    }
+
+    .quiz h2 {
+        font-size: 1.6em; /* Ajusta el tamaño del título del quiz */
+        margin-bottom: 15px;
+    }
+
+    .pregunta-texto {
+        font-size: 1.1em; /* Reduce el tamaño del texto de la pregunta */
+        margin-bottom: 15px;
+    }
+
+    .opciones-contenedor {
+        flex-direction: column; /* Apila los botones de opción verticalmente */
+        gap: 10px; /* Reduce el espacio entre opciones */
+    }
+
+    .opcion-btn {
+        max-width: 100%; /* Ocupa todo el ancho disponible */
+        font-size: 1em; /* Ajusta el tamaño de fuente de los botones */
+        padding: 12px 20px; /* Ajusta el padding de los botones */
+    }
+
+    button { /* Botones de acción como "Siguiente" o "Reiniciar" */
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+
+    /* Resultado Section */
+    .resultado {
+        padding: 20px;
+    }
+    
+    .resultado h2 {
+        font-size: 1.8em;
+    }
+
+    .resultado-imagen {
+        max-width: 80%; /* Asegura que la imagen del resultado se ajuste */
+    }
+
+    .resultado-texto h3 {
+        font-size: 1.5em; /* Ajusta el tamaño del nombre de la planta en el resultado */
+    }
+
+    .resultado-texto p, .resultado-texto ul li {
+        font-size: 0.95em; /* Ajusta el tamaño del texto de descripción */
+    }
+
+    /* Lightbox (for images and quiz result) */
+    .lightbox-content {
+        padding: 20px; /* Reduce el padding del lightbox en móviles */
+        max-width: 95%; /* Ocupa casi todo el ancho de la pantalla */
+        max-height: 90vh; /* Ajuste de altura en móviles */
+    }
+
+    .lightbox-content h3 {
+        font-size: 1.6em;
+    }
+
+    .lightbox-content p {
+        font-size: 1em;
+    }
+
+    .lightbox-quiz-result .plant-name {
+        font-size: 1.5em; /* Asegura que el nombre de la planta sea legible */
+        padding: 10px 15px;
+        /* Aseguramos que los márgenes negativos se ajusten al padding del lightbox */
+        margin-left: -20px;
+        margin-right: -20px;
+        width: calc(100% + 40px); /* Ajuste basado en el nuevo padding del lightbox */
+    }
+
+    .lightbox-quiz-result .resultado-imagen {
+        max-width: 90%; /* Ajuste para la imagen dentro del resultado del quiz en lightbox */
+        margin-bottom: 15px;
+    }
+}
+
+/* Extra small devices (phones, 480px and down) */
+@media (max-width: 480px) {
+    body {
+        font-size: 13px;
+    }
+
+    .quiz {
+        padding: 15px;
+    }
+
+    .quiz h2 {
+        font-size: 1.4em;
+    }
+
+    .pregunta-texto {
+        font-size: 1em;
+    }
+
+    .opcion-btn {
+        padding: 10px 15px;
+        font-size: 0.95em;
+    }
+
+    button {
+        padding: 10px 15px;
+        font-size: 0.95em;
+    }
+
+    .slider-inner img {
+        height: 80px; /* Reduce altura de imágenes en móviles */
+    }
+
+    .resultado h2 {
+        font-size: 1.6em;
+    }
+
+    .resultado-texto h3 {
+        font-size: 1.3em;
+    }
+
+    .resultado-texto p, .resultado-texto ul li {
+        font-size: 0.9em;
+    }
+
+    .lightbox-content {
+        padding: 15px;
+    }
+
+    .lightbox-content h3 {
+        font-size: 1.4em;
+    }
+
+    .lightbox-content p {
+        font-size: 0.95em;
+    }
+
+    .lightbox-quiz-result .plant-name {
+        font-size: 1.3em;
+        padding: 8px 12px;
+        margin-left: -15px; /* Ajuste por el padding del lightbox */
+        margin-right: -15px; /* Ajuste por el padding del lightbox */
+        width: calc(100% + 30px); /* Ajuste basado en el nuevo padding del lightbox */
+    }
+}
+
+
+/* !!! AÑADIR ESTE BLOQUE AL FINAL DE TU styles.css !!! */
+@keyframes scroll {
+    0% {
+        transform: translateX(0); /* Empieza en la posición original */
+    }
+    100% {
+        /* Desplaza todas las imágenes hacia la izquierda por el ancho de la mitad de las imágenes */
+        /* Esto asume que tienes el doble de imágenes para un bucle continuo */
+        transform: translateX(-50%); 
+    }
+}
