@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Web Básico</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Overlay de bienvenida -->
+    <div id="welcome-overlay">
+        <div class="welcome-content">
+            <h1>Bienvenido, viajero. Estás a punto de cruzar el umbral hacia Otro Mundo.</h1>
+            <p>Un jardín donde las suculentas flotan en sueños, más allá de la tierra conocida. ¿Listo para el viaje?</p>
+            <img src="img/sapo-dragon.png" alt="Sapo dragón" id="sapo-dragon-welcome">
+            <button id="enter-button">Explorar Otro Mundo</button>
+        </div>
+    </div>
+    <header>
+        <h1>Bienvenido a mi Proyecto Web</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Acerca</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="carousel-section">
+            <h2>Sección principal</h2>
+            <p>Este es un sitio web básico con HTML, CSS y JavaScript.</p>
+            <div id="carousel-container" style="position:relative;">
+                <div id="carousel">
+                    <img id="carousel-image" src="img/ejemplo.jpg" alt="Imagen de carrusel" style="max-width:100%; border-radius:12px;">
+                </div>
+                <!-- Sapo dragón flotante opcional en el carrusel -->
+                <img src="img/sapo-dragon.png" alt="Sapo dragón flotante" id="sapo-dragon-float">
+            </div>
+        </section>
+    </main>
+    <div id="controls-panel">
+        <button id="prev-btn" class="control-btn">Anterior</button>
+        <button id="magic-effect-btn" class="control-btn">Efecto Mágico</button>
+        <button id="next-btn" class="control-btn">Siguiente</button>
+    </div>
+    <footer>
+        <p>&copy; 2025 Tu Nombre</p>
+    </footer>
+    <script src="js/script.js" defer></script>
+</body>
+</html>
