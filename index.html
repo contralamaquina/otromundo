@@ -2,11 +2,6 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-<<<<<<< HEAD
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proyecto Web Básico</title>
-    <link rel="stylesheet" href="style.css">
-=======
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Otro Mundo | Colección</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
@@ -397,27 +392,9 @@
             .gallery-count { bottom: 13px; right: 14px; font-size: .99em;}
         }
     </style>
->>>>>>> 7c1d8284d781ad3ec2bfe860c327699ab0782e25
 </head>
 <body>
-    <!-- Overlay de bienvenida -->
-    <div id="welcome-overlay">
-        <div class="welcome-content">
-            <h1>Bienvenido, viajero. Estás a punto de cruzar el umbral hacia Otro Mundo.</h1>
-            <p>Un jardín donde las suculentas flotan en sueños, más allá de la tierra conocida. ¿Listo para el viaje?</p>
-            <img src="img/sapo-dragon.png" alt="Sapo dragón" id="sapo-dragon-welcome">
-            <button id="enter-button">Explorar Otro Mundo</button>
-        </div>
-    </div>
     <header>
-<<<<<<< HEAD
-        <h1>Bienvenido a mi Proyecto Web</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Acerca</a></li>
-                <li><a href="#">Contacto</a></li>
-=======
         <nav class="container">
             <div class="logo">Otro Mundo | 094691690</div>
             <div class="hamburger" id="hamburger">
@@ -430,19 +407,10 @@
                 <li><a href="#coleccion">Colección</a></li>
                 <li><a href="#nosotros">Nosotros</a></li>
                 <li><a href="#contacto">Contacto</a></li>
->>>>>>> 7c1d8284d781ad3ec2bfe860c327699ab0782e25
             </ul>
         </nav>
     </header>
     <main>
-<<<<<<< HEAD
-        <section id="carousel-section">
-            <h2>Sección principal</h2>
-            <p>Este es un sitio web básico con HTML, CSS y JavaScript.</p>
-            <div id="carousel-container" style="position:relative;">
-                <div id="carousel">
-                    <img id="carousel-image" src="img/ejemplo.jpg" alt="Imagen de carrusel" style="max-width:100%; border-radius:12px;">
-=======
         <section class="hero" id="inicio">
             <div class="container">
                 <div class="hero-content">
@@ -454,24 +422,9 @@
                         <a href="#coleccion" class="cta-button cta-over-img">Explorar Colección</a>
                         <img src="img/suculentas-hero.png" alt="Colección de suculentas Otro Mundo" class="hero-img" loading="lazy">
                     </div>
->>>>>>> 7c1d8284d781ad3ec2bfe860c327699ab0782e25
                 </div>
-                <!-- Sapo dragón flotante opcional en el carrusel -->
-                <img src="img/sapo-dragon.png" alt="Sapo dragón flotante" id="sapo-dragon-float">
             </div>
         </section>
-<<<<<<< HEAD
-    </main>
-    <div id="controls-panel">
-        <button id="prev-btn" class="control-btn">Anterior</button>
-        <button id="magic-effect-btn" class="control-btn">Efecto Mágico</button>
-        <button id="next-btn" class="control-btn">Siguiente</button>
-    </div>
-    <footer>
-        <p>&copy; 2025 Tu Nombre</p>
-    </footer>
-    <script src="js/script.js" defer></script>
-=======
         <section class="products-section" id="coleccion">
             <div class="container">
                 <h2 class="section-title">Colección</h2>
@@ -652,7 +605,7 @@
 
         // Renderizado de productos y galería modal
         const suculentas = [
-            {nombre: "El Cactus Cacahuete", archivo: "cactuscacahuete.jpg", descripcion: "(Echinopsis chamaecereus) es una verdadera delicia para los amantes de las suculentas. Este cactus de tallos delgados y dedos, que parecen cacahuetes, forma densos grupos que se extienden con gracia. Sus suaves espinas apenas se notan, haciendo de él una planta muy amigable al tacto. En primavera y verano, se adorna con una espectacular floración de vibrantes flores de color naranja o rojo intenso, creando un contraste asombroso con sus tallos verdes. Es fácil de cuidar y perfecto para añadir un toque de alegría y color a cualquier espacio.", fotos:["cactuscacahuete.jpg","cactuscacahuete-2.jpg","cactuscacahuete-3.jpg"]},
+            {nombre: "El Cactus maní", archivo: "cactuscacahuete.jpg", descripcion: "(Echinopsis chamaecereus) es una verdadera delicia para los amantes de las suculentas. Este cactus de tallos delgados y dedos, que parecen cacahuetes, forma densos grupos que se extienden con gracia. Sus suaves espinas apenas se notan, haciendo de él una planta muy amigable al tacto. En primavera y verano, se adorna con una espectacular floración de vibrantes flores de color naranja o rojo intenso, creando un contraste asombroso con sus tallos verdes. Es fácil de cuidar y perfecto para añadir un toque de alegría y color a cualquier espacio.", fotos:["cactuscacahuete.jpg","cactuscacahuete-2.jpg","cactuscacahuete-3.jpg"]},
             {nombre: "Echeveria Elegans", archivo: "echeveria-elegans.jpg", descripcion: "Rosa de Alabastro, es una de las suculentas más clásicas, populares y queridas, famosa por su belleza simétrica y su facilidad de cultivo. Su característica más distintiva es la formación de densas y perfectas rosetas de hojas carnosas, de un delicado color verde azulado o verde grisáceo. Estas hojas, de forma espatulada, suelen tener una capa cerosa (pruina) que les da un aspecto mate y las protege del sol intenso. La disposición de las hojas es tan regular y simétrica que a menudo se asemeja a una rosa en plena floración.", fotos: ["echeveria-elegans.jpg", "echeveria-elegans-2.jpg"]},
             {nombre: "Graptosedum 'California Sunset'", archivo: "califonissunset.jpg", descripcion: "Es una suculenta híbrida excepcionalmente popular y visualmente impactante, creada del cruce entre un Graptopetalum y un Sedum! Su característica más distintiva es su espectacular cambio de coloración. Las rosetas de hojas carnosas y algo alargadas, inicialmente de un tono verde pálido o amarillo verdoso, se transforman en magníficos tonos de naranja, rosa, rojo cobrizo y bronce cuando se exponen a una luz solar brillante y a condiciones de estrés (como temperaturas frescas o riego moderado). Es esta paleta de colores vibrantes, que recuerda a una puesta de sol, la que le da su nombre.", fotos:["califonissunset.jpg","califonissunset-2.jpg"]},
             {nombre: "Huernia Ojo de Dragón", archivo: "ojodedragon.jpg", descripcion: "Huernia schneideriana es una especie suculenta perenne de pequeño porte muy común en colecciones a nivel mundial; en algunas ocasiones es llamada como ojo de dragón por la coloración típica de sus flores. Esta especie pertenece a la familia Apocynaceae y dentro del género Huernia,es una de las más comunes de encontrar en los jardines.", fotos: ["ojodedragon.jpg","ojodedragon-2.jpg"]},
@@ -788,6 +741,5 @@
             }
         });
     </script>
->>>>>>> 7c1d8284d781ad3ec2bfe860c327699ab0782e25
 </body>
 </html>
