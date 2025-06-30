@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generar planta con IA</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #resultado img { max-width: 100%; margin-top: 20px; }
+    #loader {
+      display: none;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Generar planta con IA</h1>
+
+  <label>
+    URL suculenta:
+    <input type="text" id="urlSuculenta" size="50" placeholder="https://..."/>
+  </label>
+  <br/><br/>
+  <label>
+    URL maceta:
+    <input type="text" id="urlMaceta" size="50" placeholder="https://..."/>
+  </label>
+  <br/><br/>
+  <button id="btnGenerar">Generar composición</button>
+
+  <div id="loader">Generando imagen... 🔄</div>
+
+  <div id="resultado"></div>
+
+<script>
+  const btn = document.getElementById("btnGenerar");
+  const loader = document.getElementById("loader");
+  const resultado = document.getElementById("resultado");
+
+  btn.addEventListener("click", async () => {
+    const suculentaUrl = document.getElementById("urlSuculenta").value.trim();
+    const macetaUrl = document.getElementById("urlMaceta").value.trim();
+
+    if (!suculentaUrl || !macetaUrl) {
+      alert("Por favor ingresa ambas URLs.");
+      return;
+    }
+
+    loader.style.display = "block";
+    resultado.innerHTML = "";
+
+    try {
+      const resp = await fetch("http://localhost:3001/generar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ suculentaUrl, macetaUrl }),
+      });
+
+      if (!resp.ok) {
+        throw new Error("Error en la API");
+      }
+
+      const data = await resp.json();
+
+      loader.style.display = "none";
+
+      // data.resultado puede ser URL o array con URLs, tomamos el primero
+      const imgUrl = Array.isArray(data.resultado) ? data.resultado[0] : data.resultado;
+
+      resultado.innerHTML = `<img src="${imgUrl}" alt="Composición de planta IA" />`;
+
+    } catch (e) {
+      loader.style.display = "none";
+      alert("Error al generar la imagen: " + e.message);
+    }
+  });
+</script>
+
+</body>
+</html>

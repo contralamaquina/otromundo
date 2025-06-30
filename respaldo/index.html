@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Armá tu Planta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      background: #ccc;
+      font-family: 'Playfair Display', serif;
+    }
+    .container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .suculenta-wrapper {
+      position: absolute;
+      top: 3.5%;
+      left: 47%;
+      width: 495px;
+      height: 495px;
+      overflow: hidden;
+      z-index: 1;
+      user-select: none;
+    }
+
+    .suculenta {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      opacity: 1;
+      cursor: pointer;
+    }
+
+    .suculenta.fade-out {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+
+    .fondo-superior {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(255, 255, 255, 0.6);
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 10;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+
+    .arrow.left {
+      left: 50%;
+    }
+
+    .arrow.right {
+      left: 81%;
+    }
+
+    #nombre-suculenta {
+      position: absolute;
+      top: 80%;
+      left: 32%;
+      width: 440px;
+      text-align: center;
+      font-size: 36px;
+      color: black;
+      text-shadow: 0 0 5px rgba(0,0,0,0.6);
+      z-index: 5;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    #imagen-inicial,
+    #invitacion-tamano,
+    #imagen-cargando {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+      z-index: 3;
+      display: none;
+      user-select: none;
+    }
+
+    #imagen-cargando {
+      z-index: 999;
+      animation: parpadeo 1.5s infinite;
+    }
+
+    @keyframes parpadeo {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    #pantalla-final {
+      display: none;
+      z-index: 10;
+      width: 495px;
+      height: 495px;
+      top: 3.5%;
+      left: 47%;
+      background: white;
+      display: flex;
+      user-select: none;
+    }
+
+    .opcion-final {
+      flex: 1;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .opcion-final:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px yellow;
+    }
+
+    /* Botones de tamaño en invitacion-tamano */
+    #botones-tamano {
+      position: absolute;
+      top: 45%;
+      left: 60%;
+      transform: translateX(-55%);
+      width: 65%;
+      display: flex;
+      justify-content: space-around;
+      z-index: 5;
+      user-select: none;
+    }
+    .boton-tamano {
+      width: 90px;
+      height: 90px;
+      border-radius: 12px;
+      border: 1px solid #444;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 0 7px rgba(0,0,0,0.2);
+    }
+    .boton-tamano:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px #88bb44;
+    }
+
+    /* Botón volver, sutil */
+    #btn-volver {
+      position: absolute;
+      top: 5%;
+      left: 5%;
+      background-color: rgba(255,255,255,0.7);
+      border: none;
+      border-radius: 20px;
+      padding: 8px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 6px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 15;
+      user-select: none;
+      transition: background-color 0.3s;
+    }
+    #btn-volver:hover {
+      background-color: rgba(255,255,255,0.95);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="suculenta-wrapper" id="suculenta-wrapper">
+      <img id="suculenta-img" class="suculenta" src="" alt="Imagen suculenta" style="display:none;">
+      <img id="imagen-inicial" src="invitacion.png" alt="¡Tocá para comenzar!">
+      <img id="invitacion-tamano" src="invitacion-tamano.jpg" alt="Elegí el tamaño ideal" style="display:none;">
+      <div id="botones-tamano" style="display:none;">
+        <div class="boton-tamano" id="tam-pequeno" title="Pequeño" style="background-image:url('tamano-pequeno.jpg');"></div>
+        <div class="boton-tamano" id="tam-mediano" title="Mediano" style="background-image:url('tamano-mediano.jpg');"></div>
+        <div class="boton-tamano" id="tam-grande" title="Grande" style="background-image:url('tamano-grande.jpg');"></div>
+      </div>
+      <img id="imagen-cargando" src="cargando.jpg" alt="Buscando imagen y precio..." />
+      <div id="pantalla-final">
+        <img class="opcion-final" src="con-maceta.jpg" alt="Con maceta" />
+        <img class="opcion-final" src="sin-maceta.jpg" alt="Sin maceta" />
+      </div>
+    </div>
+
+    <button class="arrow left" id="prev">&#8592;</button>
+    <button class="arrow right" id="next">&#8594;</button>
+
+    <img src="fondo-con-agujero.png" class="fondo-superior" alt="Fondo con agujero"/>
+
+    <div id="nombre-suculenta"></div>
+
+    <button id="btn-volver">Volver</button>
+  </div>
+
+  <script>
+    const suculentas = Array.from({ length: 30 }, (_, i) => `suculenta${i + 1}.jpg`);
+    const nombresSuculentas = ["Mammillaria Prolifera", "Cactus maní", "Sedum Musgo Dorado", "Gasteria Verrucosa", "Sedum Adolphi", "Senecio Articulatus", "Echeveria Setosa", "Hawortia Aeonium", "Callisia Navicularis", "Cereus Monstrosus", "Cactus maní", "Sedum Luteoviride", "Madreperla", "Corpuscularia", "Sedum Palmeri", "Echeveria Elegans", "Aloe Aristata", "Sedum rubrotinctum", "Orostachys", "Sedum Clavatum", "Graptosedum Sunset", "Sedum Guantes", "Siempreviva Arachnoideum", "Oscularia Deltoides", "Huernia Variada", "Orostachys", "Echeveria Setosa", "Pachyphytum Compactum", "Graptosedum Sunset", "Echeveria Elegans", "Hawortia Aeonium", "Haworthia Cuspidata"];
+
+    let index = 0;
+    let indexSeleccionado = null;
+    let tamañoElegido = null;
+
+    const img = document.getElementById("suculenta-img");
+    const nombreDiv = document.getElementById("nombre-suculenta");
+    const imgInicial = document.getElementById("imagen-inicial");
+    const imgTamano = document.getElementById("invitacion-tamano");
+    const botonesTamano = document.getElementById("botones-tamano");
+    const imgCargando = document.getElementById("imagen-cargando");
+    const pantallaFinal = document.getElementById("pantalla-final");
+    const flechas = document.querySelectorAll(".arrow");
+    const btnVolver = document.getElementById("btn-volver");
+
+    // Mostrar texto animado
+    function animarTexto(text) {
+      nombreDiv.innerHTML = "";
+      for (let i = 0; i < text.length; i++) {
+        const span = document.createElement("span");
+        span.textContent = text[i];
+        span.style.opacity = 0;
+        span.style.display = "inline-block";
+        span.style.transform = "translateY(20px)";
+        span.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+        nombreDiv.appendChild(span);
+        setTimeout(() => {
+          span.style.opacity = 1;
+          span.style.transform = "translateY(0)";
+        }, i * 80);
+      }
+    }
+
+    // Mostrar la imagen actual con animación fade
+    function mostrarImagen() {
+      const oldImg = img.cloneNode();
+      oldImg.classList.add("fade-out");
+      img.parentElement.insertBefore(oldImg, img);
+      setTimeout(() => oldImg.remove(), 600);
+
+      img.src = suculentas[index];
+      img.style.display = "block";
+      animarTexto(nombresSuculentas[index]);
+    }
+
+    // Navegación siguiente/previa
+    function siguiente() {
+      index = (index + 1) % suculentas.length;
+      mostrarImagen();
+    }
+
+    function anterior() {
+      index = (index - 1 + suculentas.length) % suculentas.length;
+      mostrarImagen();
+    }
+
+    // Evento para flechas
+    document.getElementById("next").addEventListener("click", siguiente);
+    document.getElementById("prev").addEventListener("click", anterior);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") siguiente();
+      if (e.key === "ArrowLeft") anterior();
+    });
+
+    // Swipe para móviles
+    let startX = 0;
+    const wrapper = document.getElementById("suculenta-wrapper");
+    wrapper.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
+    });
+    wrapper.addEventListener("touchend", (e) => {
+      const delta = e.changedTouches[0].clientX - startX;
+      if (delta > 50) anterior();
+      else if (delta < -50) siguiente();
+    });
+
+    // Estado actual:
+    // fases: "inicio", "seleccionSuculenta", "seleccionTamano", "seleccionMaceta", "cargando"
+    let fase = "inicio";
+
+    // Mostrar estado inicial
+    function mostrarInicio() {
+      fase = "inicio";
+      imgInicial.style.display = "block";
+      img.style.display = "none";
+      nombreDiv.innerHTML = "";
+      flechas.forEach(f => f.style.display = "none");
+      imgTamano.style.display = "none";
+      botonesTamano.style.display = "none";
+      pantallaFinal.style.display = "none";
+      imgCargando.style.display = "none";
+      btnVolver.style.display = "none";
+    }
+
+    // Comenzar selección suculenta
+    imgInicial.addEventListener("click", () => {
+      fase = "seleccionSuculenta";
+      imgInicial.style.display = "none";
+      flechas.forEach(f => f.style.display = "flex");
+      mostrarImagen();
+      btnVolver.style.display = "block";
+    });
+
+    // Al hacer click en la imagen de suculenta para elegir tamaño
+    img.addEventListener("click", () => {
+      if (fase !== "seleccionSuculenta") return;
+      fase = "seleccionTamano";
+      indexSeleccionado = index;
+
+      // Ocultar navegación
+      flechas.forEach(f => f.style.display = "none");
+      img.style.display = "none";
+      nombreDiv.innerHTML = "";
+
+      // Mostrar invitación a tamaño y botones
+      imgTamano.style.display = "block";
+      botonesTamano.style.display = "flex";
+      btnVolver.style.display = "block";
+    });
+
+    // Función para elegir tamaño
+    function elegirTamaño(tam) {
+      tamañoElegido = tam;
+      fase = "seleccionMaceta";
+
+      // Ocultar invitación a tamaño y botones
+      imgTamano.style.display = "none";
+      botonesTamano.style.display = "none";
+
+      // Mostrar opciones con/sin maceta
+      pantallaFinal.style.display = "flex";
+      btnVolver.style.display = "block";
+    }
+
+    document.getElementById("tam-pequeno").addEventListener("click", () => elegirTamaño("Pequeño"));
+    document.getElementById("tam-mediano").addEventListener("click", () => elegirTamaño("Mediano"));
+    document.getElementById("tam-grande").addEventListener("click", () => elegirTamaño("Grande"));
+
+    // Elegir con o sin maceta
+    function elegirMaceta(opcion) {
+      if (fase !== "seleccionMaceta") return;
+
+      const eleccionFinal = {
+        suculenta: nombresSuculentas[indexSeleccionado],
+        imagenSuculenta: suculentas[indexSeleccionado],
+        tamaño: tamañoElegido,
+        conMaceta: opcion === 'con'
+      };
+
+      fase = "cargando";
+      pantallaFinal.style.display = "none";
+      imgCargando.style.display = "block";
+      btnVolver.style.display = "none";
+
+      console.log("Elección final:", eleccionFinal);
+
+      // Simular carga por 3 segundos
+      setTimeout(() => {
+        alert(`¡Tu planta está lista!\nSuculenta: ${eleccionFinal.suculenta}\nTamaño: ${eleccionFinal.tamaño}\nCon maceta: ${eleccionFinal.conMaceta ? "Sí" : "No"}`);
+        mostrarInicio();
+      }, 3000);
+    }
+
+    // Botón volver, para retroceder una etapa
+    btnVolver.addEventListener("click", () => {
+      if (fase === "seleccionSuculenta") {
+        mostrarInicio();
+      } else if (fase === "seleccionTamano") {
+        // Volver a elegir suculenta
+        fase = "seleccionSuculenta";
+        imgTamano.style.display = "none";
+        botonesTamano.style.display = "none";
+        img.style.display = "block";
+        animarTexto(nombresSuculentas[indexSeleccionado]);
+        flechas.forEach(f => f.style.display = "flex");
+        btnVolver.style.display = "block";
+      } else if (fase === "seleccionMaceta") {
+        // Volver a elegir tamaño
+        fase = "seleccionTamano";
+        pantallaFinal.style.display = "none";
+        imgTamano.style.display = "block";
+        botonesTamano.style.display = "flex";
+        btnVolver.style.display = "block";
+      }
+    });
+
+    // Asignar evento click a opciones final
+    pantallaFinal.querySelectorAll(".opcion-final")[0].addEventListener("click", () => elegirMaceta("con"));
+    pantallaFinal.querySelectorAll(".opcion-final")[1].addEventListener("click", () => elegirMaceta("sin"));
+
+    // Arranca en la imagen inicial
+    mostrarInicio();
+  </script>
+</body>
+</html>
