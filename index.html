@@ -7,13 +7,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet" />
   <style>
     * {
-      margin: 0; padding: 0; box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
+
     html, body {
-      width: 100%; height: 100%; overflow: hidden;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       background: #ccc;
       font-family: 'Playfair Display', serif;
     }
+
     .container {
       position: relative;
       width: 100vw;
@@ -48,8 +54,10 @@
 
     .fondo-superior {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       z-index: 2;
       pointer-events: none;
@@ -135,6 +143,7 @@
       cursor: pointer;
       transition: transform 0.3s, box-shadow 0.3s;
     }
+
     .opcion-final:hover {
       transform: scale(1.05);
       box-shadow: 0 0 15px yellow;
@@ -152,6 +161,7 @@
       z-index: 5;
       user-select: none;
     }
+
     .boton-tamano {
       width: 90px;
       height: 90px;
@@ -163,6 +173,7 @@
       background-position: center;
       box-shadow: 0 0 7px rgba(0,0,0,0.2);
     }
+
     .boton-tamano:hover {
       transform: scale(1.1);
       box-shadow: 0 0 15px #88bb44;
@@ -185,9 +196,102 @@
       user-select: none;
       transition: background-color 0.3s;
     }
+
     #btn-volver:hover {
       background-color: rgba(255,255,255,0.95);
     }
+
+    /* Para pantallas pequeñas */
+    @media (max-width: 768px) {
+      html, body {
+        font-size: 14px;
+      }
+
+      .container {
+        width: 100vw;
+        height: auto;
+      }
+
+      .suculenta-wrapper {
+        width: 90vw;
+        height: auto;
+        top: 5%;
+        left: 5%;
+      }
+
+      .suculenta {
+        width: 100%;
+        height: auto;
+      }
+
+      #nombre-suculenta {
+        font-size: 24px;
+        left: 5%;
+        width: 90%;
+      }
+
+      .arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        display: block;
+        z-index: 20;
+      }
+
+      .arrow.left {
+        left: 10%;
+      }
+
+      .arrow.right {
+        left: 80%;
+      }
+
+      #botones-tamano {
+        width: 80%;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .boton-tamano {
+        width: 70px;
+        height: 70px;
+        margin: 5px;
+      }
+
+      #pantalla-final {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+      }
+
+      .opcion-final {
+        width: 90%;
+        margin: 10px 0;
+      }
+
+      .fondo-superior {
+        width: 100%;
+        height: auto;
+      }
+
+      #imagen-cargando {
+        width: 80%;
+        height: auto;
+      }
+
+      #btn-volver {
+        position: absolute;
+        top: 5%;
+        left: 5%;
+        font-size: 14px;
+        padding: 10px;
+        display: block;
+      }
+    }
+
   </style>
 </head>
 <body>
