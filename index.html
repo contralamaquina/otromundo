@@ -126,15 +126,23 @@
     #pantalla-final {
       display: none;
       z-index: 10;
-      flex-direction: column;
+      flex-direction: row;
       justify-content: center;
       align-items: center;
       user-select: none;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      gap: 20px;
     }
     .opcion-final {
+      width: 40%;
+      max-width: 200px;
+      height: auto;
       cursor: pointer;
       transition: transform 0.3s, box-shadow 0.3s;
-      margin: 10px 0;
     }
     .opcion-final:hover {
       transform: scale(1.05);
@@ -145,8 +153,8 @@
       display: flex;
       justify-content: space-around;
       z-index: 5;
-      user-select: none;
       display: none;
+      width: 100%;
     }
     .boton-tamano {
       border-radius: 12px;
