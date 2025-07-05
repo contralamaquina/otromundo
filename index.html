@@ -18,6 +18,7 @@
       position: relative;
       width: 100vw;
       height: 100vh;
+      user-select: none;
     }
     #habitacion {
       position: absolute;
@@ -48,7 +49,7 @@
     .suculenta-wrapper {
       position: absolute;
       overflow: hidden;
-      z-index: 2;
+      z-index: 5;
       user-select: none;
       visibility: visible;
     }
@@ -71,14 +72,16 @@
       transform: translateX(-50%);
       color: black;
       text-shadow: 0 0 5px rgba(0,0,0,0.6);
-      z-index: 5;
+      z-index: 6;
       pointer-events: none;
       user-select: none;
+      font-size: 2.2rem;
+      white-space: nowrap;
     }
     #indicacion-teclado {
       position: absolute;
-      bottom: 20%;
-      left: 60%;
+      bottom: 110%;
+      left: 50%;
       transform: translateX(-50%);
       background: rgba(255,255,255,0.85);
       color: #333;
@@ -136,6 +139,7 @@
       top: 0;
       left: 0;
       gap: 0px;
+      background: rgba(255,255,255,0.8);
     }
     .opcion-final {
       width: 70%;
@@ -155,6 +159,9 @@
       z-index: 5;
       display: none;
       width: 100%;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
     .boton-tamano {
       border-radius: 12px;
@@ -165,6 +172,7 @@
       width: 70px;
       height: 70px;
       box-shadow: 0 0 7px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
     }
     .boton-tamano:hover {
       transform: scale(1.1);
@@ -178,39 +186,102 @@
       z-index: 4;
       display: none;
     }
+    #imagen-cargando {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      width: 500px;
+      height: 500px;
+      display: none;
+      pointer-events: none;
+    }
+    #mensaje-girar {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.8rem;
+      color: #222;
+      background: rgba(255,255,255,0.9);
+      padding: 20px 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.25);
+      text-align: center;
+      z-index: 9999;
+      display: none;
+      user-select: none;
+    }
+
     @media (min-width: 769px) {
       .suculenta-wrapper {
-        top: 3.5%;
-        left: 47%;
-        width: 495px;
-        height: 495px;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 600px;
+        visibility: visible !important;
       }
       #nombre-suculenta { top: 85%; font-size: 36px; }
       #indicacion-teclado { display: block; }
-      #botones-tamano { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60%; }
+      #mano-swipe { display: none; }
+      #mensaje-girar { display: none !important; }
+      #habitacion {
+        display: none !important;
+      }
     }
-    @media (max-width: 768px) {
+    @media (max-width: 768px) and (orientation: portrait) {
+      #habitacion {
+        display: block !important;
+        transform: scale(1) !important;
+        clip-path: inset(0% 0% 0% 0%) !important;
+        z-index: 9998;
+      }
+      .suculenta-wrapper, #btn-volver, #botones-tamano, #pantalla-final, #imagen-tamano, #imagen-cargando, #nombre-suculenta, #indicacion-teclado, #mano-swipe {
+        display: none !important;
+      }
+      #mensaje-girar {
+        display: block !important;
+      }
+    }
+    @media (max-width: 768px) and (orientation: landscape) {
       .suculenta-wrapper {
         top: 20%;
         left: 10%;
         width: 80vw;
         height: 80vw;
+        visibility: visible !important;
+        display: flex !important;
       }
-      #nombre-suculenta { top: 80%; font-size: 20px; }
-      #indicacion-teclado { display: none; }
-      #mano-swipe { display: block; }
-      #botones-tamano { top: 55%; left: 50%; transform: translate(-50%, -50%); width: 90%; }
+      #btn-volver {
+        display: block !important;
+      }
+      #indicacion-teclado {
+        display: none !important;
+      }
+      #mano-swipe {
+        display: block !important;
+      }
+      #mensaje-girar {
+        display: none !important;
+      }
+      #habitacion {
+        display: none !important;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="habitacion.jpg" id="habitacion" alt="Vista general de la habitación">
-    <div class="suculenta-wrapper" id="suculenta-wrapper">
+
+    <img src="habitacion.jpg" id="habitacion" alt="Vista general de la habitación" class="zoom-out">
+
+    <div class="suculenta-wrapper" id="suculenta-wrapper" style="visibility: hidden;">
       <img id="suculenta-img" class="suculenta" src="" alt="Imagen suculenta" style="display:none;">
       <img id="imagen-inicial" src="invitacion.png" alt="¡Tocá para comenzar!">
-      <img id="imagen-cargando" src="cargando.jpg" alt="Buscando imagen y precio..." style="display:none;">
-      <img id="imagen-tamano" src="invitacion-tamano.jpg" alt="Elegí el tamaño ideal">
+      <img id="imagen-cargando" src="cargando.jpg" alt="Cargando..."/>
+      <img id="imagen-tamano" src="invitacion-tamano.jpg" alt="Elegí el tamaño ideal" style="display:none;">
       <div id="botones-tamano">
         <div class="boton-tamano" id="tam-pequeno" style="background-image:url('tamano-pequeno.jpg')" title="Pequeño"></div>
         <div class="boton-tamano" id="tam-mediano" style="background-image:url('tamano-mediano.jpg')" title="Mediano"></div>
@@ -228,11 +299,19 @@
     <div id="indicacion-teclado">Usá las flechas del teclado para cambiar la suculenta</div>
     <div id="mano-swipe"></div>
     <button id="btn-volver">Volver</button>
+    <div id="mensaje-girar">Girá el celular para continuar</div>
   </div>
 
   <script>
     const suculentas = Array.from({ length: 30 }, (_, i) => `suculenta${i + 1}.jpg`);
-    const nombresSuculentas = ["Mammillaria Prolifera", "Cactus maní", "Sedum Musgo Dorado", "Gasteria Verrucosa", "Sedum Adolphi", "Senecio Articulatus", "Echeveria Setosa", "Hawortia Aeonium", "Callisia Navicularis", "Cereus Monstrosus", "Cactus maní", "Sedum Luteoviride", "Madreperla", "Corpuscularia", "Sedum Palmeri", "Echeveria Elegans", "Aloe Aristata", "Sedum rubrotinctum", "Orostachys", "Sedum Clavatum", "Graptosedum Sunset", "Sedum Guantes", "Siempreviva Arachnoideum", "Oscularia Deltoides", "Huernia Variada", "Orostachys", "Echeveria Setosa", "Pachyphytum Compactum", "Graptosedum Sunset", "Echeveria Elegans", "Hawortia Aeonium"];
+    const nombresSuculentas = [
+      "Mammillaria Prolifera", "Cactus maní", "Sedum Musgo Dorado", "Gasteria Verrucosa", "Sedum Adolphi", 
+      "Senecio Articulatus", "Echeveria Setosa", "Hawortia Aeonium", "Callisia Navicularis", "Cereus Monstrosus", 
+      "Cactus maní", "Sedum Luteoviride", "Madreperla", "Corpuscularia", "Sedum Palmeri", 
+      "Echeveria Elegans", "Aloe Aristata", "Sedum rubrotinctum", "Orostachys", "Sedum Clavatum", 
+      "Graptosedum Sunset", "Sedum Guantes", "Siempreviva Arachnoideum", "Oscularia Deltoides", "Huernia Variada", 
+      "Orostachys", "Echeveria Setosa", "Pachyphytum Compactum", "Graptosedum Sunset", "Echeveria Elegans", "Hawortia Aeonium"
+    ];
 
     let index = 0;
     let seleccion = {};
@@ -249,33 +328,6 @@
     const pantallaFinal = document.getElementById("pantalla-final");
     const btnVolver = document.getElementById("btn-volver");
 
-    function animarTexto(texto) {
-      nombreDiv.innerHTML = "";
-      for (let i = 0; i < texto.length; i++) {
-        const span = document.createElement("span");
-        span.textContent = texto[i];
-        span.style.opacity = 0;
-        span.style.display = "inline-block";
-        span.style.transform = "translateY(20px)";
-        span.style.transition = "opacity 0.4s ease, transform 0.4s ease";
-        nombreDiv.appendChild(span);
-        setTimeout(() => {
-          span.style.opacity = 1;
-          span.style.transform = "translateY(0)";
-        }, i * 80);
-      }
-    }
-
-    function iniciarZoom() {
-      habitacion.classList.remove('zoom-out');
-      habitacion.classList.add('zoom-in');
-      habitacion.addEventListener('transitionend', () => {
-        habitacion.style.display = 'none';
-        wrapper.style.visibility = "visible";
-        imgInicial.style.display = 'block';
-      }, { once: true });
-    }
-
     function mostrarImagen() {
       const oldImg = img.cloneNode();
       oldImg.classList.add("fade-out");
@@ -283,7 +335,7 @@
       setTimeout(() => oldImg.remove(), 600);
       img.src = suculentas[index];
       img.style.display = "block";
-      animarTexto(nombresSuculentas[index]);
+      nombreDiv.textContent = nombresSuculentas[index];
     }
 
     function siguiente() {
@@ -317,7 +369,7 @@
       seleccion.suculenta = nombresSuculentas[index];
       seleccion.img = suculentas[index];
       img.style.display = "none";
-      nombreDiv.innerHTML = "";
+      nombreDiv.textContent = "";
       imgTamano.style.display = "block";
       botonesTamano.style.display = "flex";
     });
@@ -350,16 +402,60 @@
     btnVolver.addEventListener("click", () => location.reload());
 
     window.addEventListener('load', () => {
-      if(window.innerWidth <= 768){
+      const isMobile = window.innerWidth <= 768;
+      const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+
+      if (isMobile && isPortrait) {
+        // Celular vertical: sólo imagen + mensaje girar
+        habitacion.style.display = 'block';
+        habitacion.classList.remove('zoom-in');
+        habitacion.classList.add('zoom-out');
+        wrapper.style.visibility = "hidden";
+        btnVolver.style.display = "none";
+        imgInicial.style.display = "none";
+        nombreDiv.style.display = "none";
+        imgTamano.style.display = "none";
+        botonesTamano.style.display = "none";
+        pantallaFinal.style.display = "none";
+        imgCargando.style.display = "none";
+        document.getElementById("mensaje-girar").style.display = "block";
+      } else if (isMobile && !isPortrait) {
+        // Celular horizontal: zoom + experiencia completa
+        habitacion.style.display = 'block';
+        habitacion.classList.remove('zoom-in');
         habitacion.classList.add('zoom-out');
         wrapper.style.visibility = "hidden";
         imgInicial.style.display = "none";
+        btnVolver.style.display = "none";
+        nombreDiv.style.display = "block";
+        document.getElementById("mensaje-girar").style.display = "none";
         iniciarZoom();
       } else {
+        // PC: sin zoom, mostrar la experiencia directamente
+        habitacion.style.display = "none";
+        habitacion.classList.remove('zoom-in');
+        habitacion.classList.remove('zoom-out');
+        wrapper.style.visibility = "visible";
+        imgInicial.style.display = "block";
+        btnVolver.style.display = "none";
+        nombreDiv.style.display = "block";
+        document.getElementById("mensaje-girar").style.display = "none";
+      }
+    });
+
+    function iniciarZoom() {
+      habitacion.classList.remove('zoom-out');
+      habitacion.classList.add('zoom-in');
+      habitacion.addEventListener('transitionend', () => {
         habitacion.style.display = 'none';
         wrapper.style.visibility = "visible";
         imgInicial.style.display = 'block';
-      }
+      }, { once: true });
+    }
+
+    // Para refrescar al girar el celular
+    window.addEventListener("orientationchange", () => {
+      location.reload();
     });
   </script>
 </body>
