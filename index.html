@@ -206,7 +206,6 @@
 <body>
   <div class="container">
     <img src="habitacion.jpg" id="habitacion" alt="Vista general de la habitación">
-
     <div class="suculenta-wrapper" id="suculenta-wrapper">
       <img id="suculenta-img" class="suculenta" src="" alt="Imagen suculenta" style="display:none;">
       <img id="imagen-inicial" src="invitacion.png" alt="¡Tocá para comenzar!">
@@ -250,6 +249,23 @@
     const pantallaFinal = document.getElementById("pantalla-final");
     const btnVolver = document.getElementById("btn-volver");
 
+    function animarTexto(texto) {
+      nombreDiv.innerHTML = "";
+      for (let i = 0; i < texto.length; i++) {
+        const span = document.createElement("span");
+        span.textContent = texto[i];
+        span.style.opacity = 0;
+        span.style.display = "inline-block";
+        span.style.transform = "translateY(20px)";
+        span.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+        nombreDiv.appendChild(span);
+        setTimeout(() => {
+          span.style.opacity = 1;
+          span.style.transform = "translateY(0)";
+        }, i * 80);
+      }
+    }
+
     function iniciarZoom() {
       habitacion.classList.remove('zoom-out');
       habitacion.classList.add('zoom-in');
@@ -267,7 +283,7 @@
       setTimeout(() => oldImg.remove(), 600);
       img.src = suculentas[index];
       img.style.display = "block";
-      nombreDiv.textContent = nombresSuculentas[index];
+      animarTexto(nombresSuculentas[index]);
     }
 
     function siguiente() {
@@ -301,7 +317,7 @@
       seleccion.suculenta = nombresSuculentas[index];
       seleccion.img = suculentas[index];
       img.style.display = "none";
-      nombreDiv.textContent = "";
+      nombreDiv.innerHTML = "";
       imgTamano.style.display = "block";
       botonesTamano.style.display = "flex";
     });
