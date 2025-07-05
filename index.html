@@ -89,19 +89,6 @@
       box-shadow: 0 0 15px #88bb44;
     }
 
-    .arrow {
-      position: absolute;
-      background-color: rgba(255, 255, 255, 0.6);
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 10;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      user-select: none;
-    }
-
     #pantalla-final {
       display: none;
       z-index: 10;
@@ -142,6 +129,38 @@
       background-color: rgba(255,255,255,0.95);
     }
 
+    /* Indicaciones teclado y swipe */
+    #indicacion-teclado {
+      position: absolute;
+      top: calc(3.5% + 495px + 10px); /* Justo debajo del cuadro (desktop) */
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.85);
+      color: #333;
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 12px;
+      user-select: none;
+      z-index: 12;
+      width: max-content;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      white-space: nowrap;
+      display: none;
+      pointer-events: none;
+    }
+    #mano-swipe {
+      position: absolute;
+      bottom: 12%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      background: url('mano-swipe.svg') no-repeat center/contain;
+      z-index: 12;
+      display: none;
+      pointer-events: none;
+    }
+
     /* Desktop */
     @media (min-width: 769px) {
       .suculenta-wrapper {
@@ -150,8 +169,6 @@
         width: 495px;
         height: 495px;
       }
-      .arrow.left { left: 47%; }
-      .arrow.right { left: 81%; }
       #nombre-suculenta { top: 85%; font-size: 36px; }
       #pantalla-final {
         width: 495px;
@@ -168,6 +185,12 @@
         transform: translateX(-50%);
         width: 65%;
       }
+      #indicacion-teclado {
+        display: block;
+      }
+      #mano-swipe {
+        display: none;
+      }
     }
 
     /* Mobile */
@@ -177,11 +200,6 @@
         left: 10%;
         width: 80vw;
         height: 80vw;
-      }
-      .arrow {
-        width: 50px;
-        height: 50px;
-        font-size: 28px;
       }
       #nombre-suculenta { top: 80%; font-size: 20px; }
       #pantalla-final {
@@ -199,11 +217,18 @@
         transform: translateX(-50%) translateY(-50%);
         width: 80%;
       }
+      #indicacion-teclado {
+        display: none;
+      }
+      #mano-swipe {
+        display: block;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
+
     <div class="suculenta-wrapper" id="suculenta-wrapper">
       <img id="suculenta-img" class="suculenta" src="" alt="Imagen suculenta" style="display:none;">
       <img id="imagen-inicial" src="invitacion.png" alt="¡Tocá para comenzar!">
@@ -220,14 +245,16 @@
       </div>
     </div>
 
-    <button class="arrow left" id="prev">&#8592;</button>
-    <button class="arrow right" id="next">&#8594;</button>
-
     <img src="fondo-con-agujero.png" class="fondo-superior" alt="Fondo con agujero"/>
 
     <div id="nombre-suculenta"></div>
 
     <button id="btn-volver">Volver</button>
+
+    <!-- Indicaciones -->
+    <div id="indicacion-teclado">Usá las flechas del teclado para cambiar la suculenta</div>
+    <div id="mano-swipe"></div>
+
   </div>
 
   <script>
@@ -245,7 +272,6 @@
     const botonesTamano = document.getElementById("botones-tamano");
     const imgCargando = document.getElementById("imagen-cargando");
     const pantallaFinal = document.getElementById("pantalla-final");
-    const flechas = document.querySelectorAll(".arrow");
     const btnVolver = document.getElementById("btn-volver");
 
     function animarTexto(text) {
@@ -286,9 +312,6 @@
       mostrarImagen();
     }
 
-    document.getElementById("next").addEventListener("click", siguiente);
-    document.getElementById("prev").addEventListener("click", anterior);
-
     document.addEventListener("keydown", (e) => {
       if (e.key === "ArrowRight") siguiente();
       if (e.key === "ArrowLeft") anterior();
@@ -312,8 +335,6 @@
       imgInicial.style.display = "block";
       img.style.display = "none";
       nombreDiv.innerHTML = "";
-      flechas.forEach(f => f.style.display = "none");
-      imgTamano.style.display = "none";
       botonesTamano.style.display = "none";
       pantallaFinal.style.display = "none";
       imgCargando.style.display = "none";
@@ -323,7 +344,6 @@
     imgInicial.addEventListener("click", () => {
       fase = "seleccionSuculenta";
       imgInicial.style.display = "none";
-      flechas.forEach(f => f.style.display = "flex");
       mostrarImagen();
       btnVolver.style.display = "block";
     });
@@ -332,7 +352,6 @@
       if (fase !== "seleccionSuculenta") return;
       fase = "seleccionTamano";
       indexSeleccionado = index;
-      flechas.forEach(f => f.style.display = "none");
       img.style.display = "none";
       nombreDiv.innerHTML = "";
       imgTamano.style.display = "block";
@@ -385,7 +404,6 @@
         botonesTamano.style.display = "none";
         img.style.display = "block";
         animarTexto(nombresSuculentas[indexSeleccionado]);
-        flechas.forEach(f => f.style.display = "flex");
         btnVolver.style.display = "block";
       } else if (fase === "seleccionMaceta") {
         fase = "seleccionTamano";
