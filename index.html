@@ -2,9 +2,17 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Suculentas | Otro Mundo</title>
+
+  <!-- Performance y fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="invitacion.png">
+  <link rel="preload" as="image" href="fondo-con-agujero.png">
+  <meta name="description" content="Explorá un mundo interactivo de suculentas. Elegí tu planta, su tamaño y cómo presentarla.">
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
@@ -15,65 +23,86 @@
       overflow: hidden;
     }
     .container { position: relative; width: 100vw; height: 100vh; }
+
     .fondo-superior {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
       object-fit: cover; z-index: 3; pointer-events: none;
     }
-    .suculenta-wrapper {
-      position: absolute; top: 3.5%; left: 47%;
-      width: 495px; height: 495px; overflow: hidden; z-index: 2;
-      user-select: none;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-    .suculenta { 
-      width: 100%; height: 100%; object-fit: cover; cursor: pointer; display: none; 
+
+.suculenta-wrapper {
+  position: absolute;
+  top: 3.5%;
+  left: 65%; /* <-- acá está el cambio */
+  transform: translateX(-50%);
+  width: 495px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  z-index: 2;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+    .suculenta {
+      width: 100%; height: 100%; object-fit: cover;
+      cursor: pointer; display: none;
       transition: opacity 0.5s ease;
       position: relative;
       z-index: 1;
     }
-    #imagen-inicial { 
-      width: 100%; height: 100%; object-fit: cover; cursor: pointer; 
+
+    .suculenta.fade {
+      animation: fadeSuculenta 0.4s ease;
     }
+
+    @keyframes fadeSuculenta {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    #imagen-inicial {
+      width: 100%; height: 100%;
+      object-fit: cover; cursor: pointer;
+    }
+
     @keyframes fadeInNombre {
       0% { opacity: 0; transform: translateY(10px); }
       100% { opacity: 1; transform: translateY(0); }
     }
+
     #nombre-suculenta {
-      position: absolute; top: 85%; left: 50%; transform: translateX(-50%);
-      color: black; z-index: 5; font-size: 36px; white-space: nowrap;
-      pointer-events: none; opacity: 0; text-shadow: 0 0 5px rgba(0,0,0,0.5);
+      position: absolute; top: 85%; left: 50%;
+      transform: translateX(-50%);
+      color: black; z-index: 5; font-size: 36px;
+      white-space: nowrap;
+      pointer-events: none; opacity: 0;
+      text-shadow: 0 0 5px rgba(0,0,0,0.5);
       animation-fill-mode: forwards;
     }
+
     #botones-tamano {
-      position: absolute; 
-      top: 50%; left: 50%;
+      position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      display: none; 
-      gap: 5px; 
-      z-index: 5;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
+      display: none; gap: 5px; z-index: 5;
+      flex-direction: row; align-items: center; justify-content: center;
       background: rgba(255, 255, 255, 0.85);
       padding: 10px 20px;
       border-radius: 15px;
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
       user-select: none;
     }
+
     #texto-tamano {
-      font-size: 20px;
-      color: #333;
-      font-weight: 200;
-      user-select: none;
-      margin-right: 20px;
+      font-size: 20px; color: #333; font-weight: 200;
+      user-select: none; margin-right: 20px;
       white-space: nowrap;
     }
+
     .boton-tamano {
-      width: 50px; /* pequeño */
-      height: 50px;
+      width: 50px; height: 50px;
       border-radius: 15px;
       background-size: cover;
       background-position: center;
@@ -81,41 +110,45 @@
       cursor: pointer;
       transition: transform 0.3s ease;
     }
+
     .boton-tamano:hover {
       transform: scale(1.1);
       box-shadow: 0 0 15px #88bb44;
     }
-    #tam-mediano {
-      width: 75px;
-      height: 75px;
-    }
-    #tam-grande {
-      width: 90px;
-      height: 90px;
-    }
+
+    #tam-mediano { width: 75px; height: 75px; }
+    #tam-grande { width: 90px; height: 90px; }
+
     #pantalla-final {
       position: absolute; top: 45%; left: 66%;
       transform: translate(-50%, -50%);
       display: none; gap: 0px; z-index: 2;
     }
+
     .opcion-final {
-      width: 230px; cursor: pointer; border-radius: 15px;
+      width: 230px; cursor: pointer;
+      border-radius: 15px;
       transition: transform 0.2s ease;
     }
+
     .opcion-final:hover { transform: scale(1.1); }
+
     #btn-volver {
       position: absolute; top: 5%; left: 5%;
       background-color: rgba(255,255,255,0.7);
-      border: none; border-radius: 20px; padding: 8px 15px;
+      border: none; border-radius: 20px;
+      padding: 8px 15px;
       font-size: 16px; cursor: pointer;
       box-shadow: 0 0 6px rgba(0,0,0,0.3);
       display: none; z-index: 10;
       user-select: none;
       transition: background-color 0.3s;
     }
+
     #btn-volver:hover {
       background-color: rgba(255,255,255,0.95);
     }
+
     #mensaje-cargando {
       position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
@@ -124,33 +157,46 @@
       padding: 20px 30px; border-radius: 12px;
       user-select: none;
     }
-@media (max-width: 768px) and (orientation: portrait) {
+
+    /* Overlay orientación */
+    #overlay-orientacion {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.85);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      text-align: center;
+      padding: 20px;
+      z-index: 9999;
+      user-select: none;
+      transition: opacity 0.3s ease;
+    }
+    #overlay-orientacion.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) and (orientation: portrait) {
       .suculenta-wrapper {
-        top: 20%; left: 10%; width: 80vw; height: 80vw;
+        top: 20%; left: 10%;
+        width: 80vw;
       }
       #nombre-suculenta {
         top: 80%; font-size: 20px;
       }
       #botones-tamano {
-        width: 90%;
-        padding: 10px 20px;
+        width: 90%; padding: 10px 20px;
         box-sizing: border-box;
       }
       .boton-tamano {
-        width: 60px;
-        height: 60px;
-      }
-      #tam-mediano {
-        width: 75px;
-        height: 75px;
-      }
-      #tam-grande {
-        width: 90px;
-        height: 90px;
+        width: 60px; height: 60px;
       }
       #texto-tamano {
-        font-size: 18px;
-        margin-right: 10px;
+        font-size: 18px; margin-right: 10px;
       }
     }
   </style>
@@ -167,24 +213,20 @@
         <div class="boton-tamano" id="tam-grande" style="background-image:url('tamano-grande.jpg');" title="Grande"></div>
       </div>
     </div>
-    <img src="fondo-con-agujero.png" class="fondo-superior" alt="Fondo con agujero" />
+    <img src="fondo-con-agujero.png" class="fondo-superior" alt="Fondo con agujero" loading="lazy" />
     <div id="nombre-suculenta"></div>
     <div id="pantalla-final">
-      <img class="opcion-final" src="con-maceta.jpg" alt="Con maceta">
-      <img class="opcion-final" src="sin-maceta.jpg" alt="Sin maceta">
+      <img class="opcion-final" src="con-maceta.jpg" alt="Con maceta" loading="lazy">
+      <img class="opcion-final" src="sin-maceta.jpg" alt="Sin maceta" loading="lazy">
     </div>
     <div id="mensaje-cargando">Cargando tu elección...</div>
     <button id="btn-volver">Volver</button>
+    <!-- Overlay orientación -->
+    <div id="overlay-orientacion">Girá la pantalla para continuar</div>
   </div>
+
   <script>
-    const suculentas = [
-      "suculenta1.jpg", "suculenta2.jpg", "suculenta3.jpg", "suculenta4.jpg", "suculenta5.jpg",
-      "suculenta6.jpg", "suculenta7.jpg", "suculenta8.jpg", "suculenta9.jpg", "suculenta10.jpg",
-      "suculenta11.jpg", "suculenta12.jpg", "suculenta13.jpg", "suculenta14.jpg", "suculenta15.jpg",
-      "suculenta16.jpg", "suculenta17.jpg", "suculenta18.jpg", "suculenta19.jpg", "suculenta20.jpg",
-      "suculenta21.jpg", "suculenta22.jpg", "suculenta23.jpg", "suculenta24.jpg", "suculenta25.jpg",
-      "suculenta26.jpg", "suculenta27.jpg", "suculenta28.jpg", "suculenta29.jpg", "suculenta30.jpg"
-    ];
+    const suculentas = [...Array(30)].map((_, i) => `suculenta${i + 1}.jpg`);
     const nombresSuculentas = [
       "Mammillaria Prolifera", "Cactus maní", "Sedum Musgo Dorado", "Gasteria Verrucosa", "Sedum Adolphi",
       "Senecio Articulatus", "Echeveria Setosa", "Hawortia Aeonium", "Callisia Navicularis", "Cereus Monstrosus",
@@ -194,11 +236,7 @@
       "Orostachys", "Echeveria Setosa", "Pachyphytum Compactum", "Graptosedum Sunset", "Hawortia Aeonium"
     ];
 
-    let index = 0;
-    let bloqueado = true;
-    let seleccionHecha = false;
-    let seleccion = {};
-    let startX = 0;
+    let index = 0, bloqueado = true, seleccionHecha = false, seleccion = {}, startX = 0;
 
     const imgInicial = document.getElementById("imagen-inicial");
     const img = document.getElementById("suculenta-img");
@@ -207,25 +245,28 @@
     const pantallaFinal = document.getElementById("pantalla-final");
     const mensajeCargando = document.getElementById("mensaje-cargando");
     const btnVolver = document.getElementById("btn-volver");
+    const overlay = document.getElementById("overlay-orientacion");
 
     function mostrarImagen() {
       img.src = suculentas[index];
+      img.classList.add("fade");
+      setTimeout(() => img.classList.remove("fade"), 400);
       img.style.display = "block";
       nombreDiv.style.opacity = "0";
       nombreDiv.textContent = nombresSuculentas[index];
       nombreDiv.style.animation = "none";
-      void nombreDiv.offsetWidth;  // reiniciar animación
+      void nombreDiv.offsetWidth;
       nombreDiv.style.animation = "fadeInNombre 0.6s ease forwards";
     }
 
     function siguiente() {
-      if(bloqueado || seleccionHecha) return;
+      if (bloqueado || seleccionHecha) return;
       index = (index + 1) % suculentas.length;
       mostrarImagen();
     }
 
     function anterior() {
-      if(bloqueado || seleccionHecha) return;
+      if (bloqueado || seleccionHecha) return;
       index = (index - 1 + suculentas.length) % suculentas.length;
       mostrarImagen();
     }
@@ -238,11 +279,10 @@
     };
 
     img.onclick = () => {
-      if(seleccionHecha) return;
+      if (seleccionHecha) return;
       seleccionHecha = true;
       seleccion.suculenta = nombresSuculentas[index];
       seleccion.img = suculentas[index];
-      // Hacer imagen transparente
       img.style.opacity = "0.4";
       botonesTamano.style.display = "flex";
     };
@@ -252,18 +292,16 @@
     document.getElementById("tam-grande").onclick = () => elegirTamano("Grande");
 
     function elegirTamano(tam) {
-  seleccion.tamano = tam;
-  botonesTamano.style.display = "none";
-  pantallaFinal.style.display = "flex";
-  img.style.opacity = "1";
-
-  // Mostrar "Nombre – Tamaño" en el lugar del nombre
-  nombreDiv.textContent = `${seleccion.suculenta} – ${tam}`;
-  nombreDiv.style.opacity = "0";
-  nombreDiv.style.animation = "none";
-  void nombreDiv.offsetWidth;  // reiniciar animación
-  nombreDiv.style.animation = "fadeInNombre 0.6s ease forwards";
-}
+      seleccion.tamano = tam;
+      botonesTamano.style.display = "none";
+      pantallaFinal.style.display = "flex";
+      img.style.opacity = "1";
+      nombreDiv.textContent = `${seleccion.suculenta} – ${tam}`;
+      nombreDiv.style.opacity = "0";
+      nombreDiv.style.animation = "none";
+      void nombreDiv.offsetWidth;
+      nombreDiv.style.animation = "fadeInNombre 0.6s ease forwards";
+    }
 
     pantallaFinal.children[0].onclick = () => confirmar("Con maceta");
     pantallaFinal.children[1].onclick = () => confirmar("Sin maceta");
@@ -281,21 +319,31 @@
 
     btnVolver.onclick = () => location.reload();
 
-    // Navegación con touch para móviles
     document.getElementById("suculenta-wrapper").addEventListener("touchstart", e => startX = e.touches[0].clientX);
     document.getElementById("suculenta-wrapper").addEventListener("touchend", e => {
-      if(bloqueado || seleccionHecha) return;
+      if (bloqueado || seleccionHecha) return;
       const delta = e.changedTouches[0].clientX - startX;
-      if(delta > 50) anterior();
-      else if(delta < -50) siguiente();
+      if (delta > 50) anterior();
+      else if (delta < -50) siguiente();
     });
 
-    // Navegación con teclado
     document.addEventListener("keydown", e => {
-      if(bloqueado || seleccionHecha) return;
-      if(e.key === "ArrowRight") siguiente();
-      if(e.key === "ArrowLeft") anterior();
+      if (bloqueado || seleccionHecha) return;
+      if (e.key === "ArrowRight") siguiente();
+      if (e.key === "ArrowLeft") anterior();
     });
+
+    // Control overlay orientación móvil
+    function checkOrientation() {
+      if(window.matchMedia("(orientation: portrait)").matches) {
+        overlay.classList.remove("hidden");
+      } else {
+        overlay.classList.add("hidden");
+      }
+    }
+    window.addEventListener("load", checkOrientation);
+    window.addEventListener("resize", checkOrientation);
+    window.addEventListener("orientationchange", checkOrientation);
   </script>
 </body>
 </html>
