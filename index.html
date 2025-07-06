@@ -30,21 +30,21 @@
       object-fit: cover; z-index: 3; pointer-events: none;
     }
 
-.suculenta-wrapper {
-  position: absolute;
-  top: 3.5%;
-  left: 65%; /* <-- acá está el cambio */
-  transform: translateX(-50%);
-  width: 495px;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  z-index: 2;
-  user-select: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+    .suculenta-wrapper {
+      position: absolute;
+      top: 3.5%;
+      left: 65%;
+      transform: translateX(-50%);
+      width: 495px;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      z-index: 2;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
 
     .suculenta {
       width: 100%; height: 100%; object-fit: cover;
@@ -158,7 +158,6 @@
       user-select: none;
     }
 
-    /* Overlay orientación */
     #overlay-orientacion {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -180,9 +179,11 @@
       pointer-events: none;
     }
 
-    @media (max-width: 768px) and (orientation: portrait) {
+    @media (max-width: 768px) and (orientation: portrait),
+           (max-width: 768px) and (orientation: landscape) {
       .suculenta-wrapper {
-        top: 20%; left: 10%;
+        top: 20%; left: 50%;
+        transform: translateX(-50%);
         width: 80vw;
       }
       #nombre-suculenta {
@@ -221,7 +222,6 @@
     </div>
     <div id="mensaje-cargando">Cargando tu elección...</div>
     <button id="btn-volver">Volver</button>
-    <!-- Overlay orientación -->
     <div id="overlay-orientacion">Girá la pantalla para continuar</div>
   </div>
 
@@ -312,7 +312,7 @@
       mensajeCargando.style.display = "block";
       btnVolver.style.display = "none";
       setTimeout(() => {
-        alert(`Seleccionaste:\n\nPlanta: ${seleccion.suculenta}\nTamaño: ${seleccion.tamano}\nCon maceta: ${seleccion.maceta}`);
+        alert(`Seleccionaste:\n\nPlanta: ${seleccion.suculenta}\nTamaño: ${seleccion.tamano}\nMaceta: ${seleccion.maceta}`);
         location.reload();
       }, 3000);
     }
@@ -333,9 +333,8 @@
       if (e.key === "ArrowLeft") anterior();
     });
 
-    // Control overlay orientación móvil
     function checkOrientation() {
-      if(window.matchMedia("(orientation: portrait)").matches) {
+      if (window.matchMedia("(orientation: portrait)").matches) {
         overlay.classList.remove("hidden");
       } else {
         overlay.classList.add("hidden");
