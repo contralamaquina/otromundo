@@ -158,6 +158,18 @@
       user-select: none;
     }
 
+    #loader {
+      position: absolute;
+      top: 48%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      z-index: 6;
+      display: none;
+      pointer-events: none;
+    }
+
     #overlay-orientacion {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -222,6 +234,7 @@
     </div>
     <div id="mensaje-cargando">Cargando tu elección...</div>
     <button id="btn-volver">Volver</button>
+    <img id="loader" src="cargando.gif" alt="Cargando..." />
     <div id="overlay-orientacion">Girá la pantalla para continuar</div>
   </div>
 
@@ -246,17 +259,25 @@
     const mensajeCargando = document.getElementById("mensaje-cargando");
     const btnVolver = document.getElementById("btn-volver");
     const overlay = document.getElementById("overlay-orientacion");
+    const loader = document.getElementById("loader");
 
     function mostrarImagen() {
+      loader.style.display = "block";
+      img.style.display = "none";
+
+      img.onload = () => {
+        loader.style.display = "none";
+        img.style.display = "block";
+        img.classList.add("fade");
+        setTimeout(() => img.classList.remove("fade"), 400);
+        nombreDiv.style.opacity = "0";
+        nombreDiv.textContent = nombresSuculentas[index];
+        nombreDiv.style.animation = "none";
+        void nombreDiv.offsetWidth;
+        nombreDiv.style.animation = "fadeInNombre 0.6s ease forwards";
+      };
+
       img.src = suculentas[index];
-      img.classList.add("fade");
-      setTimeout(() => img.classList.remove("fade"), 400);
-      img.style.display = "block";
-      nombreDiv.style.opacity = "0";
-      nombreDiv.textContent = nombresSuculentas[index];
-      nombreDiv.style.animation = "none";
-      void nombreDiv.offsetWidth;
-      nombreDiv.style.animation = "fadeInNombre 0.6s ease forwards";
     }
 
     function siguiente() {
