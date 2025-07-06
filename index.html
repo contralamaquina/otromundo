@@ -10,452 +10,291 @@
     html, body {
       width: 100%;
       height: 100%;
-      overflow: hidden;
       background: #ccc;
       font-family: 'Playfair Display', serif;
+      overflow: hidden;
     }
-    .container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      user-select: none;
-    }
-    #habitacion {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 4;
-      transition: transform 2.5s ease, clip-path 2.5s ease;
-    }
-    .zoom-out {
-      transform: scale(1);
-      clip-path: inset(0% 0% 0% 0%);
-    }
-    .zoom-in {
-      transform: scale(2.5);
-      clip-path: inset(35% 30% 35% 30%);
-    }
+    .container { position: relative; width: 100vw; height: 100vh; }
     .fondo-superior {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 3;
-      pointer-events: none;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: 3; pointer-events: none;
     }
     .suculenta-wrapper {
-      position: absolute;
-      overflow: hidden;
-      z-index: 5;
+      position: absolute; top: 3.5%; left: 47%;
+      width: 495px; height: 495px; overflow: hidden; z-index: 2;
       user-select: none;
-      visibility: visible;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
-    .suculenta {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: opacity 0.6s ease, transform 0.6s ease;
-      opacity: 1;
-      cursor: pointer;
+    .suculenta { 
+      width: 100%; height: 100%; object-fit: cover; cursor: pointer; display: none; 
+      transition: opacity 0.5s ease;
+      position: relative;
+      z-index: 1;
     }
-    .suculenta.fade-out {
-      opacity: 0;
-      transform: translateX(-30px);
+    #imagen-inicial { 
+      width: 100%; height: 100%; object-fit: cover; cursor: pointer; 
+    }
+    @keyframes fadeInNombre {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
     #nombre-suculenta {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      color: black;
-      text-shadow: 0 0 5px rgba(0,0,0,0.6);
-      z-index: 6;
-      pointer-events: none;
-      user-select: none;
-      font-size: 2.2rem;
-      white-space: nowrap;
+      position: absolute; top: 85%; left: 50%; transform: translateX(-50%);
+      color: black; z-index: 5; font-size: 36px; white-space: nowrap;
+      pointer-events: none; opacity: 0; text-shadow: 0 0 5px rgba(0,0,0,0.5);
+      animation-fill-mode: forwards;
     }
-    #indicacion-teclado {
-      position: absolute;
-      bottom: 110%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,0.85);
+    #botones-tamano {
+      position: absolute; 
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: none; 
+      gap: 5px; 
+      z-index: 5;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 10px 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      user-select: none;
+    }
+    #texto-tamano {
+      font-size: 20px;
       color: #333;
-      padding: 8px 16px;
-      font-size: 14px;
-      border-radius: 12px;
+      font-weight: 200;
       user-select: none;
-      z-index: 12;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      margin-right: 20px;
       white-space: nowrap;
-      display: none;
-      pointer-events: none;
     }
-    #mano-swipe {
-      position: absolute;
-      bottom: 12%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 50px;
+    .boton-tamano {
+      width: 50px; /* pequeño */
       height: 50px;
-      background: url('mano-swipe.svg') no-repeat center/contain;
-      z-index: 12;
-      display: none;
-      pointer-events: none;
-    }
-    #btn-volver {
-      position: absolute;
-      top: 5%;
-      left: 5%;
-      background-color: rgba(255,255,255,0.7);
-      border: none;
-      border-radius: 20px;
-      padding: 8px 15px;
-      font-size: 16px;
+      border-radius: 15px;
+      background-size: cover;
+      background-position: center;
+      border: 2px solid #333;
       cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .boton-tamano:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px #88bb44;
+    }
+    #tam-mediano {
+      width: 75px;
+      height: 75px;
+    }
+    #tam-grande {
+      width: 90px;
+      height: 90px;
+    }
+    #pantalla-final {
+      position: absolute; top: 45%; left: 66%;
+      transform: translate(-50%, -50%);
+      display: none; gap: 0px; z-index: 2;
+    }
+    .opcion-final {
+      width: 230px; cursor: pointer; border-radius: 15px;
+      transition: transform 0.2s ease;
+    }
+    .opcion-final:hover { transform: scale(1.1); }
+    #btn-volver {
+      position: absolute; top: 5%; left: 5%;
+      background-color: rgba(255,255,255,0.7);
+      border: none; border-radius: 20px; padding: 8px 15px;
+      font-size: 16px; cursor: pointer;
       box-shadow: 0 0 6px rgba(0,0,0,0.3);
-      display: none;
-      z-index: 15;
+      display: none; z-index: 10;
       user-select: none;
       transition: background-color 0.3s;
     }
     #btn-volver:hover {
       background-color: rgba(255,255,255,0.95);
     }
-    #pantalla-final {
-      display: none;
-      z-index: 10;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      user-select: none;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      gap: 0px;
-      background: rgba(255,255,255,0.8);
-    }
-    .opcion-final {
-      width: 70%;
-      max-width: 600px;
-      height: auto;
-      cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .opcion-final:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px yellow;
-    }
-    #botones-tamano {
-      position: absolute;
-      display: flex;
-      justify-content: space-around;
-      z-index: 5;
-      display: none;
-      width: 100%;
-      top: 55%;
-      left: 50%;
+    #mensaje-cargando {
+      position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-    }
-    .boton-tamano {
-      border-radius: 12px;
-      border: 1px solid #444;
-      cursor: pointer;
-      background-size: cover;
-      background-position: center;
-      width: 70px;
-      height: 70px;
-      box-shadow: 0 0 7px rgba(0,0,0,0.2);
-      transition: transform 0.3s;
-    }
-    .boton-tamano:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 15px #88bb44;
-    }
-    #imagen-tamano {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 4;
-      display: none;
-    }
-    #imagen-cargando {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 20;
-      width: 500px;
-      height: 500px;
-      display: none;
-      pointer-events: none;
-    }
-    #mensaje-girar {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.8rem;
-      color: #222;
-      background: rgba(255,255,255,0.9);
-      padding: 20px 30px;
-      border-radius: 16px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.25);
-      text-align: center;
-      z-index: 9999;
-      display: none;
+      font-size: 24px; z-index: 20;
+      display: none; background: rgba(255,255,255,0.9);
+      padding: 20px 30px; border-radius: 12px;
       user-select: none;
     }
-
-    @media (min-width: 769px) {
+@media (max-width: 768px) and (orientation: portrait) {
       .suculenta-wrapper {
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 600px;
-        height: 600px;
-        visibility: visible !important;
+        top: 20%; left: 10%; width: 80vw; height: 80vw;
       }
-      #nombre-suculenta { top: 85%; font-size: 36px; }
-      #indicacion-teclado { display: block; }
-      #mano-swipe { display: none; }
-      #mensaje-girar { display: none !important; }
-      #habitacion {
-        display: none !important;
+      #nombre-suculenta {
+        top: 80%; font-size: 20px;
       }
-    }
-    @media (max-width: 768px) and (orientation: portrait) {
-      #habitacion {
-        display: block !important;
-        transform: scale(1) !important;
-        clip-path: inset(0% 0% 0% 0%) !important;
-        z-index: 9998;
+      #botones-tamano {
+        width: 90%;
+        padding: 10px 20px;
+        box-sizing: border-box;
       }
-      .suculenta-wrapper, #btn-volver, #botones-tamano, #pantalla-final, #imagen-tamano, #imagen-cargando, #nombre-suculenta, #indicacion-teclado, #mano-swipe {
-        display: none !important;
+      .boton-tamano {
+        width: 60px;
+        height: 60px;
       }
-      #mensaje-girar {
-        display: block !important;
+      #tam-mediano {
+        width: 75px;
+        height: 75px;
       }
-    }
-    @media (max-width: 768px) and (orientation: landscape) {
-      .suculenta-wrapper {
-        top: 20%;
-        left: 10%;
-        width: 80vw;
-        height: 80vw;
-        visibility: visible !important;
-        display: flex !important;
+      #tam-grande {
+        width: 90px;
+        height: 90px;
       }
-      #btn-volver {
-        display: block !important;
-      }
-      #indicacion-teclado {
-        display: none !important;
-      }
-      #mano-swipe {
-        display: block !important;
-      }
-      #mensaje-girar {
-        display: none !important;
-      }
-      #habitacion {
-        display: none !important;
+      #texto-tamano {
+        font-size: 18px;
+        margin-right: 10px;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-
-    <img src="habitacion.jpg" id="habitacion" alt="Vista general de la habitación" class="zoom-out">
-
-    <div class="suculenta-wrapper" id="suculenta-wrapper" style="visibility: hidden;">
-      <img id="suculenta-img" class="suculenta" src="" alt="Imagen suculenta" style="display:none;">
+    <div class="suculenta-wrapper" id="suculenta-wrapper">
       <img id="imagen-inicial" src="invitacion.png" alt="¡Tocá para comenzar!">
-      <img id="imagen-cargando" src="cargando.jpg" alt="Cargando..."/>
-      <img id="imagen-tamano" src="invitacion-tamano.jpg" alt="Elegí el tamaño ideal" style="display:none;">
+      <img id="suculenta-img" class="suculenta" alt="Imagen suculenta">
       <div id="botones-tamano">
-        <div class="boton-tamano" id="tam-pequeno" style="background-image:url('tamano-pequeno.jpg')" title="Pequeño"></div>
-        <div class="boton-tamano" id="tam-mediano" style="background-image:url('tamano-mediano.jpg')" title="Mediano"></div>
-        <div class="boton-tamano" id="tam-grande" style="background-image:url('tamano-grande.jpg')" title="Grande"></div>
-      </div>
-      <div id="pantalla-final">
-        <img class="opcion-final" src="con-maceta.jpg" alt="Con maceta" />
-        <img class="opcion-final" src="sin-maceta.jpg" alt="Sin maceta" />
+        <div id="texto-tamano">Tamaño</div>
+        <div class="boton-tamano" id="tam-pequeno" style="background-image:url('tamano-pequeno.jpg');" title="Pequeño"></div>
+        <div class="boton-tamano" id="tam-mediano" style="background-image:url('tamano-mediano.jpg');" title="Mediano"></div>
+        <div class="boton-tamano" id="tam-grande" style="background-image:url('tamano-grande.jpg');" title="Grande"></div>
       </div>
     </div>
-
     <img src="fondo-con-agujero.png" class="fondo-superior" alt="Fondo con agujero" />
-
     <div id="nombre-suculenta"></div>
-    <div id="indicacion-teclado">Usá las flechas del teclado para cambiar la suculenta</div>
-    <div id="mano-swipe"></div>
+    <div id="pantalla-final">
+      <img class="opcion-final" src="con-maceta.jpg" alt="Con maceta">
+      <img class="opcion-final" src="sin-maceta.jpg" alt="Sin maceta">
+    </div>
+    <div id="mensaje-cargando">Cargando tu elección...</div>
     <button id="btn-volver">Volver</button>
-    <div id="mensaje-girar">Girá el celular para continuar</div>
   </div>
-
   <script>
-    const suculentas = Array.from({ length: 30 }, (_, i) => `suculenta${i + 1}.jpg`);
+    const suculentas = [
+      "suculenta1.jpg", "suculenta2.jpg", "suculenta3.jpg", "suculenta4.jpg", "suculenta5.jpg",
+      "suculenta6.jpg", "suculenta7.jpg", "suculenta8.jpg", "suculenta9.jpg", "suculenta10.jpg",
+      "suculenta11.jpg", "suculenta12.jpg", "suculenta13.jpg", "suculenta14.jpg", "suculenta15.jpg",
+      "suculenta16.jpg", "suculenta17.jpg", "suculenta18.jpg", "suculenta19.jpg", "suculenta20.jpg",
+      "suculenta21.jpg", "suculenta22.jpg", "suculenta23.jpg", "suculenta24.jpg", "suculenta25.jpg",
+      "suculenta26.jpg", "suculenta27.jpg", "suculenta28.jpg", "suculenta29.jpg", "suculenta30.jpg"
+    ];
     const nombresSuculentas = [
-      "Mammillaria Prolifera", "Cactus maní", "Sedum Musgo Dorado", "Gasteria Verrucosa", "Sedum Adolphi", 
-      "Senecio Articulatus", "Echeveria Setosa", "Hawortia Aeonium", "Callisia Navicularis", "Cereus Monstrosus", 
-      "Cactus maní", "Sedum Luteoviride", "Madreperla", "Corpuscularia", "Sedum Palmeri", 
-      "Echeveria Elegans", "Aloe Aristata", "Sedum rubrotinctum", "Orostachys", "Sedum Clavatum", 
-      "Graptosedum Sunset", "Sedum Guantes", "Siempreviva Arachnoideum", "Oscularia Deltoides", "Huernia Variada", 
-      "Orostachys", "Echeveria Setosa", "Pachyphytum Compactum", "Graptosedum Sunset", "Echeveria Elegans", "Hawortia Aeonium"
+      "Mammillaria Prolifera", "Cactus maní", "Sedum Musgo Dorado", "Gasteria Verrucosa", "Sedum Adolphi",
+      "Senecio Articulatus", "Echeveria Setosa", "Hawortia Aeonium", "Callisia Navicularis", "Cereus Monstrosus",
+      "Cactus maní", "Sedum Luteoviride", "Madreperla", "Corpuscularia", "Sedum Palmeri",
+      "Echeveria Elegans", "Aloe Aristata", "Sedum rubrotinctum", "Orostachys", "Sedum Clavatum",
+      "Graptosedum Sunset", "Sedum Guantes", "Siempreviva Arachnoideum", "Oscularia Deltoides", "Huernia Variada",
+      "Orostachys", "Echeveria Setosa", "Pachyphytum Compactum", "Graptosedum Sunset", "Hawortia Aeonium"
     ];
 
     let index = 0;
+    let bloqueado = true;
+    let seleccionHecha = false;
     let seleccion = {};
     let startX = 0;
 
-    const habitacion = document.getElementById("habitacion");
-    const wrapper = document.getElementById("suculenta-wrapper");
-    const img = document.getElementById("suculenta-img");
     const imgInicial = document.getElementById("imagen-inicial");
-    const imgTamano = document.getElementById("imagen-tamano");
-    const botonesTamano = document.getElementById("botones-tamano");
+    const img = document.getElementById("suculenta-img");
     const nombreDiv = document.getElementById("nombre-suculenta");
-    const imgCargando = document.getElementById("imagen-cargando");
+    const botonesTamano = document.getElementById("botones-tamano");
     const pantallaFinal = document.getElementById("pantalla-final");
+    const mensajeCargando = document.getElementById("mensaje-cargando");
     const btnVolver = document.getElementById("btn-volver");
 
     function mostrarImagen() {
-      const oldImg = img.cloneNode();
-      oldImg.classList.add("fade-out");
-      img.parentElement.insertBefore(oldImg, img);
-      setTimeout(() => oldImg.remove(), 600);
       img.src = suculentas[index];
       img.style.display = "block";
+      nombreDiv.style.opacity = "0";
       nombreDiv.textContent = nombresSuculentas[index];
+      nombreDiv.style.animation = "none";
+      void nombreDiv.offsetWidth;  // reiniciar animación
+      nombreDiv.style.animation = "fadeInNombre 0.6s ease forwards";
     }
 
     function siguiente() {
+      if(bloqueado || seleccionHecha) return;
       index = (index + 1) % suculentas.length;
       mostrarImagen();
     }
+
     function anterior() {
+      if(bloqueado || seleccionHecha) return;
       index = (index - 1 + suculentas.length) % suculentas.length;
       mostrarImagen();
     }
 
-    wrapper.addEventListener("touchstart", (e) => startX = e.touches[0].clientX);
-    wrapper.addEventListener("touchend", (e) => {
-      const delta = e.changedTouches[0].clientX - startX;
-      if (delta > 50) anterior();
-      else if (delta < -50) siguiente();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight") siguiente();
-      if (e.key === "ArrowLeft") anterior();
-    });
-
-    imgInicial.addEventListener("click", () => {
+    imgInicial.onclick = () => {
+      bloqueado = false;
       imgInicial.style.display = "none";
       mostrarImagen();
       btnVolver.style.display = "block";
-    });
+    };
 
-    img.addEventListener("click", () => {
+    img.onclick = () => {
+      if(seleccionHecha) return;
+      seleccionHecha = true;
       seleccion.suculenta = nombresSuculentas[index];
       seleccion.img = suculentas[index];
-      img.style.display = "none";
-      nombreDiv.textContent = "";
-      imgTamano.style.display = "block";
+      // Hacer imagen transparente
+      img.style.opacity = "0.4";
       botonesTamano.style.display = "flex";
-    });
+    };
 
     document.getElementById("tam-pequeno").onclick = () => elegirTamano("Pequeño");
     document.getElementById("tam-mediano").onclick = () => elegirTamano("Mediano");
     document.getElementById("tam-grande").onclick = () => elegirTamano("Grande");
 
     function elegirTamano(tam) {
-      seleccion.tamano = tam;
-      imgTamano.style.display = "none";
-      botonesTamano.style.display = "none";
-      pantallaFinal.style.display = "flex";
-    }
+  seleccion.tamano = tam;
+  botonesTamano.style.display = "none";
+  pantallaFinal.style.display = "flex";
+  img.style.opacity = "1";
 
-    pantallaFinal.querySelectorAll(".opcion-final")[0].addEventListener("click", () => confirmar("Sí"));
-    pantallaFinal.querySelectorAll(".opcion-final")[1].addEventListener("click", () => confirmar("No"));
+  // Mostrar "Nombre – Tamaño" en el lugar del nombre
+  nombreDiv.textContent = `${seleccion.suculenta} – ${tam}`;
+  nombreDiv.style.opacity = "0";
+  nombreDiv.style.animation = "none";
+  void nombreDiv.offsetWidth;  // reiniciar animación
+  nombreDiv.style.animation = "fadeInNombre 0.6s ease forwards";
+}
+
+    pantallaFinal.children[0].onclick = () => confirmar("Con maceta");
+    pantallaFinal.children[1].onclick = () => confirmar("Sin maceta");
 
     function confirmar(maceta) {
-      seleccion.conMaceta = maceta;
+      seleccion.maceta = maceta;
       pantallaFinal.style.display = "none";
-      imgCargando.style.display = "block";
+      mensajeCargando.style.display = "block";
       btnVolver.style.display = "none";
       setTimeout(() => {
-        alert(`Tu planta: ${seleccion.suculenta}\nTamaño: ${seleccion.tamano}\nCon maceta: ${seleccion.conMaceta}`);
+        alert(`Seleccionaste:\n\nPlanta: ${seleccion.suculenta}\nTamaño: ${seleccion.tamano}\nCon maceta: ${seleccion.maceta}`);
         location.reload();
       }, 3000);
     }
 
-    btnVolver.addEventListener("click", () => location.reload());
+    btnVolver.onclick = () => location.reload();
 
-    window.addEventListener('load', () => {
-      const isMobile = window.innerWidth <= 768;
-      const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-
-      if (isMobile && isPortrait) {
-        // Celular vertical: sólo imagen + mensaje girar
-        habitacion.style.display = 'block';
-        habitacion.classList.remove('zoom-in');
-        habitacion.classList.add('zoom-out');
-        wrapper.style.visibility = "hidden";
-        btnVolver.style.display = "none";
-        imgInicial.style.display = "none";
-        nombreDiv.style.display = "none";
-        imgTamano.style.display = "none";
-        botonesTamano.style.display = "none";
-        pantallaFinal.style.display = "none";
-        imgCargando.style.display = "none";
-        document.getElementById("mensaje-girar").style.display = "block";
-      } else if (isMobile && !isPortrait) {
-        // Celular horizontal: zoom + experiencia completa
-        habitacion.style.display = 'block';
-        habitacion.classList.remove('zoom-in');
-        habitacion.classList.add('zoom-out');
-        wrapper.style.visibility = "hidden";
-        imgInicial.style.display = "none";
-        btnVolver.style.display = "none";
-        nombreDiv.style.display = "block";
-        document.getElementById("mensaje-girar").style.display = "none";
-        iniciarZoom();
-      } else {
-        // PC: sin zoom, mostrar la experiencia directamente
-        habitacion.style.display = "none";
-        habitacion.classList.remove('zoom-in');
-        habitacion.classList.remove('zoom-out');
-        wrapper.style.visibility = "visible";
-        imgInicial.style.display = "block";
-        btnVolver.style.display = "none";
-        nombreDiv.style.display = "block";
-        document.getElementById("mensaje-girar").style.display = "none";
-      }
+    // Navegación con touch para móviles
+    document.getElementById("suculenta-wrapper").addEventListener("touchstart", e => startX = e.touches[0].clientX);
+    document.getElementById("suculenta-wrapper").addEventListener("touchend", e => {
+      if(bloqueado || seleccionHecha) return;
+      const delta = e.changedTouches[0].clientX - startX;
+      if(delta > 50) anterior();
+      else if(delta < -50) siguiente();
     });
 
-    function iniciarZoom() {
-      habitacion.classList.remove('zoom-out');
-      habitacion.classList.add('zoom-in');
-      habitacion.addEventListener('transitionend', () => {
-        habitacion.style.display = 'none';
-        wrapper.style.visibility = "visible";
-        imgInicial.style.display = 'block';
-      }, { once: true });
-    }
-
-    // Para refrescar al girar el celular
-    window.addEventListener("orientationchange", () => {
-      location.reload();
+    // Navegación con teclado
+    document.addEventListener("keydown", e => {
+      if(bloqueado || seleccionHecha) return;
+      if(e.key === "ArrowRight") siguiente();
+      if(e.key === "ArrowLeft") anterior();
     });
   </script>
 </body>
