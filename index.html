@@ -216,7 +216,7 @@
   }
 @media (max-width: 768px) and (orientation: portrait) {
   #overlay-orientacion {
-    background: url('fondo-orientacion.') no-repeat center center;
+    background: url('fondo-orientacion.png') no-repeat center center;
     background-size: cover; transition: opacity 1.3s ease;
 
   }
@@ -259,7 +259,7 @@
   </div>
 
   <script>
-    const suculentas = [...Array(30)].map((_, i) => suculenta${i + 1}.jpg);
+    const suculentas = [...Array(30)].map((_, i) => `suculenta${i + 1}.webp`);
     const nombresSuculentas = [
       "Mammillaria Prolifera", "Cactus maní", "Sedum Musgo Dorado", "Gasteria Verrucosa", "Sedum Adolphi",
       "Senecio Articulatus", "Echeveria Setosa", "Hawortia Aeonium", "Callisia Navicularis", "Cereus Monstrosus",
@@ -337,7 +337,7 @@
       botonesTamano.style.display = "none";
       pantallaFinal.style.display = "flex";
       img.style.opacity = "1";
-      nombreDiv.textContent = ${seleccion.suculenta} – ${tam};
+      nombreDiv.textContent = `${seleccion.suculenta} – ${tam}`;
       nombreDiv.style.opacity = "0";
       nombreDiv.style.animation = "none";
       void nombreDiv.offsetWidth;
@@ -353,7 +353,7 @@
       mensajeCargando.style.display = "block";
       btnVolver.style.display = "none";
       setTimeout(() => {
-        alert(Seleccionaste:\n\nPlanta: ${seleccion.suculenta}\nTamaño: ${seleccion.tamano}\nMaceta: ${seleccion.maceta});
+        alert(`Seleccionaste:\n\nPlanta: ${seleccion.suculenta}\nTamaño: ${seleccion.tamano}\nMaceta: ${seleccion.maceta}`);
         location.reload();
       }, 3000);
     }
