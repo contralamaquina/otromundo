@@ -199,7 +199,7 @@
         width: 37vw;
       }
       #nombre-suculenta {
-        top: 77%; font-size: 10px; left: 32%;
+        top: 79%; font-size: 10px; left: 32%;
       transform: translateX(-50%);
       color: black; z-index: 5; font-size: 20px;
       white-space: nowrap;
@@ -207,12 +207,16 @@
       text-shadow: 0 0 5px rgba(0,0,0,0.5);
       animation-fill-mode: forwards;
       }
+    .opcion-final {
+      width: 130px; cursor: pointer;
+      border-radius: 15px;
+      transition: transform 0.2s ease;}
       #botones-tamano {
-        width: 90%; padding: 10px 20px;
+        width: 60%; padding: 10px 10px;
         box-sizing: border-box;
       }
       .boton-tamano {
-        width: 60px; height: 60px;
+        width: 50px; height: 50px;
       }
       #texto-tamano {
         font-size: 18px; margin-right: 10px;
@@ -225,11 +229,13 @@
   #overlay-orientacion {
     background: url('fondo-orientacion.png') no-repeat center center;
     background-size: cover; transition: opacity 1.3s ease;
-
-  }
-}
-}
     }
+ .opcion-final {
+      width: 100px; cursor: pointer;
+      border-radius: 15px;
+      transition: transform 0.2s ease;
+    }
+
   </style>
 </head>
 <body>
