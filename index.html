@@ -74,7 +74,7 @@
     }
 
     #nombre-suculenta {
-      position: absolute; top: 85%; left: 32%;
+      position: absolute; top: 85%; left: 50%;
       transform: translateX(-50%);
       color: black; z-index: 5; font-size: 36px;
       white-space: nowrap;
@@ -106,14 +106,14 @@
       border-radius: 15px;
       background-size: cover;
       background-position: center;
-      border: 1px solid #333;
+      border: 2px solid #333;
       cursor: pointer;
       transition: transform 0.3s ease;
     }
 
     .boton-tamano:hover {
       transform: scale(1.1);
-      box-shadow: 0 0 10px #88bb44;
+      box-shadow: 0 0 15px #88bb44;
     }
 
     #tam-mediano { width: 75px; height: 75px; }
@@ -190,50 +190,37 @@
       opacity: 0;
       pointer-events: none;
     }
-@media (max-width: 768px) and (orientation: portrait), {
-}
-      #suculenta-wrapper {
-        top: 3.5%; left: 65%;
+	@media (max-width: 768px) and (orientation: portrait),
+           (max-width: 768px) and (orientation: landscape) {
+      .suculenta-wrapper {
+        top: 20%; left: 50%;
         transform: translateX(-50%);
-        width: 495px;
+        width: 80vw;
       }
       #nombre-suculenta {
-      position: absolute; top: 80%; left: 32%;
-      transform: translateX(-50%);
-      color: black; z-index: 5; font-size: 36px;
-      white-space: nowrap;
-      pointer-events: none; opacity: 0;
-      text-shadow: 0 0 5px rgba(0,0,0,0.5);
-      animation-fill-mode: forwards;
+        top: 50%; font-size: 20px;
       }
       #botones-tamano {
         width: 90%; padding: 10px 20px;
         box-sizing: border-box;
       }
-      #boton-tamano {
+      .boton-tamano {
         width: 60px; height: 60px;
       }
       #texto-tamano {
-      font-size: 20px; color: #333; font-weight: 200;
-      user-select: none; margin-right: 20px;
-      white-space: nowrap;
+        font-size: 18px; margin-right: 10px;
       }
-    #loader {
-      position: absolute;
-      top: 48%;
-      left: 65%;
-      transform: translate(-50%, -50%);
-      width: 60px;
-      height: 60px;
-      z-index: 6;
-      display: none;
-      pointer-events: none;
-  #overlay-orientacion {
-    background:  linear-gradient(135deg, #4a90e2, #50e3c2)  }
-}   #overlay-orientacion {
-    background: url('fondo-orientacion.jpg') no-repeat center center;
-    background-size: cover;
+      #loader {
+       top: 65%;
+       left: 50%;
   }
+@media (max-width: 768px) and (orientation: portrait) {
+  #overlay-orientacion {
+    background: url('fondo-orientacion.jpg') no-repeat center center;
+    background-size: cover; transition: opacity 1.3s ease;
+
+  }
+}
 }
     }
   </style>
