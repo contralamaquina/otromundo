@@ -105,6 +105,26 @@
     overflow: hidden;
   }
 
+  .hero-wall-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-wall-bg svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Overlay semitransparente sobre el lado izquierdo para legibilidad */
+  .hero-left-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(20,10,4,0.72) 0%, rgba(20,10,4,0.55) 50%, transparent 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
   .hero-left {
     display: flex;
     flex-direction: column;
@@ -118,7 +138,7 @@
     font-size: 0.85rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--arena);
+    color: var(--salvia);
     margin-bottom: 20px;
     opacity: 0;
     animation: fadeUp 0.8s 0.2s forwards;
@@ -128,7 +148,7 @@
     font-family: 'Playfair Display', serif;
     font-size: clamp(3.2rem, 6vw, 5.5rem);
     line-height: 1.05;
-    color: var(--tierra);
+    color: var(--crema);
     margin-bottom: 28px;
     opacity: 0;
     animation: fadeUp 0.8s 0.4s forwards;
@@ -136,19 +156,16 @@
 
   .hero-title em {
     font-style: italic;
-    color: var(--musgo);
+    color: var(--verde-agua);
   }
 
   .hero-subtitle {
     font-size: 1.25rem;
     font-weight: 300;
     line-height: 1.7;
-    color: var(--texto);
-    opacity: 0.85;
+    color: rgba(245,239,224,0.85);
     max-width: 420px;
     margin-bottom: 48px;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.6s forwards;
   }
 
   .hero-ctas {
@@ -185,19 +202,19 @@
     align-items: center;
     gap: 10px;
     background: transparent;
-    color: var(--tierra);
+    color: var(--crema);
     padding: 16px 32px;
     border-radius: 50px;
     text-decoration: none;
     font-size: 1.05rem;
     font-weight: 600;
-    border: 2px solid var(--arena);
+    border: 2px solid rgba(245,239,224,0.45);
     transition: all 0.3s;
   }
 
   .btn-secondary:hover {
-    border-color: var(--tierra);
-    background: var(--hueso);
+    border-color: var(--crema);
+    background: rgba(245,239,224,0.12);
   }
 
   .hero-right {
@@ -208,39 +225,49 @@
   .hero-bg-shape {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, var(--hueso) 0%, var(--verde-agua) 60%, var(--salvia) 100%);
+    overflow: hidden;
+    z-index: 0;
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
   }
+
+  .hero-bg-shape svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Overlay oscuro gradiente sobre la izquierda — legibilidad del texto */
+  .hero-left::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, rgba(10,4,1,0.78) 0%, rgba(10,4,1,0.55) 65%, transparent 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
 
   .hero-illustration {
     position: absolute;
     inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 60px;
-  }
-
-  /* SVG ilustración suculenta */
-  .succulent-hero {
-    width: min(380px, 80%);
-    opacity: 0;
-    animation: fadeIn 1.2s 0.5s forwards;
   }
 
   .hero-badge {
     position: absolute;
     bottom: 40px;
-    left: 24px;
-    background: var(--tierra);
+    left: 32px;
+    background: rgba(42,31,20,0.82);
+    backdrop-filter: blur(8px);
     color: var(--crema);
-    padding: 16px 24px;
+    padding: 14px 22px;
     border-radius: 12px;
     font-family: 'Playfair Display', serif;
     font-size: 0.9rem;
     line-height: 1.5;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     opacity: 0;
     animation: fadeIn 0.8s 1.2s forwards;
+    z-index: 2;
   }
 
   .hero-badge strong {
@@ -353,6 +380,36 @@
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+
+  /* ── HERO SLIDESHOW ── */
+  .hero-slideshow {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  /* Gradiente que funde el lado izquierdo del slideshow con el fondo */
+  .hero-slideshow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(10,18,8,0.75) 0%, rgba(10,18,8,0.2) 35%, transparent 65%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .hero-slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;
+  }
+
+  .hero-slide.active {
+    opacity: 1;
   }
 
   .maceta-foto-wrap {
@@ -499,7 +556,7 @@
 
   .section-sub {
     font-size: 1.1rem;
-    color: rgba(245,239,224,0.6);
+    color: rgba(245,239,224,0.78);
     margin-top: 16px;
     font-weight: 300;
   }
@@ -556,6 +613,8 @@
   }
 
   .producto-img {
+    position: relative;
+    overflow: hidden;
     height: 200px;
     background: linear-gradient(135deg, var(--musgo), var(--salvia));
     display: flex;
@@ -600,7 +659,7 @@
 
   .producto-desc {
     font-size: 0.9rem;
-    color: rgba(245,239,224,0.55);
+    color: rgba(245,239,224,0.78);
     line-height: 1.6;
     margin-bottom: 20px;
   }
@@ -620,7 +679,7 @@
   .producto-precio span {
     font-family: 'Crimson Pro', serif;
     font-size: 0.85rem;
-    color: rgba(245,239,224,0.4);
+    color: rgba(245,239,224,0.65);
     margin-left: 4px;
   }
 
@@ -661,7 +720,7 @@
 
   .macetas .section-title { color: var(--crema); }
   .macetas .section-eyebrow { color: var(--salvia); }
-  .macetas .section-sub { color: rgba(245,239,224,0.55); }
+  .macetas .section-sub { color: rgba(245,239,224,0.78); }
 
   .macetas-grid {
     display: grid;
@@ -741,7 +800,7 @@
 
   .maceta-desc {
     font-size: 0.92rem;
-    color: rgba(245,239,224,0.5);
+    color: rgba(245,239,224,0.75);
     line-height: 1.65;
     margin-bottom: 24px;
   }
@@ -848,7 +907,7 @@
 
   .cta-final p {
     font-size: 1.2rem;
-    color: rgba(245,239,224,0.65);
+    color: rgba(245,239,224,0.82);
     margin-bottom: 48px;
     max-width: 500px;
     margin-left: auto;
@@ -900,7 +959,7 @@
 
   footer p {
     font-size: 0.85rem;
-    color: rgba(245,239,224,0.35);
+    color: rgba(245,239,224,0.6);
   }
 
   /* ── WHATSAPP FLOTANTE ── */
@@ -1037,6 +1096,68 @@
   .hero-carousel .hero-badge {
     z-index: 20;
   }
+
+  /* ── FONDOS DINÁMICOS ── */
+  .bg-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Color base de cada sección */
+  .hero     { background: #0f1a0a; }
+  .about    { background: #283153; overflow: hidden; }
+  .catalogo { background: #181231; }
+  .macetas  { background: #091812; }
+  .cta-final { background: #0f1a0a; }
+
+  /* Overlay suave encima del canvas — legibilidad sin tapar el efecto */
+  .hero::after, .about::after, .catalogo::after,
+  .macetas::after, .cta-final::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .hero::after      { background: rgba(5,12,3,0.38); }
+  .about::after     { background: rgba(5,12,3,0.42); }
+  .catalogo::after  { background: rgba(5,12,3,0.40); }
+  .macetas::after   { background: rgba(3,10,8,0.40); }
+  .cta-final::after { background: rgba(5,12,3,0.38); }
+
+  /* Todo el contenido por encima del canvas y el overlay */
+  .hero > *:not(.bg-canvas),
+  .about > *:not(.bg-canvas),
+  .catalogo > *:not(.bg-canvas),
+  .macetas > *:not(.bg-canvas),
+  .cta-final > *:not(.bg-canvas) { position: relative; z-index: 1; }
+
+  /* Overlay izquierdo del hero para legibilidad del texto */
+  .hero-left::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(105deg, rgba(5,12,3,0.62) 0%, rgba(5,12,3,0.35) 60%, transparent 100%);
+    z-index: 0; pointer-events: none;
+  }
+  .hero-left { position: relative; z-index: 1; }
+  .hero-right { position: relative; z-index: 1; }
+
+  /* Eliminamos el hero-wall-bg y hero-left-overlay que ya no se usan */
+  .hero-wall-bg, .hero-left-overlay { display: none; }
+
+  /* About: textos sobre fondo oscuro */
+  .about-text h2 { color: var(--crema) !important; }
+  .about-text h2 em { color: var(--verde-agua) !important; }
+  .about-text p { color: rgba(245,239,224,0.85) !important; }
+  .feature-item h4 { color: var(--arena) !important; }
+  .feature-item p { color: rgba(245,239,224,0.65) !important; }
+  .feature-icon { background: rgba(255,255,255,0.07) !important; border-color: rgba(255,255,255,0.1) !important; }
+
 </style>
 </head>
 <body>
@@ -1058,6 +1179,10 @@
 
 <!-- HERO -->
 <section class="hero">
+
+  <canvas class="bg-canvas" data-fx="leaves" aria-hidden="true"></canvas>
+
+  <!-- IZQUIERDA: texto sobre ladrillo -->
   <div class="hero-left">
     <p class="hero-eyebrow">🌿 Suculentas & Macetas Artesanales · Uruguay</p>
     <h1 class="hero-title">Un pedazo de<br><em>naturaleza</em><br>para tu hogar.</h1>
@@ -1065,49 +1190,28 @@
     <div class="hero-ctas">
       <a href="#catalogo" class="btn-primary">Ver catálogo →</a>
       <a href="https://wa.me/59894691690" target="_blank" class="btn-secondary">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="#4A6741"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.118 1.523 5.847L0 24l6.324-1.508A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.001-1.368l-.36-.214-3.732.979.996-3.638-.234-.374A9.786 9.786 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.118 1.523 5.847L0 24l6.324-1.508A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.001-1.368l-.36-.214-3.732.979.996-3.638-.234-.374A9.786 9.786 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
         Escribir por WhatsApp
       </a>
     </div>
   </div>
+
+  <!-- DERECHA: slideshow full -->
   <div class="hero-right">
-    <div class="hero-bg-shape"></div>
-        <div class="hero-illustration">
-      <!-- Cuando tengas tus fotos: reemplazá el SVG por <img src="fotos/hero.jpg" class="foto-placeholder"> -->
-      <svg class="succulent-hero" viewBox="0 0 400 420" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="200" cy="370" rx="85" ry="18" fill="#8B5E3C" opacity="0.3"/>
-        <path d="M135 290 Q130 370 145 385 Q200 400 255 385 Q270 370 265 290 Z" fill="#7A4F2E"/>
-        <path d="M128 290 Q125 295 135 300 Q200 310 265 300 Q275 295 272 290 Z" fill="#9B6A3E"/>
-        <ellipse cx="200" cy="290" rx="72" ry="12" fill="#8B5E3C"/>
-        <ellipse cx="200" cy="290" rx="66" ry="10" fill="#5C3D2E"/>
-        <ellipse cx="200" cy="240" rx="28" ry="58" fill="#4A6741" transform="rotate(-40 200 240)"/>
-        <ellipse cx="200" cy="240" rx="28" ry="58" fill="#5A7A51" transform="rotate(-40 200 240)" opacity="0.6"/>
-        <ellipse cx="200" cy="240" rx="28" ry="58" fill="#4A6741" transform="rotate(40 200 240)"/>
-        <ellipse cx="200" cy="240" rx="28" ry="58" fill="#5A7A51" transform="rotate(40 200 240)" opacity="0.6"/>
-        <ellipse cx="200" cy="240" rx="28" ry="58" fill="#4A6741" transform="rotate(-80 200 240)"/>
-        <ellipse cx="200" cy="240" rx="28" ry="58" fill="#4A6741" transform="rotate(80 200 240)"/>
-        <ellipse cx="200" cy="240" rx="28" ry="58" fill="#3D5935" transform="rotate(0 200 240)"/>
-        <ellipse cx="200" cy="240" rx="28" ry="58" fill="#3D5935" transform="rotate(120 200 240)"/>
-        <ellipse cx="200" cy="240" rx="28" ry="58" fill="#3D5935" transform="rotate(-120 200 240)"/>
-        <ellipse cx="200" cy="255" rx="22" ry="22" fill="#7A9E72"/>
-        <ellipse cx="200" cy="255" rx="14" ry="14" fill="#95D5B2"/>
-        <ellipse cx="200" cy="255" rx="7" ry="7" fill="#B7E4C7"/>
-        <circle cx="172" cy="190" r="4" fill="#8B1A1A" opacity="0.7"/>
-        <circle cx="228" cy="190" r="4" fill="#8B1A1A" opacity="0.7"/>
-        <circle cx="200" cy="182" r="4" fill="#8B1A1A" opacity="0.7"/>
-        <circle cx="155" cy="218" r="3" fill="#8B1A1A" opacity="0.6"/>
-        <circle cx="245" cy="218" r="3" fill="#8B1A1A" opacity="0.6"/>
-      </svg>
-      <div class="hero-badge">
-        <strong>+20</strong>
-        variedades disponibles
-      </div>
+    <div class="hero-slideshow" id="hero-slideshow">
+      <div class="hero-slide active"></div>
+      <div class="hero-slide"></div>
+    </div>
+    <div class="hero-badge">
+      <strong>+20</strong>
+      variedades disponibles
     </div>
   </div>
 </section>
 
 <!-- NOSOTROS -->
 <section class="about" id="nosotros">
+  <canvas class="bg-canvas" data-fx="net" aria-hidden="true"></canvas>
   <div class="about-text reveal">
     <h2>De la planta a la<br><em>maceta</em>, todo nuestro.</h2>
     <p>En Otro Mundo no compramos plantas para revender. Las reproducimos nosotros, desde el esqueje. Las cuidamos, las dejamos crecer, y cuando están listas las combinamos con macetas que fabricamos con nuestros propios moldes.</p>
@@ -1168,6 +1272,7 @@
 
 <!-- CATÁLOGO -->
 <section class="catalogo" id="catalogo">
+  <canvas class="bg-canvas" data-fx="dust" aria-hidden="true"></canvas>
   <div class="section-header reveal">
     <p class="section-eyebrow">Lo que tenemos</p>
     <h2 class="section-title">El <em>catálogo</em></h2>
@@ -1185,9 +1290,8 @@
   <div class="productos-grid" id="productosGrid">
 
     <div class="producto-card" data-cat="pequeña">
-      <!-- Cuando tengas tus fotos: <img src="fotos/echeveria-roseta.jpg"> dentro del producto-img -->
       <div class="producto-img" style="background:linear-gradient(135deg,#5a7a51,#95d5b2)">
-        🌵
+        <img src="https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/sucu014.webp" alt="Echeveria Roseta" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;border-radius:inherit;">
         <span class="producto-tag">Pequeña</span>
         <span class="producto-tag">Pequeña</span>
       </div>
@@ -1202,9 +1306,8 @@
     </div>
 
     <div class="producto-card" data-cat="pequeña">
-      <!-- Cuando tengas tus fotos: <img src="fotos/haworthia-rayada.jpg"> dentro del producto-img -->
       <div class="producto-img" style="background:linear-gradient(135deg,#7a9e72,#c8e6c9)">
-        🪴
+        <img src="https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/sucu025.webp" alt="Haworthia" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;border-radius:inherit;">
         <span class="producto-tag">Pequeña</span>
         <span class="producto-tag">Pequeña</span>
       </div>
@@ -1219,9 +1322,8 @@
     </div>
 
     <div class="producto-card" data-cat="mediana">
-      <!-- Cuando tengas tus fotos: <img src="fotos/aloe-vera.jpg"> dentro del producto-img -->
       <div class="producto-img" style="background:linear-gradient(135deg,#4a6741,#7a9e72)">
-        🌿
+        <img src="https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/sucu040.webp" alt="Aloe Vera" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;border-radius:inherit;">
         <span class="producto-tag">Mediana</span>
         <span class="producto-tag">Mediana</span>
       </div>
@@ -1236,9 +1338,8 @@
     </div>
 
     <div class="producto-card" data-cat="mediana">
-      <!-- Cuando tengas tus fotos: <img src="fotos/sedum-rosado.jpg"> dentro del producto-img -->
       <div class="producto-img" style="background:linear-gradient(135deg,#8b5e3c,#c8a882)">
-        🌸
+        <img src="https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/sucu065.webp" alt="Sedum Rosado" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;border-radius:inherit;">
         <span class="producto-tag">Mediana</span>
         <span class="producto-tag">Mediana</span>
       </div>
@@ -1253,9 +1354,8 @@
     </div>
 
     <div class="producto-card" data-cat="grande">
-      <!-- Cuando tengas tus fotos: <img src="fotos/cactus-columnar.jpg"> dentro del producto-img -->
       <div class="producto-img" style="background:linear-gradient(135deg,#2a4a2a,#4a6741)">
-        🌵
+        <img src="https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/sucu082.webp" alt="Cactus Columnar" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;border-radius:inherit;">
         <span class="producto-tag">Grande</span>
         <span class="producto-tag">Grande</span>
       </div>
@@ -1270,9 +1370,8 @@
     </div>
 
     <div class="producto-card" data-cat="combo">
-      <!-- Cuando tengas tus fotos: <img src="fotos/combo-regalo.jpg"> dentro del producto-img -->
       <div class="producto-img" style="background:linear-gradient(135deg,#5c3d2e,#7a9e72)">
-        🎁
+        <img src="https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/sucu100.webp" alt="Combo Regalo" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;border-radius:inherit;">
         <span class="producto-tag">Combo</span>
         <span class="producto-tag">Combo</span>
       </div>
@@ -1291,6 +1390,7 @@
 
 <!-- MACETAS -->
 <section class="macetas" id="macetas">
+  <canvas class="bg-canvas" data-fx="waves" aria-hidden="true"></canvas>
   <div class="section-header reveal">
     <p class="section-eyebrow">Fabricadas en cemento portland</p>
     <h2 class="section-title">Las <em>macetas</em></h2>
@@ -1301,9 +1401,8 @@
     <!-- CHICA -->
     <div class="maceta-card reveal">
       <div class="maceta-tag">Chica</div>
-      <!-- Cuando tengas tus fotos: <img src="fotos/maceta-chica.jpg"> dentro de maceta-foto-wrap -->
-      <div class="maceta-foto-wrap" style="background:rgba(200,168,130,0.08);display:flex;align-items:center;justify-content:center;">
-        <span style="font-size:2.5rem">🏺</span>
+      <div class="maceta-foto-wrap">
+        <img src="https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/20250710_152228.webp" alt="Maceta Chica" style="width:100%;height:100%;object-fit:cover;">
       </div>
       <div class="maceta-nombre">Decagonal Chica</div>
       <div class="maceta-medidas">⌀ 3 cm · Alto 4 cm</div>
@@ -1314,9 +1413,8 @@
     <!-- MEDIANA -->
     <div class="maceta-card reveal">
       <div class="maceta-tag">Mediana</div>
-      <!-- Cuando tengas tus fotos: <img src="fotos/maceta-mediana.jpg"> dentro de maceta-foto-wrap -->
-      <div class="maceta-foto-wrap" style="background:rgba(200,168,130,0.08);display:flex;align-items:center;justify-content:center;">
-        <span style="font-size:2.5rem">🏺</span>
+      <div class="maceta-foto-wrap">
+        <img src="https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/20250710_152303.webp" alt="Maceta Mediana" style="width:100%;height:100%;object-fit:cover;">
       </div>
       <div class="maceta-nombre">Texturada Mediana</div>
       <div class="maceta-medidas">⌀ 6 cm · Alto 7 cm</div>
@@ -1327,9 +1425,8 @@
     <!-- GRANDE -->
     <div class="maceta-card reveal">
       <div class="maceta-tag">Grande</div>
-      <!-- Cuando tengas tus fotos: <img src="fotos/maceta-grande.jpg"> dentro de maceta-foto-wrap -->
-      <div class="maceta-foto-wrap" style="background:rgba(200,168,130,0.08);display:flex;align-items:center;justify-content:center;">
-        <span style="font-size:2.5rem">🏺</span>
+      <div class="maceta-foto-wrap">
+        <img src="https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/20250710_152345.webp" alt="Maceta Grande" style="width:100%;height:100%;object-fit:cover;">
       </div>
       <div class="maceta-nombre">Lisa Grande</div>
       <div class="maceta-medidas">⌀ 15 cm · Alto 10 cm</div>
@@ -1371,6 +1468,7 @@
 
 <!-- CTA FINAL -->
 <section class="cta-final">
+  <canvas class="bg-canvas" data-fx="leaves" aria-hidden="true"></canvas>
   <h2>¿Te gustó algo?<br><em>Escribinos.</em></h2>
   <p>Contanos qué buscás o pedí el catálogo completo. Respondemos rápido.</p>
   <a href="https://wa.me/59894691690?text=Hola!%20Vi%20la%20p%C3%A1gina%20de%20Otro%20Mundo%20y%20quiero%20consultar%20por%20suculentas%20🌵" target="_blank" class="cta-wa">
@@ -1435,84 +1533,242 @@
     });
   });
 
-  // ── CARRUSEL HERO DESDE GITHUB ──
-  (async function() {
-    const REPO   = 'contralamaquina/otromundo';
-    const FOLDER = 'Imagenes';
-    const BRANCH = 'main';
-    const INTERVAL = 1000; // ms entre fotos
-    const FLASH_DURATION = 80; // ms del destello blanco
 
-    const container = document.getElementById('carouselSlides');
-    const flash     = document.getElementById('carouselFlash');
 
-    if (!container) return;
-
-    // Mostrar fondo verde mientras carga
-    container.innerHTML = '';
-
-    try {
-      // Obtener lista de archivos de la API de GitHub
-      const apiUrl = `https://api.github.com/repos/${REPO}/contents/${FOLDER}?ref=${BRANCH}`;
-      const res    = await fetch(apiUrl);
-      if (!res.ok) throw new Error('GitHub API error: ' + res.status);
-      const files  = await res.json();
-
-      // Filtrar solo imágenes
-      const exts   = ['jpg','jpeg','png','webp','gif'];
-      const imgs   = files.filter(f =>
-        f.type === 'file' && exts.some(e => f.name.toLowerCase().endsWith(e))
-      );
-
-      if (imgs.length === 0) throw new Error('No hay imágenes');
-
-      // Mezclar aleatoriamente para que no sea siempre el mismo orden
-      imgs.sort(() => Math.random() - 0.5);
-
-      // Crear slides (precarga las primeras 5, el resto lazy)
-      imgs.forEach((file, i) => {
-        const slide = document.createElement('div');
-        slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
-
-        const img = document.createElement('img');
-        // raw.githubusercontent.com para carga directa sin API rate limit
-        img.src = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${FOLDER}/${encodeURIComponent(file.name)}`;
-        img.alt = file.name.replace(/\.[^.]+$/, '');
-        img.loading = i < 5 ? 'eager' : 'lazy';
-
-        slide.appendChild(img);
-        container.appendChild(slide);
-      });
-
-      const slides = container.querySelectorAll('.carousel-slide');
-      let current  = 0;
-
-      function nextSlide() {
-        const prev = current;
-        current    = (current + 1) % slides.length;
-
-        // Destello blanco
-        flash.classList.add('flash');
-
-        setTimeout(() => {
-          flash.classList.remove('flash');
-          slides[prev].classList.remove('active');
-          slides[current].classList.add('active');
-        }, FLASH_DURATION);
-      }
-
-      // Arrancar después de 500ms para que la primera foto se vea
-      setTimeout(() => {
-        setInterval(nextSlide, INTERVAL);
-      }, 500);
-
-    } catch (err) {
-      console.warn('Carrusel hero:', err.message);
-      // Fallback: mostrar fondo verde del hero si falla
-      container.innerHTML = '';
-    }
-  })();
 
 </script>
+
+<script>
+(function() {
+  const BASE = 'https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/';
+  const TOTAL = 600;
+  const INTERVAL = 3500;
+  const container = document.getElementById('hero-slideshow');
+  if (!container) return;
+
+  // Dos slides que se alternan (A/B swap)
+  const slides = container.querySelectorAll('.hero-slide');
+  let pool = [];      // URLs confirmadas que cargan
+  let current = 0;    // índice en pool
+  let active = 0;     // 0 o 1 — cuál slide está visible
+  let timer = null;
+
+  function pad(n) {
+    return String(n).padStart(3, '0');
+  }
+
+  function preload(url) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload  = () => resolve(url);
+      img.onerror = () => resolve(null);
+      img.src = url;
+    });
+  }
+
+  // Muestra la próxima imagen del pool
+  function next() {
+    if (pool.length < 2) return;
+    current = (current + 1) % pool.length;
+    const next = 1 - active;
+    slides[next].style.backgroundImage = 'url(' + pool[current] + ')';
+    slides[next].classList.add('active');
+    slides[active].classList.remove('active');
+    active = next;
+  }
+
+  // Arranca con las primeras 2 URLs conocidas mientras carga el resto
+  async function init() {
+    // Seed inicial con las 7 imágenes originales para no esperar nada
+    const seeds = [1,19,40,82,100,200,315];
+    for (const n of seeds) {
+      pool.push(BASE + 'sucu' + pad(n) + '.webp');
+    }
+    // Mostrar la primera inmediatamente
+    slides[0].style.backgroundImage = 'url(' + pool[0] + ')';
+    slides[0].classList.add('active');
+    current = 0;
+    timer = setInterval(next, INTERVAL);
+
+    // Ahora probar las 600 en lotes de 30 en paralelo
+    const batch = 30;
+    for (let i = 1; i <= TOTAL; i += batch) {
+      const checks = [];
+      for (let j = i; j < i + batch && j <= TOTAL; j++) {
+        const url = BASE + 'sucu' + pad(j) + '.webp';
+        // Saltar las seeds que ya están
+        if (seeds.includes(j)) continue;
+        checks.push(preload(url));
+      }
+      const results = await Promise.all(checks);
+      results.forEach(url => { if (url) pool.push(url); });
+      // Pequeña pausa entre lotes para no saturar
+      await new Promise(r => setTimeout(r, 200));
+    }
+
+    // Mezclar el pool para que no salgan siempre en orden
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+  }
+
+  init();
+})();
+</script>
+
+
+<script>
+(function() {
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+  var LC = ['#2d5a2d','#3a7a3a','#4a8a4a','#264826','#1e3d1e','#5a9a5a','#6aaa6a'];
+  var DC = ['#C8A882','#7A9E72','#F5EFE0','#A8C5A0','#d4b878'];
+
+  function setup(c) {
+    var p = c.parentElement;
+    var w = p.offsetWidth, h = p.offsetHeight || window.innerHeight;
+    c.width = w * DPR; c.height = h * DPR;
+    return { ctx: c.getContext('2d'), W: c.width, H: c.height };
+  }
+
+  /* HOJAS */
+  function leaves(c) {
+    var s = setup(c), t = [], running = true;
+    function mk(top) {
+      return { x: Math.random()*s.W, y: top ? -20*DPR : Math.random()*s.H,
+        sz: (7+Math.random()*16)*DPR, rot: Math.random()*Math.PI*2,
+        rs: (Math.random()-.5)*.03, vx: (Math.random()-.5)*1.2*DPR,
+        vy: (.4+Math.random()*.9)*DPR, sw: Math.random()*Math.PI*2,
+        ss: .018+Math.random()*.02, col: LC[Math.floor(Math.random()*LC.length)],
+        a: .2+Math.random()*.45 };
+    }
+    for(var i=0;i<26;i++) t.push(mk(false));
+    function draw() {
+      if(!running) return;
+      s.ctx.clearRect(0,0,s.W,s.H);
+      t.forEach(function(l) {
+        l.sw+=l.ss; l.x+=l.vx+Math.sin(l.sw)*DPR; l.y+=l.vy; l.rot+=l.rs;
+        if(l.y>s.H+30) { Object.assign(l,mk(true)); l.y=-20*DPR; }
+        if(l.x<-40) l.x=s.W+20; if(l.x>s.W+40) l.x=-20;
+        s.ctx.save(); s.ctx.translate(l.x,l.y); s.ctx.rotate(l.rot);
+        s.ctx.globalAlpha=l.a; s.ctx.fillStyle=l.col;
+        s.ctx.beginPath(); s.ctx.ellipse(0,0,l.sz,l.sz*.4,0,0,Math.PI*2); s.ctx.fill();
+        s.ctx.beginPath(); s.ctx.strokeStyle='rgba(0,0,0,0.15)';
+        s.ctx.lineWidth=DPR*.5; s.ctx.moveTo(-l.sz,0); s.ctx.lineTo(l.sz,0); s.ctx.stroke();
+        s.ctx.restore();
+      });
+      s.ctx.globalAlpha=1;
+      requestAnimationFrame(draw);
+    }
+    draw();
+    return function(){ running=false; };
+  }
+
+  /* POLVO */
+  function dust(c) {
+    var s = setup(c), p = [], running = true;
+    for(var i=0;i<85;i++) p.push({
+      x:Math.random()*s.W, y:Math.random()*s.H,
+      r:(.5+Math.random()*2.2)*DPR,
+      vx:(Math.random()-.5)*.35*DPR, vy:-(0.12+Math.random()*.5)*DPR,
+      a:.1+Math.random()*.7, da:(Math.random()-.5)*.007,
+      col:DC[Math.floor(Math.random()*DC.length)]
+    });
+    function draw() {
+      if(!running) return;
+      s.ctx.clearRect(0,0,s.W,s.H);
+      p.forEach(function(pt) {
+        pt.x+=pt.vx; pt.y+=pt.vy; pt.a+=pt.da;
+        if(pt.y<-5){pt.y=s.H+5;pt.x=Math.random()*s.W;}
+        if(pt.x<0) pt.x=s.W; if(pt.x>s.W) pt.x=0;
+        pt.a=Math.max(.04,Math.min(.8,pt.a));
+        s.ctx.beginPath(); s.ctx.arc(pt.x,pt.y,pt.r,0,Math.PI*2);
+        s.ctx.fillStyle=pt.col; s.ctx.globalAlpha=pt.a*.6; s.ctx.fill();
+      });
+      s.ctx.globalAlpha=1;
+      requestAnimationFrame(draw);
+    }
+    draw();
+    return function(){ running=false; };
+  }
+
+  /* ONDAS */
+  function waves(c) {
+    var s = setup(c), t = 0, running = true;
+    var L = [
+      {o:0,   a:.20, f:2.0, col:'#1a4a2a', op:.60},
+      {o:1.1, a:.15, f:2.7, col:'#2d6e42', op:.42},
+      {o:2.4, a:.10, f:3.4, col:'#3a8a52', op:.30},
+      {o:3.7, a:.07, f:4.1, col:'#5aaa72', op:.18},
+    ];
+    function draw() {
+      if(!running) return;
+      s.ctx.clearRect(0,0,s.W,s.H);
+      t+=.009;
+      L.forEach(function(l) {
+        s.ctx.beginPath(); s.ctx.moveTo(0,s.H);
+        for(var x=0;x<=s.W;x+=4) {
+          var y=s.H*(.5+l.a*Math.sin((x/s.W)*l.f*Math.PI*2+t+l.o)
+                    +l.a*.38*Math.sin((x/s.W)*l.f*1.65*Math.PI*2+t*1.28+l.o));
+          s.ctx.lineTo(x,y);
+        }
+        s.ctx.lineTo(s.W,s.H); s.ctx.closePath();
+        s.ctx.fillStyle=l.col; s.ctx.globalAlpha=l.op; s.ctx.fill();
+      });
+      s.ctx.globalAlpha=1;
+      requestAnimationFrame(draw);
+    }
+    draw();
+    return function(){ running=false; };
+  }
+
+  /* RED */
+  function net(c) {
+    var s = setup(c), running = true;
+    var DIST = 105*DPR;
+    var nodes = [];
+    for(var i=0;i<30;i++) nodes.push({
+      x:Math.random()*s.W, y:Math.random()*s.H,
+      vx:(Math.random()-.5)*.65*DPR, vy:(Math.random()-.5)*.65*DPR,
+      r:(1.4+Math.random()*1.8)*DPR
+    });
+    function draw() {
+      if(!running) return;
+      s.ctx.clearRect(0,0,s.W,s.H);
+      for(var i=0;i<nodes.length;i++) {
+        for(var j=i+1;j<nodes.length;j++) {
+          var dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+          var d=Math.sqrt(dx*dx+dy*dy);
+          if(d<DIST) {
+            s.ctx.beginPath(); s.ctx.moveTo(nodes[i].x,nodes[i].y);
+            s.ctx.lineTo(nodes[j].x,nodes[j].y);
+            s.ctx.strokeStyle='#5aaa6a';
+            s.ctx.globalAlpha=(1-d/DIST)*.28;
+            s.ctx.lineWidth=DPR*.7; s.ctx.stroke();
+          }
+        }
+      }
+      nodes.forEach(function(n) {
+        n.x+=n.vx; n.y+=n.vy;
+        if(n.x<0||n.x>s.W) n.vx*=-1;
+        if(n.y<0||n.y>s.H) n.vy*=-1;
+        s.ctx.beginPath(); s.ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+        s.ctx.fillStyle='#8ada8a'; s.ctx.globalAlpha=.65; s.ctx.fill();
+      });
+      s.ctx.globalAlpha=1;
+      requestAnimationFrame(draw);
+    }
+    draw();
+    return function(){ running=false; };
+  }
+
+  var FX = { leaves:leaves, dust:dust, waves:waves, net:net };
+  document.querySelectorAll('canvas.bg-canvas').forEach(function(c) {
+    var fx = c.dataset.fx;
+    if(FX[fx]) FX[fx](c);
+  });
+})();
+</script>
+
 </body>
 </html>
