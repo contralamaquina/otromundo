@@ -1762,38 +1762,88 @@
       <div class="card-carousel-dots">${dots}</div>`;
   }
 
+  // ── INFINITE SCROLL CONFIG ──
+  const PAGE_SIZE = 6;
+  let listaActiva = [];   // lista filtrada actual
+  let paginaActual = 0;   // cuántas páginas ya renderizadas
+  let scrollObserver = null;
+
+  function buildCardHTML(p, idx) {
+    const cat = p.categoria || 'mediana';
+    const grad = CAT_GRADIENTS[cat] || CAT_GRADIENTS['mediana'];
+    const nombreEnc = encodeURIComponent('Hola! Quiero consultar por ' + p.nombre + ' 🌵');
+    const capCat = cat.charAt(0).toUpperCase() + cat.slice(1);
+    const imagenes = (p.imagenes && p.imagenes.length) ? p.imagenes
+                     : (p.imagen_url ? [p.imagen_url] : []);
+    const carousel = buildCarousel(imagenes, grad, p.nombre);
+    return `
+    <div class="producto-card" data-cat="${cat}" data-idx="${idx}" onclick="abrirModal(event, 'producto', ${idx})">
+      <div class="producto-img card-carousel" style="background:${grad};overflow:hidden;">
+        ${carousel}
+        <span class="producto-tag">${capCat}</span>
+      </div>
+      <div class="producto-body">
+        <div class="producto-nombre">${p.nombre}</div>
+        <div class="producto-desc">${p.descripcion || ''}</div>
+        <div class="producto-footer">
+          <div class="producto-precio">$${p.precio} <span>UYU</span></div>
+          <a href="https://wa.me/59894691690?text=${nombreEnc}" target="_blank" class="btn-pedir" onclick="event.stopPropagation()">Pedir</a>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function renderPagina() {
+    const grid = document.getElementById('productosGrid');
+    const inicio = paginaActual * PAGE_SIZE;
+    const fin    = inicio + PAGE_SIZE;
+    const trozo  = listaActiva.slice(inicio, fin);
+
+    // Quitar sentinel anterior si existe
+    const sentinelViejo = document.getElementById('scroll-sentinel');
+    if (sentinelViejo) sentinelViejo.remove();
+
+    // Insertar las cards nuevas
+    trozo.forEach(p => {
+      const idx = todosLosProductos.indexOf(p);
+      const div = document.createElement('div');
+      div.innerHTML = buildCardHTML(p, idx);
+      grid.appendChild(div.firstElementChild);
+    });
+
+    initCardCarousels();
+    paginaActual++;
+
+    // Si quedan más productos, poner sentinel para el próximo load
+    if (paginaActual * PAGE_SIZE < listaActiva.length) {
+      const sentinel = document.createElement('div');
+      sentinel.id = 'scroll-sentinel';
+      sentinel.style.cssText = 'grid-column:1/-1;height:1px;';
+      grid.appendChild(sentinel);
+
+      if (scrollObserver) scrollObserver.disconnect();
+      scrollObserver = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          scrollObserver.disconnect();
+          renderPagina();
+        }
+      }, { rootMargin: '200px' });
+      scrollObserver.observe(sentinel);
+    }
+  }
+
   function renderProductos(lista) {
     const grid = document.getElementById('productosGrid');
+    if (scrollObserver) { scrollObserver.disconnect(); scrollObserver = null; }
+    listaActiva  = lista;
+    paginaActual = 0;
+    grid.innerHTML = '';
+
     if (!lista.length) {
       grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:rgba(245,239,224,0.5);">No hay productos en esta categoría.</div>';
       return;
     }
-    grid.innerHTML = lista.map((p, idx) => {
-      const cat = p.categoria || 'mediana';
-      const grad = CAT_GRADIENTS[cat] || CAT_GRADIENTS['mediana'];
-      const nombreEnc = encodeURIComponent('Hola! Quiero consultar por ' + p.nombre + ' 🌵');
-      const capCat = cat.charAt(0).toUpperCase() + cat.slice(1);
-      // Soporte imagenes[] y fallback a imagen_url
-      const imagenes = (p.imagenes && p.imagenes.length) ? p.imagenes
-                       : (p.imagen_url ? [p.imagen_url] : []);
-      const carousel = buildCarousel(imagenes, grad, p.nombre);
-      return `
-      <div class="producto-card" data-cat="${cat}" data-idx="${idx}" onclick="abrirModal(event, 'producto', ${idx})">
-        <div class="producto-img card-carousel" style="background:${grad};overflow:hidden;">
-          ${carousel}
-          <span class="producto-tag">${capCat}</span>
-        </div>
-        <div class="producto-body">
-          <div class="producto-nombre">${p.nombre}</div>
-          <div class="producto-desc">${p.descripcion || ''}</div>
-          <div class="producto-footer">
-            <div class="producto-precio">$${p.precio} <span>UYU</span></div>
-            <a href="https://wa.me/59894691690?text=${nombreEnc}" target="_blank" class="btn-pedir" onclick="event.stopPropagation()">Pedir</a>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-    initCardCarousels();
+    renderPagina();
   }
 
   async function cargarProductos() {
@@ -2130,15 +2180,16 @@
   const BASE     = 'https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/';
   const TOTAL    = 399;
   const INTERVAL = 3500;
+  const PRELOAD  = 4;
   const container = document.getElementById('hero-slideshow');
   if (!container) return;
 
   const slides = container.querySelectorAll('.hero-slide');
   let active = 0;
+  let intervalId = null;
 
   function pad(n) { return String(n).padStart(3, '0'); }
 
-  // Generar array [1..399] mezclado (Fisher-Yates)
   const nums = Array.from({ length: TOTAL }, (_, i) => i + 1);
   for (let i = nums.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -2147,38 +2198,79 @@
   let current = 0;
 
   function urlOf(idx) {
-    return BASE + 'sucu' + pad(nums[idx]) + '.webp';
+    return BASE + 'sucu' + pad(nums[idx % TOTAL]) + '.webp';
   }
 
-  function showNext() {
-    current = (current + 1) % TOTAL;
-    const next = 1 - active;
-    const img = new Image();
-    img.onload = () => {
-      slides[next].style.backgroundImage = 'url(' + img.src + ')';
-      slides[next].classList.add('active');
-      slides[active].classList.remove('active');
-      active = next;
-    };
-    img.onerror = () => {
-      // imagen rota → saltar a la siguiente sin esperar el intervalo
+  const cache = {};
+
+  function precargar(idx) {
+    return new Promise(resolve => {
+      const url = urlOf(idx);
+      if (cache[url]) { resolve(url); return; }
+      const img = new Image();
+      img.onload  = () => { cache[url] = true; resolve(url); };
+      img.onerror = () => resolve(null);
+      img.src = url;
+    });
+  }
+
+  async function siguienteValida() {
+    for (let t = 0; t < 10; t++) {
       current = (current + 1) % TOTAL;
-      slides[1 - active].style.backgroundImage = 'url(' + urlOf(current) + ')';
-      slides[1 - active].classList.add('active');
-      slides[active].classList.remove('active');
-      active = 1 - active;
-    };
-    img.src = urlOf(current);
+      const url = await precargar(current);
+      if (url) return url;
+    }
+    return null;
   }
 
-  // Mostrar la primera imagen de inmediato
-  slides[0].style.backgroundImage = 'url(' + urlOf(0) + ')';
-  slides[0].classList.add('active');
+  async function tick() {
+    const next = 1 - active;
+    const url = await siguienteValida();
+    if (!url) return;
+    slides[next].style.backgroundImage = 'url(' + url + ')';
+    slides[next].classList.add('active');
+    slides[active].classList.remove('active');
+    active = next;
+    precargar(current + 1);
+  }
 
-  // Precargar la segunda en silencio antes de arrancar el timer
-  const seed2 = new Image();
-  seed2.onload = seed2.onerror = () => setInterval(showNext, INTERVAL);
-  seed2.src = urlOf(1);
+  async function arrancar() {
+    const promesas = Array.from({ length: PRELOAD }, (_, i) => precargar(i));
+    let primeraMostrada = false;
+
+    promesas.forEach(p => {
+      p.then(url => {
+        if (url && !primeraMostrada) {
+          primeraMostrada = true;
+          slides[0].style.backgroundImage = 'url(' + url + ')';
+          slides[0].classList.add('active');
+          if (!intervalId) intervalId = setInterval(tick, INTERVAL);
+        }
+      });
+    });
+
+    // Fallback si la red es muy lenta
+    setTimeout(() => {
+      if (!primeraMostrada) {
+        current = Math.floor(Math.random() * TOTAL);
+        precargar(current).then(url => {
+          if (url) {
+            primeraMostrada = true;
+            slides[0].style.backgroundImage = 'url(' + url + ')';
+            slides[0].classList.add('active');
+            if (!intervalId) intervalId = setInterval(tick, INTERVAL);
+          }
+        });
+      }
+    }, 5000);
+
+    Promise.all(promesas).then(() => {
+      current = PRELOAD - 1;
+      precargar(current + 1);
+    });
+  }
+
+  arrancar();
 })();
 </script>
 
