@@ -480,72 +480,6 @@
   }
 
   #toast.show { opacity: 1; transform: translateY(0); }
-
-  /* ── IMAGE UPLOAD ── */
-  .img-upload-area {
-    border: 1px dashed var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: all .2s;
-    background: var(--bg);
-    position: relative;
-  }
-  .img-upload-area:hover { border-color: var(--accent); background: rgba(122,158,114,0.04); }
-  .img-upload-area.dragover { border-color: var(--accent); background: rgba(122,158,114,0.08); }
-  .img-upload-area input[type="file"] {
-    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
-  }
-  .img-upload-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-  .img-upload-label span { color: var(--accent); font-size: 13px; }
-  .img-upload-progress {
-    height: 2px;
-    background: var(--border);
-    border-radius: 2px;
-    margin-top: 8px;
-    overflow: hidden;
-    display: none;
-  }
-  .img-upload-progress-bar {
-    height: 100%;
-    background: var(--accent);
-    transition: width .3s;
-    width: 0%;
-  }
-  .img-upload-status {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 6px;
-    min-height: 16px;
-  }
-  .img-url-divider {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin: 8px 0;
-  }
-  .img-url-divider::before, .img-url-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
 </style>
 </head>
 <body>
@@ -662,22 +596,7 @@
           </select>
         </div>
         <div class="modal-field full">
-          <label>Imagen</label>
-          <div class="img-upload-area" id="f-upload-area"
-               ondragover="handleDragOver(event,'f-upload-area')"
-               ondragleave="handleDragLeave('f-upload-area')"
-               ondrop="handleDrop(event,'f','producto')">
-            <input type="file" id="f-file" accept="image/*" onchange="handleFileSelect(this,'f','producto')">
-            <div class="img-upload-label">
-              <span>↑</span>
-              Arrastrá una imagen o hacé clic para subir
-            </div>
-          </div>
-          <div class="img-upload-progress" id="f-progress">
-            <div class="img-upload-progress-bar" id="f-progress-bar"></div>
-          </div>
-          <div class="img-upload-status" id="f-upload-status"></div>
-          <div class="img-url-divider">o pegá una URL</div>
+          <label>URL de imagen</label>
           <input type="text" id="f-img" placeholder="https://raw.githubusercontent.com/..." oninput="previewImg(this.value)">
           <img id="img-preview" class="modal-preview" alt="preview">
         </div>
@@ -733,22 +652,7 @@
           <input type="text" id="mf-medidas" placeholder="⌀ 6 cm · Alto 7 cm">
         </div>
         <div class="modal-field full">
-          <label>Imagen</label>
-          <div class="img-upload-area" id="mf-upload-area"
-               ondragover="handleDragOver(event,'mf-upload-area')"
-               ondragleave="handleDragLeave('mf-upload-area')"
-               ondrop="handleDrop(event,'mf','maceta')">
-            <input type="file" id="mf-file" accept="image/*" onchange="handleFileSelect(this,'mf','maceta')">
-            <div class="img-upload-label">
-              <span>↑</span>
-              Arrastrá una imagen o hacé clic para subir
-            </div>
-          </div>
-          <div class="img-upload-progress" id="mf-progress">
-            <div class="img-upload-progress-bar" id="mf-progress-bar"></div>
-          </div>
-          <div class="img-upload-status" id="mf-upload-status"></div>
-          <div class="img-url-divider">o pegá una URL</div>
+          <label>URL de imagen</label>
           <input type="text" id="mf-img" placeholder="https://..." oninput="previewImgMaceta(this.value)">
           <img id="mf-preview" class="modal-preview" alt="preview">
         </div>
@@ -1143,108 +1047,6 @@ async function guardarMaceta() {
 function mostrarMsgMaceta(txt, tipo) {
   const el = document.getElementById('modal-maceta-msg');
   el.textContent = txt; el.className = 'modal-msg ' + tipo;
-}
-
-/* ── IMAGE UPLOAD ── */
-const SB_BUCKET = 'imagenes'; // ← nombre del bucket en Supabase Storage
-
-function handleDragOver(e, areaId) {
-  e.preventDefault();
-  document.getElementById(areaId).classList.add('dragover');
-}
-function handleDragLeave(areaId) {
-  document.getElementById(areaId).classList.remove('dragover');
-}
-function handleDrop(e, prefix, tipo) {
-  e.preventDefault();
-  document.getElementById(prefix + '-upload-area').classList.remove('dragover');
-  const file = e.dataTransfer.files[0];
-  if (file && file.type.startsWith('image/')) subirImagen(file, prefix, tipo);
-}
-function handleFileSelect(input, prefix, tipo) {
-  const file = input.files[0];
-  if (file) subirImagen(file, prefix, tipo);
-}
-
-async function subirImagen(file, prefix, tipo) {
-  const ext      = file.name.split('.').pop().toLowerCase();
-  const nombre   = tipo + '_' + Date.now() + '.' + ext;
-  const progWrap = document.getElementById(prefix + '-progress');
-  const progBar  = document.getElementById(prefix + '-progress-bar');
-  const status   = document.getElementById(prefix + '-upload-status');
-
-  progWrap.style.display = 'block';
-  progBar.style.width = '10%';
-  status.textContent = 'Subiendo...';
-
-  try {
-    // Supabase Storage upload
-    const res = await fetch(
-      `${SB_URL}/storage/v1/object/${SB_BUCKET}/${nombre}`,
-      {
-        method: 'POST',
-        headers: {
-          'apikey': SB_KEY,
-          'Authorization': 'Bearer ' + SB_KEY,
-          'Content-Type': file.type,
-          'x-upsert': 'true',
-        },
-        body: file,
-      }
-    );
-
-    progBar.style.width = '90%';
-
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || res.status);
-    }
-
-    progBar.style.width = '100%';
-
-    // URL pública
-    const publicUrl = `${SB_URL}/storage/v1/object/public/${SB_BUCKET}/${nombre}`;
-    document.getElementById(prefix + '-img').value = publicUrl;
-
-    if (prefix === 'f')  previewImg(publicUrl);
-    if (prefix === 'mf') previewImgMaceta(publicUrl);
-
-    status.style.color = 'var(--accent)';
-    status.textContent = '✓ ' + file.name;
-    setTimeout(() => { progWrap.style.display = 'none'; progBar.style.width = '0%'; }, 1500);
-
-  } catch (err) {
-    progBar.style.background = 'var(--danger)';
-    progBar.style.width = '100%';
-    status.style.color = 'var(--danger)';
-    status.textContent = 'Error: ' + err.message;
-    setTimeout(() => {
-      progWrap.style.display = 'none';
-      progBar.style.width = '0%';
-      progBar.style.background = 'var(--accent)';
-    }, 3000);
-  }
-}
-
-// Limpiar upload state al abrir/cerrar modales
-const _limpiarModal = limpiarModal;
-limpiarModal = function() {
-  _limpiarModal();
-  resetUploadState('f');
-};
-const _limpiarModalMaceta = limpiarModalMaceta;
-limpiarModalMaceta = function() {
-  _limpiarModalMaceta();
-  resetUploadState('mf');
-};
-function resetUploadState(prefix) {
-  const prog = document.getElementById(prefix + '-progress');
-  const bar  = document.getElementById(prefix + '-progress-bar');
-  const st   = document.getElementById(prefix + '-upload-status');
-  if (prog) { prog.style.display = 'none'; bar.style.width = '0%'; bar.style.background = 'var(--accent)'; }
-  if (st)   { st.textContent = ''; st.style.color = 'var(--muted)'; }
-  const fileInput = document.getElementById(prefix + '-file');
-  if (fileInput) fileInput.value = '';
 }
 </script>
 </body>
