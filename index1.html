@@ -1531,58 +1531,80 @@
 
 <script>
 (function() {
-  const BASE     = 'https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/';
-  const TOTAL    = 399;
+  const BASE = 'https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/';
+  const TOTAL = 999;
   const INTERVAL = 3500;
   const container = document.getElementById('hero-slideshow');
   if (!container) return;
 
+  // Dos slides que se alternan (A/B swap)
   const slides = container.querySelectorAll('.hero-slide');
-  let active = 0;
+  let pool = [];      // URLs confirmadas que cargan
+  let current = 0;    // índice en pool
+  let active = 0;     // 0 o 1 — cuál slide está visible
+  let timer = null;
 
-  function pad(n) { return String(n).padStart(3, '0'); }
-
-  // Generar array [1..399] mezclado (Fisher-Yates)
-  const nums = Array.from({ length: TOTAL }, (_, i) => i + 1);
-  for (let i = nums.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [nums[i], nums[j]] = [nums[j], nums[i]];
-  }
-  let current = 0;
-
-  function urlOf(idx) {
-    return BASE + 'sucu' + pad(nums[idx]) + '.webp';
+  function pad(n) {
+    return String(n).padStart(3, '0');
   }
 
-  function showNext() {
-    current = (current + 1) % TOTAL;
+  function preload(url) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload  = () => resolve(url);
+      img.onerror = () => resolve(null);
+      img.src = url;
+    });
+  }
+
+  // Muestra la próxima imagen del pool
+  function next() {
+    if (pool.length < 2) return;
+    current = (current + 1) % pool.length;
     const next = 1 - active;
-    const img = new Image();
-    img.onload = () => {
-      slides[next].style.backgroundImage = 'url(' + img.src + ')';
-      slides[next].classList.add('active');
-      slides[active].classList.remove('active');
-      active = next;
-    };
-    img.onerror = () => {
-      // imagen rota → saltar a la siguiente sin esperar el intervalo
-      current = (current + 1) % TOTAL;
-      slides[1 - active].style.backgroundImage = 'url(' + urlOf(current) + ')';
-      slides[1 - active].classList.add('active');
-      slides[active].classList.remove('active');
-      active = 1 - active;
-    };
-    img.src = urlOf(current);
+    slides[next].style.backgroundImage = 'url(' + pool[current] + ')';
+    slides[next].classList.add('active');
+    slides[active].classList.remove('active');
+    active = next;
   }
 
-  // Mostrar la primera imagen de inmediato
-  slides[0].style.backgroundImage = 'url(' + urlOf(0) + ')';
-  slides[0].classList.add('active');
+  // Arranca con las primeras 2 URLs conocidas mientras carga el resto
+  async function init() {
+    // Seed inicial con las 7 imágenes originales para no esperar nada
+    const seeds = [1,19,40,82,100,200,315];
+    for (const n of seeds) {
+      pool.push(BASE + 'sucu' + pad(n) + '.webp');
+    }
+    // Mostrar la primera inmediatamente
+    slides[0].style.backgroundImage = 'url(' + pool[0] + ')';
+    slides[0].classList.add('active');
+    current = 0;
+    timer = setInterval(next, INTERVAL);
 
-  // Precargar la segunda en silencio antes de arrancar el timer
-  const seed2 = new Image();
-  seed2.onload = seed2.onerror = () => setInterval(showNext, INTERVAL);
-  seed2.src = urlOf(1);
+    // Ahora probar las 600 en lotes de 30 en paralelo
+    const batch = 30;
+    for (let i = 1; i <= TOTAL; i += batch) {
+      const checks = [];
+      for (let j = i; j < i + batch && j <= TOTAL; j++) {
+        const url = BASE + 'sucu' + pad(j) + '.webp';
+        // Saltar las seeds que ya están
+        if (seeds.includes(j)) continue;
+        checks.push(preload(url));
+      }
+      const results = await Promise.all(checks);
+      results.forEach(url => { if (url) pool.push(url); });
+      // Pequeña pausa entre lotes para no saturar
+      await new Promise(r => setTimeout(r, 200));
+    }
+
+    // Mezclar el pool para que no salgan siempre en orden
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+  }
+
+  init();
 })();
 </script>
 
