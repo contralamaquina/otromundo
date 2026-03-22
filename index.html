@@ -2179,95 +2179,96 @@
 (function() {
   const BASE     = 'https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/';
   const TOTAL    = 399;
-  const INTERVAL = 3500;
-  const PRELOAD  = 4;
+  const SHOW_MS  = 3000;  // tiempo que se ve cada foto
+  const MAX_WAIT = 6000;  // máx que esperamos que cargue la siguiente
   const container = document.getElementById('hero-slideshow');
   if (!container) return;
 
   const slides = container.querySelectorAll('.hero-slide');
   let active = 0;
-  let intervalId = null;
 
   function pad(n) { return String(n).padStart(3, '0'); }
 
+  // Mezcla aleatoria 1..399
   const nums = Array.from({ length: TOTAL }, (_, i) => i + 1);
   for (let i = nums.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [nums[i], nums[j]] = [nums[j], nums[i]];
   }
-  let current = 0;
+  let cur = 0;
 
-  function urlOf(idx) {
-    return BASE + 'sucu' + pad(nums[idx % TOTAL]) + '.webp';
+  function urlOf(i) {
+    return BASE + 'sucu' + pad(nums[i % TOTAL]) + '.webp';
   }
 
-  const cache = {};
-
-  function precargar(idx) {
-    return new Promise(resolve => {
-      const url = urlOf(idx);
-      if (cache[url]) { resolve(url); return; }
+  // Carga una imagen, resuelve con la URL si ok, null si error o timeout
+  function cargar(url, timeout) {
+    return new Promise(res => {
+      let done = false;
+      const finish = (val) => { if (!done) { done = true; res(val); } };
       const img = new Image();
-      img.onload  = () => { cache[url] = true; resolve(url); };
-      img.onerror = () => resolve(null);
+      img.onload  = () => finish(url);
+      img.onerror = () => finish(null);
       img.src = url;
+      // Si tarda más de MAX_WAIT (solo para el loop, no el arranque), la saltamos
+      if (timeout) setTimeout(() => finish(null), timeout);
     });
   }
 
-  async function siguienteValida() {
-    for (let t = 0; t < 10; t++) {
-      current = (current + 1) % TOTAL;
-      const url = await precargar(current);
-      if (url) return url;
-    }
-    return null;
-  }
-
-  async function tick() {
+  // Muestra una URL en el slot inactivo y hace el crossfade
+  function mostrar(url) {
     const next = 1 - active;
-    const url = await siguienteValida();
-    if (!url) return;
     slides[next].style.backgroundImage = 'url(' + url + ')';
     slides[next].classList.add('active');
     slides[active].classList.remove('active');
     active = next;
-    precargar(current + 1);
   }
 
-  async function arrancar() {
-    const promesas = Array.from({ length: PRELOAD }, (_, i) => precargar(i));
-    let primeraMostrada = false;
-
-    promesas.forEach(p => {
-      p.then(url => {
-        if (url && !primeraMostrada) {
-          primeraMostrada = true;
-          slides[0].style.backgroundImage = 'url(' + url + ')';
-          slides[0].classList.add('active');
-          if (!intervalId) intervalId = setInterval(tick, INTERVAL);
-        }
-      });
-    });
-
-    // Fallback si la red es muy lenta
-    setTimeout(() => {
-      if (!primeraMostrada) {
-        current = Math.floor(Math.random() * TOTAL);
-        precargar(current).then(url => {
-          if (url) {
-            primeraMostrada = true;
-            slides[0].style.backgroundImage = 'url(' + url + ')';
-            slides[0].classList.add('active');
-            if (!intervalId) intervalId = setInterval(tick, INTERVAL);
-          }
-        });
+  // Loop principal: carga la siguiente, la muestra, espera SHOW_MS, repite
+  // Si la imagen falla, prueba la siguiente sin esperar
+  async function loop() {
+    // Intentamos hasta 20 imágenes seguidas buscando una que cargue
+    for (let intentos = 0; intentos < 20; intentos++) {
+      cur = (cur + 1) % TOTAL;
+      const url = await cargar(urlOf(cur), MAX_WAIT);
+      if (url) {
+        mostrar(url);
+        // Precarga silenciosa de la siguiente mientras esta se ve
+        cargar(urlOf(cur + 1));
+        // Esperar antes de la próxima
+        await new Promise(r => setTimeout(r, SHOW_MS));
+        break;
       }
-    }, 5000);
+      // imagen rota → siguiente intento sin pausa
+    }
+    loop(); // se auto-programa, nunca se solapa
+  }
 
-    Promise.all(promesas).then(() => {
-      current = PRELOAD - 1;
-      precargar(current + 1);
-    });
+  // ── ARRANQUE: lanza 6 pedidos en paralelo, muestra el primero que llegue ──
+  async function arrancar() {
+    // Índices aleatorios para el arranque inicial
+    const candidatos = Array.from({ length: 6 }, (_, i) => i);
+    let mostrado = false;
+
+    // Cargar todas en paralelo — mostrar la primera que responda
+    const promesas = candidatos.map(i =>
+      cargar(urlOf(i)).then(url => {
+        if (url && !mostrado) {
+          mostrado = true;
+          cur = i;
+          mostrar(url);
+          // Arrancar el loop después de SHOW_MS
+          setTimeout(() => loop(), SHOW_MS);
+        }
+      })
+    );
+
+    await Promise.all(promesas);
+
+    // Si ninguna de las 6 cargó (red muy lenta/sin internet), reintentar
+    if (!mostrado) {
+      setTimeout(arrancar, 3000);
+    }
   }
 
   arrancar();
