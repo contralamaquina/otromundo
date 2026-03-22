@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel · Otro Mundo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0e0e0e;
+    --surface:  #161616;
+    --border:   #2a2a2a;
+    --text:     #e8e8e8;
+    --muted:    #666;
+    --accent:   #7a9e72;
+    --accent2:  #c8a882;
+    --danger:   #c0503a;
+    --radius:   6px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* ── LOGIN ── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-box {
+    width: 320px;
+  }
+
+  .login-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  .login-logo span { color: var(--accent); }
+
+  .login-box h1 {
+    font-size: 22px;
+    font-weight: 300;
+    margin-bottom: 32px;
+    color: var(--text);
+  }
+
+  .field { margin-bottom: 16px; }
+
+  .field label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .field input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  .field input:focus { border-color: var(--accent); }
+
+  .login-error {
+    color: var(--danger);
+    font-size: 12px;
+    margin-bottom: 16px;
+    display: none;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── BOTONES ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all .15s;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0e0e0e;
+    width: 100%;
+    justify-content: center;
+    padding: 11px;
+    font-size: 14px;
+  }
+  .btn-primary:hover { background: #8ab882; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { color: var(--text); border-color: #444; }
+
+  .btn-accent {
+    background: var(--accent);
+    color: #0e0e0e;
+  }
+  .btn-accent:hover { background: #8ab882; }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid transparent;
+  }
+  .btn-danger:hover { border-color: var(--danger); }
+
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+
+  /* ── APP ── */
+  #app { display: none; }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+  }
+
+  .header-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .header-logo span { color: var(--accent); }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .header-stat {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .header-stat b { color: var(--accent); font-weight: 400; }
+
+  /* ── MAIN ── */
+  main { padding: 32px; max-width: 1100px; margin: 0 auto; }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+  }
+
+  .toolbar-left { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .filter-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+    transition: all .15s;
+  }
+
+  .filter-pill:hover { color: var(--text); border-color: #444; }
+  .filter-pill.active { background: var(--accent); color: #0e0e0e; border-color: var(--accent); }
+
+  /* ── TABLA ── */
+  .table-wrap {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    padding: 10px 16px;
+    text-align: left;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .td-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: var(--surface);
+    display: block;
+    border: 1px solid var(--border);
+  }
+
+  .td-img-placeholder {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 18px;
+  }
+
+  .td-nombre { font-weight: 500; color: var(--text); }
+  .td-desc { color: var(--muted); font-size: 12px; max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .td-precio { font-family: 'DM Mono', monospace; color: var(--accent2); }
+
+  .cat-pill {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    background: rgba(122,158,114,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(122,158,114,0.2);
+  }
+
+  .status-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+  }
+
+  .status-dot::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+
+  .status-dot.on { color: var(--accent); }
+  .status-dot.on::before { background: var(--accent); }
+
+  .td-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* ── EMPTY / LOADING ── */
+  .state-row td {
+    text-align: center;
+    padding: 60px 16px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    padding: 20px 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-header h2 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+  }
+
+  .modal-close:hover { color: var(--text); }
+
+  .modal-body { padding: 20px 24px 24px; }
+
+  .modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .modal-grid .full { grid-column: 1 / -1; }
+
+  .modal-field { display: flex; flex-direction: column; gap: 6px; }
+
+  .modal-field label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .modal-field input,
+  .modal-field textarea,
+  .modal-field select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color .2s;
+    width: 100%;
+  }
+
+  .modal-field input:focus,
+  .modal-field textarea:focus,
+  .modal-field select:focus { border-color: var(--accent); }
+
+  .modal-field textarea { resize: vertical; min-height: 80px; }
+
+  .modal-field select option { background: var(--surface); }
+
+  .modal-preview {
+    width: 100%;
+    height: 120px;
+    border-radius: var(--radius);
+    object-fit: cover;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    display: none;
+    margin-top: 8px;
+  }
+
+  .modal-preview.show { display: block; }
+
+  .modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    margin-top: 16px;
+  }
+
+  .modal-msg {
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    display: none;
+  }
+
+  .modal-msg.ok { background: rgba(122,158,114,0.1); color: var(--accent); border: 1px solid rgba(122,158,114,0.2); display: block; }
+  .modal-msg.err { background: rgba(192,80,58,0.1); color: var(--danger); border: 1px solid rgba(192,80,58,0.2); display: block; }
+
+  /* ── TABS ── */
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 10px 18px;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition: all .15s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    z-index: 200;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all .25s;
+    pointer-events: none;
+  }
+
+  #toast.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Otro <span>Mundo</span> · Panel</div>
+    <h1>Acceder</h1>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+    <div class="login-error" id="login-error">Contraseña incorrecta.</div>
+    <button class="btn btn-primary" onclick="doLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <div class="header-logo">Otro <span>Mundo</span> · Panel</div>
+    <div class="header-right">
+      <span class="header-stat">Productos: <b id="stat-total">—</b> · Activos: <b id="stat-activos">—</b></span>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Salir</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Tabs -->
+    <div style="display:flex;gap:4px;margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:0;">
+      <button class="tab-btn active" id="tab-productos" onclick="setTab('productos',this)">Productos</button>
+      <button class="tab-btn" id="tab-macetas" onclick="setTab('macetas',this)">Macetas</button>
+    </div>
+
+    <!-- SECCIÓN PRODUCTOS -->
+    <div id="sec-productos">
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <button class="filter-pill active" onclick="setFiltro('todos',this)">Todos</button>
+          <button class="filter-pill" onclick="setFiltro('pequeña',this)">Pequeñas</button>
+          <button class="filter-pill" onclick="setFiltro('mediana',this)">Medianas</button>
+          <button class="filter-pill" onclick="setFiltro('grande',this)">Grandes</button>
+          <button class="filter-pill" onclick="setFiltro('combo',this)">Combos</button>
+        </div>
+        <button class="btn btn-accent" onclick="abrirModal('producto')">+ Nuevo producto</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Imagen</th><th>Nombre</th><th>Descripción</th><th>Precio</th><th>Categoría</th><th>Estado</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="tabla-body">
+            <tr class="state-row"><td colspan="7">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECCIÓN MACETAS -->
+    <div id="sec-macetas" style="display:none">
+      <div class="toolbar">
+        <div class="toolbar-left"></div>
+        <button class="btn btn-accent" onclick="abrirModal('maceta')">+ Nueva maceta</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Imagen</th><th>Nombre</th><th>Descripción</th><th>Tamaño</th><th>Medidas</th><th>Estado</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="tabla-macetas">
+            <tr class="state-row"><td colspan="7">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-title">Nuevo producto</h2>
+      <button class="modal-close" onclick="cerrarModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-msg" id="modal-msg"></div>
+      <input type="hidden" id="f-id">
+      <div class="modal-grid">
+        <div class="modal-field full">
+          <label>Nombre</label>
+          <input type="text" id="f-nombre" placeholder="Echeveria Roseta">
+        </div>
+        <div class="modal-field full">
+          <label>Descripción</label>
+          <textarea id="f-desc" placeholder="Breve descripción del producto..."></textarea>
+        </div>
+        <div class="modal-field">
+          <label>Precio (UYU)</label>
+          <input type="number" id="f-precio" placeholder="350" min="0">
+        </div>
+        <div class="modal-field">
+          <label>Categoría</label>
+          <select id="f-cat">
+            <option value="pequeña">Pequeña</option>
+            <option value="mediana">Mediana</option>
+            <option value="grande">Grande</option>
+            <option value="combo">Combo</option>
+          </select>
+        </div>
+        <div class="modal-field full">
+          <label>URL de imagen</label>
+          <input type="text" id="f-img" placeholder="https://raw.githubusercontent.com/..." oninput="previewImg(this.value)">
+          <img id="img-preview" class="modal-preview" alt="preview">
+        </div>
+        <div class="modal-field">
+          <label>Orden</label>
+          <input type="number" id="f-orden" placeholder="0" min="0">
+        </div>
+        <div class="modal-field">
+          <label>Estado</label>
+          <select id="f-activo">
+            <option value="true">Activo</option>
+            <option value="false">Oculto</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button>
+        <button class="btn btn-accent" onclick="guardar()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MACETA -->
+<div class="modal-overlay" id="modal-maceta">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-maceta-title">Nueva maceta</h2>
+      <button class="modal-close" onclick="cerrarModalMaceta()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-msg" id="modal-maceta-msg"></div>
+      <input type="hidden" id="mf-id">
+      <div class="modal-grid">
+        <div class="modal-field full">
+          <label>Nombre</label>
+          <input type="text" id="mf-nombre" placeholder="Decagonal Chica">
+        </div>
+        <div class="modal-field full">
+          <label>Descripción</label>
+          <textarea id="mf-desc" placeholder="Descripción de la maceta..."></textarea>
+        </div>
+        <div class="modal-field">
+          <label>Tamaño</label>
+          <select id="mf-tamano">
+            <option value="chica">Chica</option>
+            <option value="mediana">Mediana</option>
+            <option value="grande">Grande</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label>Medidas</label>
+          <input type="text" id="mf-medidas" placeholder="⌀ 6 cm · Alto 7 cm">
+        </div>
+        <div class="modal-field full">
+          <label>URL de imagen</label>
+          <input type="text" id="mf-img" placeholder="https://..." oninput="previewImgMaceta(this.value)">
+          <img id="mf-preview" class="modal-preview" alt="preview">
+        </div>
+        <div class="modal-field">
+          <label>Orden</label>
+          <input type="number" id="mf-orden" placeholder="0" min="0">
+        </div>
+        <div class="modal-field">
+          <label>Estado</label>
+          <select id="mf-activo">
+            <option value="true">Activa</option>
+            <option value="false">Oculta</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="cerrarModalMaceta()">Cancelar</button>
+        <button class="btn btn-accent" onclick="guardarMaceta()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const PASS     = 'otromundo2025';
+let tabActual  = 'productos';
+const SB_URL   = 'https://kpesiyrdtxthnahemyzn.supabase.co';
+const SB_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwZXNpeXJkdHh0aG5haGVteXpuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NDg3NjQ3MSwiZXhwIjoyMDgwNDUyNDcxfQ.9RJ0kIQ4yQRQfe3uHapgd-ZVFCGRKR8r6xx84v4zaDQ';
+const HEADERS  = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+
+let productos = [];
+let filtro = 'todos';
+
+/* ── AUTH ── */
+function doLogin() {
+  const val = document.getElementById('pw-input').value;
+  if (val === PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    cargar(); // productos
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function logout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('pw-input').value = '';
+}
+
+/* ── API ── */
+async function cargar() {
+  tablaEstado('Cargando...');
+  const res = await fetch(SB_URL + '/rest/v1/productos?select=*&order=orden.asc,id.asc', { headers: HEADERS });
+  productos = await res.json();
+  actualizarStats();
+  renderTabla();
+}
+
+async function apiPost(body) {
+  return fetch(SB_URL + '/rest/v1/productos', {
+    method: 'POST', headers: HEADERS, body: JSON.stringify(body)
+  });
+}
+
+async function apiPatch(id, body) {
+  return fetch(SB_URL + '/rest/v1/productos?id=eq.' + id, {
+    method: 'PATCH', headers: HEADERS, body: JSON.stringify(body)
+  });
+}
+
+async function apiDelete(id) {
+  return fetch(SB_URL + '/rest/v1/productos?id=eq.' + id, {
+    method: 'DELETE', headers: HEADERS
+  });
+}
+
+/* ── RENDER ── */
+function actualizarStats() {
+  document.getElementById('stat-total').textContent = productos.length;
+  document.getElementById('stat-activos').textContent = productos.filter(p => p.activo).length;
+}
+
+function tablaEstado(msg) {
+  document.getElementById('tabla-body').innerHTML = `<tr class="state-row"><td colspan="7">${msg}</td></tr>`;
+}
+
+function setFiltro(cat, btn) {
+  filtro = cat;
+  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTabla();
+}
+
+function renderTabla() {
+  const lista = filtro === 'todos' ? productos : productos.filter(p => p.categoria === filtro);
+  if (!lista.length) { tablaEstado('No hay productos.'); return; }
+
+  document.getElementById('tabla-body').innerHTML = lista.map(p => {
+    const imgEl = p.imagen_url
+      ? `<img class="td-img" src="${p.imagen_url}" alt="${p.nombre}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      : '';
+    const placeholder = `<div class="td-img-placeholder" style="${p.imagen_url ? 'display:none' : ''}">🌵</div>`;
+    const capCat = p.categoria.charAt(0).toUpperCase() + p.categoria.slice(1);
+
+    return `<tr>
+      <td>${imgEl}${placeholder}</td>
+      <td><div class="td-nombre">${p.nombre}</div></td>
+      <td><div class="td-desc">${p.descripcion || '—'}</div></td>
+      <td><span class="td-precio">$${p.precio}</span></td>
+      <td><span class="cat-pill">${capCat}</span></td>
+      <td>
+        <span class="status-dot ${p.activo ? 'on' : ''}">${p.activo ? 'Activo' : 'Oculto'}</span>
+      </td>
+      <td>
+        <div class="td-actions">
+          <button class="btn btn-ghost btn-sm" onclick="abrirModal(${p.id})">Editar</button>
+          <button class="btn btn-ghost btn-sm" onclick="toggleActivo(${p.id}, ${p.activo})">${p.activo ? 'Ocultar' : 'Activar'}</button>
+          <button class="btn btn-danger btn-sm" onclick="eliminar(${p.id}, '${p.nombre.replace(/'/g,"\\'")}')">Borrar</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+/* ── ACCIONES ── */
+async function toggleActivo(id, actual) {
+  await apiPatch(id, { activo: !actual });
+  const p = productos.find(x => x.id === id);
+  if (p) p.activo = !actual;
+  actualizarStats();
+  renderTabla();
+  toast(actual ? 'Producto ocultado' : 'Producto activado');
+}
+
+async function eliminar(id, nombre) {
+  if (!confirm(`¿Borrar "${nombre}"? Esta acción no se puede deshacer.`)) return;
+  await apiDelete(id);
+  productos = productos.filter(p => p.id !== id);
+  actualizarStats();
+  renderTabla();
+  toast('Producto eliminado');
+}
+
+/* ── MODAL ── */
+function abrirModal(id) {
+  limpiarModal();
+  if (id) {
+    const p = productos.find(x => x.id === id);
+    document.getElementById('modal-title').textContent = 'Editar producto';
+    document.getElementById('f-id').value     = p.id;
+    document.getElementById('f-nombre').value = p.nombre;
+    document.getElementById('f-desc').value   = p.descripcion || '';
+    document.getElementById('f-precio').value = p.precio;
+    document.getElementById('f-cat').value    = p.categoria;
+    document.getElementById('f-img').value    = p.imagen_url || '';
+    document.getElementById('f-orden').value  = p.orden || 0;
+    document.getElementById('f-activo').value = String(p.activo);
+    previewImg(p.imagen_url);
+  } else {
+    document.getElementById('modal-title').textContent = 'Nuevo producto';
+  }
+  document.getElementById('modal').classList.add('open');
+}
+
+function cerrarModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+function limpiarModal() {
+  ['f-id','f-nombre','f-desc','f-precio','f-img','f-orden'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-cat').value    = 'pequeña';
+  document.getElementById('f-activo').value = 'true';
+  document.getElementById('img-preview').classList.remove('show');
+  const msg = document.getElementById('modal-msg');
+  msg.className = 'modal-msg';
+  msg.textContent = '';
+}
+
+function previewImg(url) {
+  const img = document.getElementById('img-preview');
+  if (url && url.startsWith('http')) {
+    img.src = url;
+    img.classList.add('show');
+  } else {
+    img.classList.remove('show');
+  }
+}
+
+async function guardar() {
+  const id     = document.getElementById('f-id').value;
+  const nombre = document.getElementById('f-nombre').value.trim();
+  const precio = parseInt(document.getElementById('f-precio').value);
+
+  if (!nombre) { mostrarMsg('El nombre es obligatorio.', 'err'); return; }
+  if (!precio || precio < 0) { mostrarMsg('El precio debe ser un número válido.', 'err'); return; }
+
+  const body = {
+    nombre,
+    descripcion: document.getElementById('f-desc').value.trim() || null,
+    precio,
+    categoria:   document.getElementById('f-cat').value,
+    imagen_url:  document.getElementById('f-img').value.trim() || null,
+    orden:       parseInt(document.getElementById('f-orden').value) || 0,
+    activo:      document.getElementById('f-activo').value === 'true',
+  };
+
+  let res;
+  if (id) {
+    res = await apiPatch(id, body);
+  } else {
+    res = await apiPost(body);
+  }
+
+  if (res.ok) {
+    cerrarModal();
+    await cargar();
+    toast(id ? 'Producto actualizado' : 'Producto creado');
+  } else {
+    const err = await res.json();
+    mostrarMsg('Error: ' + (err.message || res.status), 'err');
+  }
+}
+
+function mostrarMsg(txt, tipo) {
+  const el = document.getElementById('modal-msg');
+  el.textContent = txt;
+  el.className = 'modal-msg ' + tipo;
+}
+
+/* ── TOAST ── */
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+/* Cerrar modal con Escape */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { cerrarModal(); cerrarModalMaceta(); }
+});
+
+/* ── TABS ── */
+function setTab(tab, btn) {
+  tabActual = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sec-productos').style.display = tab === 'productos' ? 'block' : 'none';
+  document.getElementById('sec-macetas').style.display   = tab === 'macetas'   ? 'block' : 'none';
+  if (tab === 'macetas' && macetas.length === 0) cargarMacetas();
+}
+
+/* ── MACETAS ── */
+let macetas = [];
+
+async function cargarMacetas() {
+  tablaEstadoMacetas('Cargando...');
+  const res = await fetch(SB_URL + '/rest/v1/macetas?select=*&order=orden.asc,id.asc', { headers: HEADERS });
+  macetas = await res.json();
+  renderMacetas();
+}
+
+function tablaEstadoMacetas(msg) {
+  document.getElementById('tabla-macetas').innerHTML = `<tr class="state-row"><td colspan="7">${msg}</td></tr>`;
+}
+
+function renderMacetas() {
+  if (!macetas.length) { tablaEstadoMacetas('No hay macetas.'); return; }
+  document.getElementById('tabla-macetas').innerHTML = macetas.map(m => {
+    const tam = m.tamano.charAt(0).toUpperCase() + m.tamano.slice(1);
+    const imgEl = m.imagen_url
+      ? `<img class="td-img" src="${m.imagen_url}" alt="${m.nombre}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      : '';
+    const placeholder = `<div class="td-img-placeholder" style="${m.imagen_url ? 'display:none' : ''}">🏺</div>`;
+    return `<tr>
+      <td>${imgEl}${placeholder}</td>
+      <td><div class="td-nombre">${m.nombre}</div></td>
+      <td><div class="td-desc">${m.descripcion || '—'}</div></td>
+      <td><span class="cat-pill">${tam}</span></td>
+      <td><span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)">${m.medidas || '—'}</span></td>
+      <td><span class="status-dot ${m.activo ? 'on' : ''}">${m.activo ? 'Activa' : 'Oculta'}</span></td>
+      <td>
+        <div class="td-actions">
+          <button class="btn btn-ghost btn-sm" onclick="abrirModalMaceta(${m.id})">Editar</button>
+          <button class="btn btn-ghost btn-sm" onclick="toggleActivoMaceta(${m.id}, ${m.activo})">${m.activo ? 'Ocultar' : 'Activar'}</button>
+          <button class="btn btn-danger btn-sm" onclick="eliminarMaceta(${m.id}, '${m.nombre.replace(/'/g,"\'")}')">Borrar</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function toggleActivoMaceta(id, actual) {
+  await fetch(SB_URL + '/rest/v1/macetas?id=eq.' + id, { method: 'PATCH', headers: HEADERS, body: JSON.stringify({ activo: !actual }) });
+  const m = macetas.find(x => x.id === id);
+  if (m) m.activo = !actual;
+  renderMacetas();
+  toast(actual ? 'Maceta ocultada' : 'Maceta activada');
+}
+
+async function eliminarMaceta(id, nombre) {
+  if (!confirm(`¿Borrar "${nombre}"?`)) return;
+  await fetch(SB_URL + '/rest/v1/macetas?id=eq.' + id, { method: 'DELETE', headers: HEADERS });
+  macetas = macetas.filter(m => m.id !== id);
+  renderMacetas();
+  toast('Maceta eliminada');
+}
+
+function abrirModal(tipo) {
+  if (tipo === 'maceta') { abrirModalMaceta(); return; }
+  // abre modal de producto vacío
+  limpiarModal();
+  document.getElementById('modal-title').textContent = 'Nuevo producto';
+  document.getElementById('modal').classList.add('open');
+}
+
+function abrirModalMaceta(id) {
+  limpiarModalMaceta();
+  if (id) {
+    const m = macetas.find(x => x.id === id);
+    document.getElementById('modal-maceta-title').textContent = 'Editar maceta';
+    document.getElementById('mf-id').value      = m.id;
+    document.getElementById('mf-nombre').value  = m.nombre;
+    document.getElementById('mf-desc').value    = m.descripcion || '';
+    document.getElementById('mf-tamano').value  = m.tamano;
+    document.getElementById('mf-medidas').value = m.medidas || '';
+    document.getElementById('mf-img').value     = m.imagen_url || '';
+    document.getElementById('mf-orden').value   = m.orden || 0;
+    document.getElementById('mf-activo').value  = String(m.activo);
+    previewImgMaceta(m.imagen_url);
+  }
+  document.getElementById('modal-maceta').classList.add('open');
+}
+
+function cerrarModalMaceta() {
+  document.getElementById('modal-maceta').classList.remove('open');
+}
+
+function limpiarModalMaceta() {
+  ['mf-id','mf-nombre','mf-desc','mf-medidas','mf-img','mf-orden'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('mf-tamano').value = 'chica';
+  document.getElementById('mf-activo').value = 'true';
+  document.getElementById('mf-preview').classList.remove('show');
+  const msg = document.getElementById('modal-maceta-msg');
+  msg.className = 'modal-msg'; msg.textContent = '';
+  document.getElementById('modal-maceta-title').textContent = 'Nueva maceta';
+}
+
+function previewImgMaceta(url) {
+  const img = document.getElementById('mf-preview');
+  if (url && url.startsWith('http')) { img.src = url; img.classList.add('show'); }
+  else img.classList.remove('show');
+}
+
+async function guardarMaceta() {
+  const id     = document.getElementById('mf-id').value;
+  const nombre = document.getElementById('mf-nombre').value.trim();
+  if (!nombre) { mostrarMsgMaceta('El nombre es obligatorio.', 'err'); return; }
+
+  const body = {
+    nombre,
+    descripcion: document.getElementById('mf-desc').value.trim() || null,
+    tamano:      document.getElementById('mf-tamano').value,
+    medidas:     document.getElementById('mf-medidas').value.trim() || null,
+    imagen_url:  document.getElementById('mf-img').value.trim() || null,
+    orden:       parseInt(document.getElementById('mf-orden').value) || 0,
+    activo:      document.getElementById('mf-activo').value === 'true',
+  };
+
+  const url    = SB_URL + '/rest/v1/macetas' + (id ? '?id=eq.' + id : '');
+  const method = id ? 'PATCH' : 'POST';
+  const res    = await fetch(url, { method, headers: HEADERS, body: JSON.stringify(body) });
+
+  if (res.ok) {
+    cerrarModalMaceta();
+    await cargarMacetas();
+    toast(id ? 'Maceta actualizada' : 'Maceta creada');
+  } else {
+    const err = await res.json();
+    mostrarMsgMaceta('Error: ' + (err.message || res.status), 'err');
+  }
+}
+
+function mostrarMsgMaceta(txt, tipo) {
+  const el = document.getElementById('modal-maceta-msg');
+  el.textContent = txt; el.className = 'modal-msg ' + tipo;
+}
+</script>
+</body>
+</html>

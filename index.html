@@ -1300,44 +1300,8 @@
     <h2 class="section-title">Las <em>macetas</em></h2>
     <p class="section-sub">Tres tamaños, cada uno con su forma y carácter. Todas de cemento portland, fabricadas con nuestros propios moldes. Consultá precios por WhatsApp.</p>
   </div>
-  <div class="macetas-grid">
-
-    <!-- CHICA -->
-    <div class="maceta-card reveal">
-      <div class="maceta-tag">Chica</div>
-      <div class="maceta-foto-wrap">
-        <img src="https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/20250710_152228.webp" alt="Maceta Chica" style="width:100%;height:100%;object-fit:cover;">
-      </div>
-      <div class="maceta-nombre">Decagonal Chica</div>
-      <div class="maceta-medidas">⌀ 3 cm · Alto 4 cm</div>
-      <div class="maceta-desc">Forma decagonal lisa, perfecta para una suculenta pequeña en escritorio o repisa. Cemento portland natural.</div>
-      <a href="https://wa.me/59894691690?text=Hola!%20Quiero%20consultar%20por%20la%20maceta%20chica%20decagonal%20🏺" target="_blank" class="maceta-cta">Consultar precio</a>
-    </div>
-
-    <!-- MEDIANA -->
-    <div class="maceta-card reveal">
-      <div class="maceta-tag">Mediana</div>
-      <div class="maceta-foto-wrap">
-        <img src="https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/20250710_152303.webp" alt="Maceta Mediana" style="width:100%;height:100%;object-fit:cover;">
-      </div>
-      <div class="maceta-nombre">Texturada Mediana</div>
-      <div class="maceta-medidas">⌀ 6 cm · Alto 7 cm</div>
-      <div class="maceta-desc">Superficie texturada que le da profundidad visual. Más espacio para que la suculenta se desarrolle bien.</div>
-      <a href="https://wa.me/59894691690?text=Hola!%20Quiero%20consultar%20por%20la%20maceta%20mediana%20texturada%20🏺" target="_blank" class="maceta-cta">Consultar precio</a>
-    </div>
-
-    <!-- GRANDE -->
-    <div class="maceta-card reveal">
-      <div class="maceta-tag">Grande</div>
-      <div class="maceta-foto-wrap">
-        <img src="https://raw.githubusercontent.com/contralamaquina/otromundo/main/Imagenes/20250710_152345.webp" alt="Maceta Grande" style="width:100%;height:100%;object-fit:cover;">
-      </div>
-      <div class="maceta-nombre">Lisa Grande</div>
-      <div class="maceta-medidas">⌀ 15 cm · Alto 10 cm</div>
-      <div class="maceta-desc">Presencia real. Lisa y sólida, ideal para aloe, cactus grandes o una composición con varias suculentas.</div>
-      <a href="https://wa.me/59894691690?text=Hola!%20Quiero%20consultar%20por%20la%20maceta%20grande%20lisa%20🏺" target="_blank" class="maceta-cta">Consultar precio</a>
-    </div>
-
+  <div class="macetas-grid" id="macetasGrid">
+    <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:rgba(245,239,224,0.4);font-size:1rem;">Cargando macetas...</div>
   </div>
 </section>
 
@@ -1461,6 +1425,74 @@
   }
 
   cargarProductos();
+
+  // ── MACETAS DINÁMICAS SUPABASE ──
+  async function cargarMacetas() {
+    try {
+      const res = await fetch(
+        SUPA_URL + '/rest/v1/macetas?select=*&activo=eq.true&order=orden.asc',
+        { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } }
+      );
+      if (!res.ok) throw new Error('Error ' + res.status);
+      const macetas = await res.json();
+      const grid = document.getElementById('macetasGrid');
+      if (!macetas.length) { grid.innerHTML = ''; return; }
+      grid.innerHTML = macetas.map(m => {
+        const tam = m.tamano.charAt(0).toUpperCase() + m.tamano.slice(1);
+        const nombreEnc = encodeURIComponent('Hola! Quiero consultar por la maceta ' + m.nombre + ' 🏺');
+        const img = m.imagen_url
+          ? `<img src="${m.imagen_url}" alt="${m.nombre}" style="width:100%;height:100%;object-fit:cover;">`
+          : '';
+        return `
+        <div class="maceta-card reveal">
+          <div class="maceta-tag">${tam}</div>
+          <div class="maceta-foto-wrap">${img}</div>
+          <div class="maceta-nombre">${m.nombre}</div>
+          ${m.medidas ? `<div class="maceta-medidas">${m.medidas}</div>` : ''}
+          <div class="maceta-desc">${m.descripcion || ''}</div>
+          <a href="https://wa.me/59894691690?text=${nombreEnc}" target="_blank" class="maceta-cta">Consultar precio</a>
+        </div>`;
+      }).join('');
+    } catch(e) {
+      console.error('Error cargando macetas:', e);
+    }
+  }
+
+  cargarMacetas();
+
+  // ── MACETAS DINÁMICAS ──
+  async function cargarMacetas() {
+    try {
+      const res = await fetch(
+        SUPA_URL + '/rest/v1/macetas?select=*&activo=eq.true&order=orden.asc',
+        { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } }
+      );
+      if (!res.ok) throw new Error(res.status);
+      const macetas = await res.json();
+      const grid = document.getElementById('macetasGrid');
+      if (!macetas.length) { grid.innerHTML = ''; return; }
+      grid.innerHTML = macetas.map(m => {
+        const img = m.imagen_url
+          ? `<img src="${m.imagen_url}" alt="${m.nombre}" style="width:100%;height:100%;object-fit:cover;">`
+          : '';
+        const nombreEnc = encodeURIComponent('Hola! Quiero consultar por la maceta ' + m.nombre + ' 🏺');
+        return `
+        <div class="maceta-card reveal">
+          <div class="maceta-foto-wrap">${img}</div>
+          <div class="maceta-nombre" style="padding:20px 28px 4px">${m.nombre}</div>
+          ${m.medidas ? `<div class="maceta-medidas" style="padding:0 28px 8px">${m.medidas}</div>` : ''}
+          <div class="maceta-desc" style="padding:0 28px 16px">${m.descripcion || ''}</div>
+          <a href="https://wa.me/59894691690?text=${nombreEnc}" target="_blank" class="maceta-cta" style="margin:0 28px 28px;display:inline-block">Consultar precio</a>
+        </div>`;
+      }).join('');
+      // re-observar los nuevos .reveal
+      document.querySelectorAll('#macetasGrid .reveal').forEach(el => observer.observe(el));
+    } catch(e) {
+      document.getElementById('macetasGrid').innerHTML = '';
+    }
+  }
+
+  cargarMacetas();
 
   // Reveal on scroll
   const observer = new IntersectionObserver((entries) => {
