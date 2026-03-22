@@ -1158,346 +1158,6 @@
   .feature-item p { color: rgba(245,239,224,0.65) !important; }
   .feature-icon { background: rgba(255,255,255,0.07) !important; border-color: rgba(255,255,255,0.1) !important; }
 
-  /* ── CARRUSEL EN CARD ── */
-  .card-carousel {
-    position: relative;
-    overflow: hidden;
-    touch-action: pan-y;
-    user-select: none;
-  }
-
-  .card-carousel-track {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    will-change: transform;
-  }
-
-  .card-carousel-track.dragging {
-    transition: none;
-  }
-
-  .card-carousel-slide {
-    flex: 0 0 100%;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card-carousel-slide img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    pointer-events: none;
-  }
-
-  .card-carousel-dots {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 6px;
-    z-index: 3;
-  }
-
-  .card-carousel-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.45);
-    transition: all 0.25s;
-    cursor: pointer;
-  }
-
-  .card-carousel-dot.active {
-    background: white;
-    width: 18px;
-    border-radius: 3px;
-  }
-
-  .card-carousel-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 28px;
-    height: 28px;
-    background: rgba(0,0,0,0.45);
-    border: none;
-    border-radius: 50%;
-    color: white;
-    font-size: 0.75rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3;
-    opacity: 0;
-    transition: opacity 0.2s;
-    backdrop-filter: blur(4px);
-  }
-
-  .card-carousel:hover .card-carousel-arrow { opacity: 1; }
-  .card-carousel-arrow.prev { left: 8px; }
-  .card-carousel-arrow.next { right: 8px; }
-  .card-carousel-arrow:hover { background: rgba(0,0,0,0.7); }
-
-  /* Fallback sin imágenes */
-  .card-no-img {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-  }
-
-  /* ── MODAL ── */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(10, 6, 2, 0.92);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    backdrop-filter: blur(6px);
-  }
-
-  .modal-overlay.open {
-    display: flex;
-    animation: fadeIn 0.25s ease;
-  }
-
-  .modal-box {
-    background: var(--oscuro);
-    border: 1px solid rgba(200,168,130,0.2);
-    border-radius: 24px;
-    max-width: 860px;
-    width: 100%;
-    max-height: 90vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 40px 100px rgba(0,0,0,0.7);
-  }
-
-  .modal-gallery {
-    position: relative;
-    background: #0a0804;
-    overflow: hidden;
-    min-height: 400px;
-  }
-
-  .modal-gallery-track {
-    display: flex;
-    height: 100%;
-    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    will-change: transform;
-  }
-
-  .modal-gallery-track.dragging {
-    transition: none;
-  }
-
-  .modal-gallery-slide {
-    flex: 0 0 100%;
-    height: 100%;
-    min-height: 400px;
-  }
-
-  .modal-gallery-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    pointer-events: none;
-  }
-
-  .modal-gallery-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 36px;
-    height: 36px;
-    background: rgba(0,0,0,0.55);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 50%;
-    color: white;
-    font-size: 0.85rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
-    transition: background 0.2s;
-    backdrop-filter: blur(4px);
-  }
-
-  .modal-gallery-arrow.prev { left: 12px; }
-  .modal-gallery-arrow.next { right: 12px; }
-  .modal-gallery-arrow:hover { background: rgba(0,0,0,0.8); }
-
-  .modal-gallery-dots {
-    position: absolute;
-    bottom: 14px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 7px;
-    z-index: 5;
-  }
-
-  .modal-gallery-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.35);
-    cursor: pointer;
-    transition: all 0.25s;
-  }
-
-  .modal-gallery-dot.active {
-    background: white;
-    width: 22px;
-    border-radius: 3.5px;
-  }
-
-  .modal-counter {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: rgba(0,0,0,0.55);
-    color: rgba(255,255,255,0.8);
-    font-size: 0.75rem;
-    padding: 4px 10px;
-    border-radius: 20px;
-    backdrop-filter: blur(4px);
-    z-index: 5;
-    font-family: 'Crimson Pro', serif;
-    letter-spacing: 0.05em;
-  }
-
-  .modal-info {
-    padding: 40px 36px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .modal-tag {
-    display: inline-block;
-    font-size: 0.72rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--arena);
-    background: rgba(200,168,130,0.12);
-    border: 1px solid rgba(200,168,130,0.25);
-    padding: 4px 14px;
-    border-radius: 20px;
-    align-self: flex-start;
-  }
-
-  .modal-nombre {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.7rem;
-    color: var(--crema);
-    line-height: 1.2;
-  }
-
-  .modal-desc-corta {
-    font-size: 0.9rem;
-    color: rgba(245,239,224,0.65);
-    line-height: 1.6;
-    font-style: italic;
-  }
-
-  .modal-divider {
-    height: 1px;
-    background: rgba(200,168,130,0.15);
-  }
-
-  .modal-desc-larga {
-    font-size: 0.95rem;
-    color: rgba(245,239,224,0.82);
-    line-height: 1.75;
-    flex: 1;
-  }
-
-  .modal-precio {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem;
-    color: var(--arena);
-  }
-
-  .modal-precio span {
-    font-family: 'Crimson Pro', serif;
-    font-size: 0.85rem;
-    color: rgba(245,239,224,0.5);
-    margin-left: 4px;
-  }
-
-  .modal-wa {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: #25D366;
-    color: white;
-    padding: 13px 24px;
-    border-radius: 40px;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 700;
-    font-family: 'Crimson Pro', serif;
-    transition: all 0.3s;
-    align-self: flex-start;
-  }
-
-  .modal-wa:hover { background: #1da851; transform: translateY(-1px); }
-  .modal-wa svg { width: 20px; height: 20px; fill: white; }
-
-  .modal-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 36px;
-    height: 36px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 50%;
-    color: var(--crema);
-    font-size: 1.1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    transition: background 0.2s;
-    line-height: 1;
-  }
-
-  .modal-close:hover { background: rgba(255,255,255,0.18); }
-
-  @media (max-width: 700px) {
-    .modal-box {
-      grid-template-columns: 1fr;
-      max-height: 95vh;
-      border-radius: 18px;
-    }
-    .modal-gallery { min-height: 260px; }
-    .modal-gallery-slide { min-height: 260px; }
-    .modal-info { padding: 24px 20px; }
-    .modal-nombre { font-size: 1.4rem; }
-  }
-
 </style>
 </head>
 <body>
@@ -1692,36 +1352,6 @@
   <p>© 2025</p>
 </footer>
 
-<!-- MODAL PRODUCTO -->
-<div class="modal-overlay" id="modalOverlay" onclick="cerrarModalSiOverlay(event)">
-  <div class="modal-box" id="modalBox">
-    <button class="modal-close" onclick="cerrarModal()" title="Cerrar">✕</button>
-
-    <!-- GALERÍA IZQUIERDA -->
-    <div class="modal-gallery" id="modalGallery">
-      <div class="modal-gallery-track" id="modalTrack"></div>
-      <button class="modal-gallery-arrow prev" id="modalPrev" onclick="modalNav(-1)">&#8249;</button>
-      <button class="modal-gallery-arrow next" id="modalNext" onclick="modalNav(1)">&#8250;</button>
-      <div class="modal-gallery-dots" id="modalDots"></div>
-      <div class="modal-counter" id="modalCounter"></div>
-    </div>
-
-    <!-- INFO DERECHA -->
-    <div class="modal-info">
-      <span class="modal-tag" id="modalTag"></span>
-      <div class="modal-nombre" id="modalNombre"></div>
-      <div class="modal-desc-corta" id="modalDescCorta"></div>
-      <div class="modal-divider"></div>
-      <div class="modal-desc-larga" id="modalDescLarga"></div>
-      <div class="modal-precio" id="modalPrecio"></div>
-      <a href="#" target="_blank" class="modal-wa" id="modalWa">
-        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.118 1.523 5.847L0 24l6.324-1.508A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.001-1.368l-.36-.214-3.732.979.996-3.638-.234-.374A9.786 9.786 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
-        Consultar por WhatsApp
-      </a>
-    </div>
-  </div>
-</div>
-
 <!-- BOTÓN FLOTANTE WHATSAPP -->
 <a href="https://wa.me/59894691690?text=Hola!%20Vi%20la%20p%C3%A1gina%20de%20Otro%20Mundo%20y%20quiero%20consultar%20🌵" target="_blank" class="wa-float" title="Escribir por WhatsApp">
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.118 1.523 5.847L0 24l6.324-1.508A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.001-1.368l-.36-.214-3.732.979.996-3.638-.234-.374A9.786 9.786 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
@@ -1741,46 +1371,22 @@
     'combo':    'linear-gradient(135deg,#5c3d2e,#7a9e72)',
   };
 
-  function buildCarousel(imagenes, grad, nombre) {
-    const imgs = (imagenes && imagenes.length) ? imagenes : [];
-    if (!imgs.length) {
-      return `<div class="card-no-img" style="background:${grad}">🌵</div>`;
-    }
-    const slides = imgs.map(url =>
-      `<div class="card-carousel-slide"><img src="${url}" alt="${nombre}" loading="lazy"></div>`
-    ).join('');
-    const dots = imgs.length > 1 ? imgs.map((_, i) =>
-      `<span class="card-carousel-dot${i===0?' active':''}" onclick="cardDotClick(event,this)"></span>`
-    ).join('') : '';
-    const arrows = imgs.length > 1
-      ? `<button class="card-carousel-arrow prev" onclick="cardArrow(event,this,-1)">&#8249;</button>
-         <button class="card-carousel-arrow next" onclick="cardArrow(event,this,1)">&#8250;</button>`
-      : '';
-    return `
-      <div class="card-carousel-track" style="background:${grad}">${slides}</div>
-      ${arrows}
-      <div class="card-carousel-dots">${dots}</div>`;
-  }
-
   function renderProductos(lista) {
     const grid = document.getElementById('productosGrid');
     if (!lista.length) {
       grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:rgba(245,239,224,0.5);">No hay productos en esta categoría.</div>';
       return;
     }
-    grid.innerHTML = lista.map((p, idx) => {
+    grid.innerHTML = lista.map(p => {
       const cat = p.categoria || 'mediana';
       const grad = CAT_GRADIENTS[cat] || CAT_GRADIENTS['mediana'];
       const nombreEnc = encodeURIComponent('Hola! Quiero consultar por ' + p.nombre + ' 🌵');
       const capCat = cat.charAt(0).toUpperCase() + cat.slice(1);
-      // Soporte imagenes[] y fallback a imagen_url
-      const imagenes = (p.imagenes && p.imagenes.length) ? p.imagenes
-                       : (p.imagen_url ? [p.imagen_url] : []);
-      const carousel = buildCarousel(imagenes, grad, p.nombre);
+      const img = p.imagen_url ? `<img src="${p.imagen_url}" alt="${p.nombre}" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;border-radius:inherit;" loading="lazy">` : '';
       return `
-      <div class="producto-card" data-cat="${cat}" data-idx="${idx}" onclick="abrirModal(event, 'producto', ${idx})">
-        <div class="producto-img card-carousel" style="background:${grad};overflow:hidden;">
-          ${carousel}
+      <div class="producto-card" data-cat="${cat}">
+        <div class="producto-img" style="background:${grad}">
+          ${img}
           <span class="producto-tag">${capCat}</span>
         </div>
         <div class="producto-body">
@@ -1788,12 +1394,11 @@
           <div class="producto-desc">${p.descripcion || ''}</div>
           <div class="producto-footer">
             <div class="producto-precio">$${p.precio} <span>UYU</span></div>
-            <a href="https://wa.me/59894691690?text=${nombreEnc}" target="_blank" class="btn-pedir" onclick="event.stopPropagation()">Pedir</a>
+            <a href="https://wa.me/59894691690?text=${nombreEnc}" target="_blank" class="btn-pedir">Pedir</a>
           </div>
         </div>
       </div>`;
     }).join('');
-    initCardCarousels();
   }
 
   async function cargarProductos() {
@@ -1821,8 +1426,7 @@
 
   cargarProductos();
 
-  let todasLasMacetas = [];
-
+  // ── MACETAS DINÁMICAS SUPABASE ──
   async function cargarMacetas() {
     try {
       const res = await fetch(
@@ -1830,47 +1434,62 @@
         { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } }
       );
       if (!res.ok) throw new Error('Error ' + res.status);
-      todasLasMacetas = await res.json();
+      const macetas = await res.json();
       const grid = document.getElementById('macetasGrid');
-      if (!todasLasMacetas.length) { grid.innerHTML = ''; return; }
-      grid.innerHTML = todasLasMacetas.map((m, idx) => {
-        const tam = m.tamano ? m.tamano.charAt(0).toUpperCase() + m.tamano.slice(1) : '';
+      if (!macetas.length) { grid.innerHTML = ''; return; }
+      grid.innerHTML = macetas.map(m => {
+        const tam = m.tamano.charAt(0).toUpperCase() + m.tamano.slice(1);
         const nombreEnc = encodeURIComponent('Hola! Quiero consultar por la maceta ' + m.nombre + ' 🏺');
-        const imagenes = (m.imagenes && m.imagenes.length) ? m.imagenes
-                         : (m.imagen_url ? [m.imagen_url] : []);
-        const carousel = buildCarouselMaceta(imagenes, m.nombre);
+        const img = m.imagen_url
+          ? `<img src="${m.imagen_url}" alt="${m.nombre}" style="width:100%;height:100%;object-fit:cover;">`
+          : '';
         return `
-        <div class="maceta-card reveal" data-idx="${idx}" onclick="abrirModal(event, 'maceta', ${idx})">
+        <div class="maceta-card reveal">
           <div class="maceta-tag">${tam}</div>
-          <div class="maceta-foto-wrap card-carousel" style="cursor:pointer;">
-            ${carousel}
-          </div>
+          <div class="maceta-foto-wrap">${img}</div>
           <div class="maceta-nombre">${m.nombre}</div>
           ${m.medidas ? `<div class="maceta-medidas">${m.medidas}</div>` : ''}
           <div class="maceta-desc">${m.descripcion || ''}</div>
-          <a href="https://wa.me/59894691690?text=${nombreEnc}" target="_blank" class="maceta-cta" onclick="event.stopPropagation()">Consultar precio</a>
+          <a href="https://wa.me/59894691690?text=${nombreEnc}" target="_blank" class="maceta-cta">Consultar precio</a>
         </div>`;
       }).join('');
-      initCardCarousels();
-      document.querySelectorAll('#macetasGrid .reveal').forEach(el => observer.observe(el));
     } catch(e) {
       console.error('Error cargando macetas:', e);
     }
   }
 
-  function buildCarouselMaceta(imagenes, nombre) {
-    if (!imagenes.length) return `<div style="width:100%;height:100%;background:#2a1f14;display:flex;align-items:center;justify-content:center;font-size:3rem;">🏺</div>`;
-    const slides = imagenes.map(url =>
-      `<div class="card-carousel-slide"><img src="${url}" alt="${nombre}" loading="lazy"></div>`
-    ).join('');
-    const dots = imagenes.length > 1 ? imagenes.map((_, i) =>
-      `<span class="card-carousel-dot${i===0?' active':''}" onclick="cardDotClick(event,this)"></span>`
-    ).join('') : '';
-    const arrows = imagenes.length > 1
-      ? `<button class="card-carousel-arrow prev" onclick="cardArrow(event,this,-1)">&#8249;</button>
-         <button class="card-carousel-arrow next" onclick="cardArrow(event,this,1)">&#8250;</button>`
-      : '';
-    return `<div class="card-carousel-track">${slides}</div>${arrows}<div class="card-carousel-dots">${dots}</div>`;
+  cargarMacetas();
+
+  // ── MACETAS DINÁMICAS ──
+  async function cargarMacetas() {
+    try {
+      const res = await fetch(
+        SUPA_URL + '/rest/v1/macetas?select=*&activo=eq.true&order=orden.asc',
+        { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } }
+      );
+      if (!res.ok) throw new Error(res.status);
+      const macetas = await res.json();
+      const grid = document.getElementById('macetasGrid');
+      if (!macetas.length) { grid.innerHTML = ''; return; }
+      grid.innerHTML = macetas.map(m => {
+        const img = m.imagen_url
+          ? `<img src="${m.imagen_url}" alt="${m.nombre}" style="width:100%;height:100%;object-fit:cover;">`
+          : '';
+        const nombreEnc = encodeURIComponent('Hola! Quiero consultar por la maceta ' + m.nombre + ' 🏺');
+        return `
+        <div class="maceta-card reveal">
+          <div class="maceta-foto-wrap">${img}</div>
+          <div class="maceta-nombre" style="padding:20px 28px 4px">${m.nombre}</div>
+          ${m.medidas ? `<div class="maceta-medidas" style="padding:0 28px 8px">${m.medidas}</div>` : ''}
+          <div class="maceta-desc" style="padding:0 28px 16px">${m.descripcion || ''}</div>
+          <a href="https://wa.me/59894691690?text=${nombreEnc}" target="_blank" class="maceta-cta" style="margin:0 28px 28px;display:inline-block">Consultar precio</a>
+        </div>`;
+      }).join('');
+      // re-observar los nuevos .reveal
+      document.querySelectorAll('#macetasGrid .reveal').forEach(el => observer.observe(el));
+    } catch(e) {
+      document.getElementById('macetasGrid').innerHTML = '';
+    }
   }
 
   cargarMacetas();
@@ -1886,221 +1505,6 @@
   }, { threshold: 0.12 });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  // ── CARRUSEL DE CARDS ──
-  function initCardCarousels() {
-    document.querySelectorAll('.card-carousel').forEach(el => {
-      if (el.dataset.carouselInit) return;
-      el.dataset.carouselInit = '1';
-      const track = el.querySelector('.card-carousel-track');
-      if (!track) return;
-      const slides = track.querySelectorAll('.card-carousel-slide');
-      if (slides.length <= 1) return;
-
-      let cur = 0;
-      let startX = 0, startY = 0, diffX = 0, dragging = false;
-
-      function goTo(n) {
-        cur = (n + slides.length) % slides.length;
-        track.style.transform = `translateX(-${cur * 100}%)`;
-        el.querySelectorAll('.card-carousel-dot').forEach((d, i) => {
-          d.classList.toggle('active', i === cur);
-        });
-      }
-
-      el._carouselGoTo = goTo;
-
-      el.addEventListener('touchstart', e => {
-        startX = e.touches[0].clientX;
-        startY = e.touches[0].clientY;
-        diffX = 0;
-        dragging = true;
-        track.classList.add('dragging');
-      }, { passive: true });
-
-      el.addEventListener('touchmove', e => {
-        if (!dragging) return;
-        diffX = e.touches[0].clientX - startX;
-        const diffY = e.touches[0].clientY - startY;
-        if (Math.abs(diffX) > Math.abs(diffY)) {
-          e.preventDefault();
-          track.style.transform = `translateX(calc(-${cur * 100}% + ${diffX}px))`;
-        }
-      }, { passive: false });
-
-      el.addEventListener('touchend', e => {
-        if (!dragging) return;
-        dragging = false;
-        track.classList.remove('dragging');
-        if (diffX < -50) goTo(cur + 1);
-        else if (diffX > 50) goTo(cur - 1);
-        else track.style.transform = `translateX(-${cur * 100}%)`;
-        diffX = 0;
-      });
-    });
-  }
-
-  function cardArrow(e, btn, dir) {
-    e.stopPropagation();
-    const carousel = btn.closest('.card-carousel');
-    const track = carousel.querySelector('.card-carousel-track');
-    const slides = track.querySelectorAll('.card-carousel-slide');
-    const dots = carousel.querySelectorAll('.card-carousel-dot');
-    let cur = [...dots].findIndex(d => d.classList.contains('active'));
-    if (cur < 0) cur = 0;
-    const next = (cur + dir + slides.length) % slides.length;
-    if (carousel._carouselGoTo) carousel._carouselGoTo(next);
-  }
-
-  function cardDotClick(e, dot) {
-    e.stopPropagation();
-    const carousel = dot.closest('.card-carousel');
-    const dots = [...carousel.querySelectorAll('.card-carousel-dot')];
-    const idx = dots.indexOf(dot);
-    if (carousel._carouselGoTo) carousel._carouselGoTo(idx);
-  }
-
-  // ── MODAL ──
-  let modalImagenes = [], modalIdx = 0;
-  let mStartX = 0, mDiffX = 0, mDragging = false;
-
-  function abrirModal(e, tipo, dataIdx) {
-    // No abrir si se hizo clic en botón WA o flecha de carrusel
-    if (e.target.closest('.btn-pedir, .maceta-cta, .card-carousel-arrow, .card-carousel-dot')) return;
-
-    let p;
-    if (tipo === 'producto') p = todosLosProductos[dataIdx];
-    else p = todasLasMacetas[dataIdx];
-    if (!p) return;
-
-    const imagenes = (p.imagenes && p.imagenes.length) ? p.imagenes
-                     : (p.imagen_url ? [p.imagen_url] : []);
-    modalImagenes = imagenes;
-    modalIdx = 0;
-
-    // Tag
-    const tag = tipo === 'producto'
-      ? (p.categoria ? p.categoria.charAt(0).toUpperCase() + p.categoria.slice(1) : '')
-      : (p.tamano ? p.tamano.charAt(0).toUpperCase() + p.tamano.slice(1) : '');
-    document.getElementById('modalTag').textContent = tag;
-
-    // Nombre
-    document.getElementById('modalNombre').textContent = p.nombre;
-
-    // Desc corta
-    document.getElementById('modalDescCorta').textContent = p.descripcion || '';
-
-    // Desc larga (columna nueva en Supabase)
-    const dl = document.getElementById('modalDescLarga');
-    dl.textContent = p.descripcion_larga || '';
-    dl.style.display = p.descripcion_larga ? '' : 'none';
-
-    // Precio
-    const precioEl = document.getElementById('modalPrecio');
-    if (p.precio) {
-      precioEl.innerHTML = `$${p.precio} <span>UYU</span>`;
-      precioEl.style.display = '';
-    } else {
-      precioEl.style.display = 'none';
-    }
-
-    // WA
-    const waText = tipo === 'producto'
-      ? encodeURIComponent('Hola! Quiero consultar por ' + p.nombre + ' 🌵')
-      : encodeURIComponent('Hola! Quiero consultar por la maceta ' + p.nombre + ' 🏺');
-    document.getElementById('modalWa').href = `https://wa.me/59894691690?text=${waText}`;
-
-    // Galería
-    renderModalGallery();
-
-    // Abrir
-    document.getElementById('modalOverlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-
-    // Swipe en modal
-    const track = document.getElementById('modalTrack');
-    track.addEventListener('touchstart', mTouchStart, { passive: true });
-    track.addEventListener('touchmove', mTouchMove, { passive: false });
-    track.addEventListener('touchend', mTouchEnd);
-  }
-
-  function renderModalGallery() {
-    const track = document.getElementById('modalTrack');
-    const dots = document.getElementById('modalDots');
-    const counter = document.getElementById('modalCounter');
-    const prev = document.getElementById('modalPrev');
-    const next = document.getElementById('modalNext');
-
-    if (!modalImagenes.length) {
-      track.innerHTML = `<div class="modal-gallery-slide" style="display:flex;align-items:center;justify-content:center;font-size:6rem;background:#1a1208;">🌵</div>`;
-      dots.innerHTML = '';
-      counter.textContent = '';
-      prev.style.display = next.style.display = 'none';
-      return;
-    }
-
-    track.innerHTML = modalImagenes.map(url =>
-      `<div class="modal-gallery-slide"><img src="${url}" alt="" loading="lazy"></div>`
-    ).join('');
-
-    dots.innerHTML = modalImagenes.map((_, i) =>
-      `<span class="modal-gallery-dot${i===0?' active':''}" onclick="modalDotClick(${i})"></span>`
-    ).join('');
-
-    counter.textContent = `1 / ${modalImagenes.length}`;
-    prev.style.display = next.style.display = modalImagenes.length > 1 ? '' : 'none';
-
-    track.style.transform = 'translateX(0)';
-    modalIdx = 0;
-  }
-
-  function modalNav(dir) {
-    if (!modalImagenes.length) return;
-    modalIdx = (modalIdx + dir + modalImagenes.length) % modalImagenes.length;
-    document.getElementById('modalTrack').style.transform = `translateX(-${modalIdx * 100}%)`;
-    document.querySelectorAll('.modal-gallery-dot').forEach((d, i) => d.classList.toggle('active', i === modalIdx));
-    document.getElementById('modalCounter').textContent = `${modalIdx + 1} / ${modalImagenes.length}`;
-  }
-
-  function modalDotClick(idx) {
-    modalIdx = idx;
-    document.getElementById('modalTrack').style.transform = `translateX(-${modalIdx * 100}%)`;
-    document.querySelectorAll('.modal-gallery-dot').forEach((d, i) => d.classList.toggle('active', i === modalIdx));
-    document.getElementById('modalCounter').textContent = `${modalIdx + 1} / ${modalImagenes.length}`;
-  }
-
-  function mTouchStart(e) { mStartX = e.touches[0].clientX; mDiffX = 0; mDragging = true; }
-  function mTouchMove(e) {
-    if (!mDragging) return;
-    mDiffX = e.touches[0].clientX - mStartX;
-    e.preventDefault();
-    document.getElementById('modalTrack').style.transform =
-      `translateX(calc(-${modalIdx * 100}% + ${mDiffX}px))`;
-  }
-  function mTouchEnd() {
-    if (!mDragging) return;
-    mDragging = false;
-    if (mDiffX < -50) modalNav(1);
-    else if (mDiffX > 50) modalNav(-1);
-    else document.getElementById('modalTrack').style.transform = `translateX(-${modalIdx * 100}%)`;
-    mDiffX = 0;
-  }
-
-  function cerrarModal() {
-    document.getElementById('modalOverlay').classList.remove('open');
-    document.body.style.overflow = '';
-    const track = document.getElementById('modalTrack');
-    track.removeEventListener('touchstart', mTouchStart);
-    track.removeEventListener('touchmove', mTouchMove);
-    track.removeEventListener('touchend', mTouchEnd);
-  }
-
-  function cerrarModalSiOverlay(e) {
-    if (e.target === document.getElementById('modalOverlay')) cerrarModal();
-  }
-
-  // Cerrar con Escape
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
 
   // Menu mobile
   function toggleMenu(el) {
