@@ -1,7 +1,7 @@
 # --- CONFIGURACIÓN ---
 $FolderPath = (Get-Location).Path # Usa '.' si el script está en la misma carpeta que las fotos.
                               # Si no, pon la ruta completa (ej: "C:\Users\TuUsuario\FotosSuculentas")
-$Prefix = "suc"             # El prefijo para los nuevos nombres de archivo
+$Prefix = "sucu"             # El prefijo para los nuevos nombres de archivo
 $StartCounter = 1            # El número con el que quieres empezar a renombrar (ej: 1 para sucu001)
 $Digits = 3                  # Número de dígitos para el contador (ej: 3 para 001, 002...).
                               # Si tienes más de 999 fotos, pon 4.
