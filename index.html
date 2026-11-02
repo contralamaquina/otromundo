@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Un pedacito de Otro Mundo para tu hogar</title>
+<meta name="description" content="Suculentas cultivadas por nosotros y macetas artesanales hechas en Uruguay. Envíos a todo el país.">
+<meta property="og:title" content="Un pedacito de Otro Mundo para tu hogar">
+<meta property="og:description" content="Plantas cuidadas y macetas hechas a mano para llenar tu casa de vida.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
@@ -95,6 +99,57 @@
   }
 
   .nav-wa:hover { background: var(--tierra) !important; }
+
+  /* ── RENOVACIÓN 2026: CALIDEZ, PROFUNDIDAD Y PARALLAX ── */
+  :root {
+    --terracota: #C97957;
+    --sombra-suave: 0 24px 70px rgba(42,31,20,0.16);
+  }
+  a, button { -webkit-tap-highlight-color: transparent; }
+  :focus-visible { outline: 3px solid var(--terracota); outline-offset: 4px; }
+  .parallax-layer { transform: translate3d(0,0,0) scale(1.04); will-change: transform; }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 78% 22%, rgba(201,121,87,0.16), transparent 28%), radial-gradient(circle at 20% 86%, rgba(168,197,160,0.14), transparent 24%);
+    z-index: 1; pointer-events: none; mix-blend-mode: screen;
+  }
+  .hero-note {
+    position: absolute; right: 34px; bottom: 40px; z-index: 3; max-width: 220px;
+    padding: 16px 18px; border: 1px solid rgba(245,239,224,0.24); border-radius: 18px;
+    background: rgba(42,31,20,0.62); color: var(--crema); backdrop-filter: blur(14px);
+    box-shadow: var(--sombra-suave); font-size: 0.96rem; line-height: 1.45;
+  }
+  .hero-note strong { display: block; color: var(--verde-agua); font-family: 'Playfair Display', serif; font-size: 1.08rem; margin-bottom: 3px; }
+  .trust-strip {
+    position: relative; z-index: 2; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    margin: -32px 8% 0; border: 1px solid rgba(92,61,46,0.12); border-radius: 22px; overflow: hidden;
+    background: rgba(92,61,46,0.12); box-shadow: 0 18px 50px rgba(42,31,20,0.12);
+  }
+  .trust-item { display: flex; align-items: center; gap: 14px; padding: 22px 26px; background: rgba(245,239,224,0.94); }
+  .trust-icon { display: grid; place-items: center; width: 42px; height: 42px; flex: 0 0 42px; border-radius: 50%; background: var(--hueso); font-size: 1.2rem; }
+  .trust-item strong { display: block; color: var(--tierra); font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 2px; }
+  .trust-item span { display: block; font-size: 0.9rem; opacity: 0.72; }
+  .featured { padding: 36px 8% 100px; background: var(--crema); position: relative; overflow: hidden; }
+  .featured::after { content: ''; position: absolute; width: 360px; height: 360px; right: -160px; top: 40px; border-radius: 50%; background: rgba(168,197,160,0.20); filter: blur(8px); pointer-events: none; }
+  .featured-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 28px; }
+  .featured-heading h2 { color: var(--tierra); font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.08; }
+  .featured-heading h2 em { color: var(--musgo); }
+  .featured-heading p { max-width: 360px; line-height: 1.6; opacity: 0.76; }
+  .featured-grid { display: grid; grid-template-columns: 1.25fr 0.9fr 0.9fr; gap: 18px; }
+  .featured-card { min-height: 300px; position: relative; display: flex; align-items: end; overflow: hidden; border-radius: 22px; isolation: isolate; box-shadow: var(--sombra-suave); text-decoration: none; color: var(--crema); background: var(--tierra); }
+  .featured-card:first-child { min-height: 390px; }
+  .featured-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform 0.7s cubic-bezier(.2,.7,.2,1); }
+  .featured-card::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 25%, rgba(25,17,10,0.86) 100%); }
+  .featured-card:hover img { transform: scale(1.07); }
+  .featured-copy { padding: 24px; }
+  .featured-copy small { color: var(--verde-agua); letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.72rem; }
+  .featured-copy h3 { margin-top: 8px; font-family: 'Playfair Display', serif; font-size: 1.5rem; }
+  .featured-copy span { display: inline-block; margin-top: 12px; font-size: 0.92rem; color: rgba(245,239,224,0.78); }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    .parallax-layer { transform: none !important; }
+  }
 
   /* ── HERO ── */
   .hero {
@@ -1030,6 +1085,11 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
+    .trust-strip { margin: -20px 6% 0; grid-template-columns: 1fr; }
+    .trust-item { padding: 18px 22px; }
+    .featured { padding: 30px 6% 80px; }
+    .featured-grid { grid-template-columns: 1fr 1fr; }
+    .featured-card:first-child { grid-column: 1 / -1; min-height: 340px; }
     .hero { grid-template-columns: 1fr; min-height: auto; }
     .hero-right { height: 320px; }
     .hero-left { padding: 120px 6% 60px; }
@@ -1041,6 +1101,12 @@
   }
 
   @media (max-width: 600px) {
+    .hero-note { right: 18px; bottom: 18px; max-width: 190px; padding: 12px 14px; font-size: 0.84rem; }
+    .featured-heading { display: block; }
+    .featured-heading p { margin-top: 16px; }
+    .featured-grid { grid-template-columns: 1fr; }
+    .featured-card, .featured-card:first-child { min-height: 280px; grid-column: auto; }
+    .featured-copy { padding: 20px; }
     .macetas-grid { grid-template-columns: 1fr; }
     .envios-grid { grid-template-columns: 1fr; }
     .about-features { grid-template-columns: 1fr; }
@@ -1512,7 +1578,7 @@
     <li><a href="#envios">Envíos</a></li>
     <li><a href="https://wa.me/59894691690" target="_blank" class="nav-wa">Pedir ahora</a></li>
   </ul>
-  <div class="hamburger" onclick="toggleMenu(this)">
+  <div class="hamburger" role="button" tabindex="0" aria-label="Abrir menú" aria-expanded="false" onclick="toggleMenu(this)" onkeydown="if(event.key==='Enter'||event.key===' ') toggleMenu(this)">
     <span></span><span></span><span></span>
   </div>
 </nav>
@@ -1546,7 +1612,18 @@
       <strong>+20</strong>
       variedades disponibles
     </div>
+    <div class="hero-note">
+      <strong>Hecho para quedarse</strong>
+      Plantas cuidadas y macetas hechas a mano, listas para acompañar tu hogar.
+    </div>
   </div>
+</section>
+
+<!-- CONFIANZA -->
+<section class="trust-strip" aria-label="Por qué elegir Otro Mundo">
+  <div class="trust-item"><div class="trust-icon" aria-hidden="true">🌱</div><div><strong>Cultivadas acá</strong><span>Desde el esqueje, con paciencia.</span></div></div>
+  <div class="trust-item"><div class="trust-icon" aria-hidden="true">🏺</div><div><strong>Macetas propias</strong><span>Hechas con nuestros moldes.</span></div></div>
+  <div class="trust-item"><div class="trust-icon" aria-hidden="true">📦</div><div><strong>Envíos cuidados</strong><span>Preparamos cada pedido para viajar.</span></div></div>
 </section>
 
 <!-- NOSOTROS -->
@@ -1607,6 +1684,19 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- DESTACADOS -->
+<section class="featured" aria-labelledby="destacados-title">
+  <div class="featured-heading reveal">
+    <div><p class="section-eyebrow" style="color:var(--musgo);">Elegidos para tu espacio</p><h2 id="destacados-title">Pequeños mundos,<br><em>grandes cambios.</em></h2></div>
+    <p>Una planta cambia la energía de un rincón. Elegimos estas escenas para inspirarte antes de recorrer todo el catálogo.</p>
+  </div>
+  <div class="featured-grid">
+    <a class="featured-card reveal" href="#catalogo"><img src="Imagenes/sucu001.webp" alt="Suculenta artesanal para interior" loading="lazy"><div class="featured-copy"><small>Para empezar</small><h3>Un rincón con vida</h3><span>Ver plantas disponibles →</span></div></a>
+    <a class="featured-card reveal" href="#macetas"><img src="Imagenes/sucu014.webp" alt="Suculenta en maceta artesanal" loading="lazy"><div class="featured-copy"><small>Hecho a mano</small><h3>Texturas que abrigan</h3><span>Conocer las macetas →</span></div></a>
+    <a class="featured-card reveal" href="#envios"><img src="Imagenes/sucu032.webp" alt="Planta lista para enviar" loading="lazy"><div class="featured-copy"><small>Para regalar</small><h3>Un detalle que crece</h3><span>Cómo hacemos los envíos →</span></div></a>
   </div>
 </section>
 
@@ -2169,6 +2259,26 @@
       ul.style.cssText = '';
     });
   });
+  // Parallax sutil: profundidad sin marear ni consumir recursos de más.
+  (function initParallax() {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    if (reduce || isTouch) return;
+    const targets = [
+      { el: document.querySelector('.hero-slideshow'), speed: 0.10 },
+      { el: document.querySelector('.hero-wall-bg'), speed: 0.05 },
+      { el: document.querySelector('.hero-note'), speed: -0.04 }
+    ].filter(item => item.el);
+    if (!targets.length) return;
+    let ticking = false;
+    function update() {
+      const y = Math.min(window.scrollY, window.innerHeight);
+      targets.forEach(({el, speed}) => { el.style.transform = `translate3d(0, ${Math.round(y * speed)}px, 0) scale(1.04)`; });
+      ticking = false;
+    }
+    update();
+    window.addEventListener('scroll', () => { if (!ticking) { window.requestAnimationFrame(update); ticking = true; } }, { passive: true });
+  })();
 
 
 
