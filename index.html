@@ -1564,6 +1564,73 @@
     .modal-nombre { font-size: 1.4rem; }
   }
 
+  /* ── HERO INMERSIVO: FOTO A SANGRE + LECTURA PROTEGIDA ── */
+  .hero {
+    display: block;
+    min-height: 100svh;
+    position: relative;
+    isolation: isolate;
+    background: #10170d;
+  }
+  .hero-right {
+    position: absolute;
+    inset: 0;
+    height: auto;
+    z-index: -2;
+  }
+  .hero-slideshow { inset: -3% -2%; }
+  .hero-slideshow::after {
+    background:
+      linear-gradient(90deg, rgba(8,14,7,0.90) 0%, rgba(8,14,7,0.72) 30%, rgba(8,14,7,0.28) 58%, rgba(8,14,7,0.05) 100%),
+      linear-gradient(0deg, rgba(8,14,7,0.62) 0%, transparent 38%, rgba(8,14,7,0.12) 100%);
+  }
+  .hero-left {
+    min-height: 100svh;
+    width: min(760px, 72vw);
+    padding: clamp(128px, 18vh, 190px) 6% 120px 8%;
+    justify-content: center;
+    z-index: 2;
+  }
+  .hero-left::before {
+    inset: -12% -18% -12% -18%;
+    background: radial-gradient(ellipse at 28% 48%, rgba(8,14,7,0.58) 0%, rgba(8,14,7,0.30) 48%, transparent 78%);
+    filter: blur(1px);
+  }
+  .hero-left > * { position: relative; }
+  .hero-title { max-width: 700px; text-wrap: balance; text-shadow: 0 4px 28px rgba(0,0,0,0.22); }
+  .hero-subtitle { max-width: 440px; text-shadow: 0 2px 16px rgba(0,0,0,0.28); }
+  .hero-badge { left: auto; right: 34px; bottom: 42px; }
+  .hero-note { right: 34px; bottom: 134px; }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 18vh;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(0deg, rgba(245,239,224,0.18), transparent);
+    mix-blend-mode: soft-light;
+  }
+  @media (max-width: 900px) {
+    .hero { min-height: 100svh; }
+    .hero-right { height: auto; }
+    .hero-left { width: 100%; min-height: 100svh; padding: 128px 8% 170px; }
+    .hero-badge { right: 18px; bottom: 24px; }
+    .hero-note { right: 18px; bottom: 96px; }
+  }
+  @media (max-width: 600px) {
+    .hero-left { padding: 126px 7% 160px; }
+    .hero-slideshow { inset: -4% -8%; }
+    .hero-slideshow::after {
+      background:
+        linear-gradient(90deg, rgba(8,14,7,0.88) 0%, rgba(8,14,7,0.66) 62%, rgba(8,14,7,0.18) 100%),
+        linear-gradient(0deg, rgba(8,14,7,0.70) 0%, transparent 45%);
+    }
+    .hero-note { max-width: 178px; bottom: 88px; }
+    .hero-badge { padding: 10px 14px; font-size: 0.78rem; }
+    .hero-badge strong { font-size: 1.15rem; }
+  }
+
 </style>
 </head>
 <body>
