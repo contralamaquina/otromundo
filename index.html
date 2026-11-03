@@ -1656,6 +1656,14 @@
     .hero-right::after { background: linear-gradient(90deg, rgba(8,14,7,0.82) 0%, rgba(8,14,7,0.50) 60%, rgba(8,14,7,0.16) 100%), linear-gradient(0deg, rgba(8,14,7,0.54), transparent 52%); }
   }
 
+  /* ── CORRECCIÓN DE CAPAS DEL VIDEO ── */
+  .hero { display: block !important; position: relative !important; min-height: 100svh !important; }
+  .hero-right { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; z-index: 0 !important; display: block !important; overflow: hidden !important; }
+  .hero-video { position: absolute !important; inset: -3% -2% !important; width: 104% !important; height: 106% !important; display: block !important; visibility: visible !important; opacity: 1 !important; z-index: 1 !important; }
+  .hero-right::after { z-index: 2 !important; }
+  .hero-left { position: relative !important; z-index: 3 !important; }
+  .hero-note, .hero-badge { z-index: 4 !important; }
+
 </style>
 </head>
 <body>
