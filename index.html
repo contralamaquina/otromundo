@@ -2764,11 +2764,18 @@
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const touch = window.matchMedia('(pointer: coarse)').matches;
   if (reduce || touch) return;
-  const targets = [
-    ...document.querySelectorAll('.featured-card img'),
-    ...document.querySelectorAll('.about-card, .envio-item, .producto-img, .maceta-card .maceta-foto-wrap')
-  ].map((el, i) => ({ el, speed: (i % 3 === 0 ? -1 : i % 3 === 1 ? 0.65 : 0.4) * 0.22 }));
-  if (!targets.length) return;
+  let targets = [];
+  function collect() {
+    const elements = [
+      ...document.querySelectorAll('.featured-card img'),
+      ...document.querySelectorAll('.about-card, .envio-item, .producto-img, .maceta-card .maceta-foto-wrap')
+    ];
+    targets = elements.map((el, i) => ({ el, speed: (i % 3 === 0 ? -1 : i % 3 === 1 ? 0.65 : 0.4) * 0.22 }));
+  }
+  collect();
+  document.querySelectorAll('#productosGrid, #macetasGrid').forEach(grid => {
+    new MutationObserver(collect).observe(grid, { childList: true });
+  });
   let ticking = false;
   function update() {
     const h = window.innerHeight;
