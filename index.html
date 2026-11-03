@@ -2006,6 +2006,32 @@
   @media (max-width: 900px) { .photo-switcher { right: 18px; bottom: 204px; } }
   @media (max-width: 600px) { .photo-switcher { right: 12px; bottom: 198px; } }
 
+  /* Entrada cinematográfica al cambiar de escena */
+  @keyframes premiumSceneEnter {
+    0% {
+      opacity: 0.34;
+      filter: blur(3px) saturate(0.82) brightness(0.92);
+      transform: translate3d(0,18px,18px) scale(0.985) rotate(0deg);
+    }
+    58% {
+      opacity: 1;
+      filter: blur(0.35px) saturate(1.02) brightness(1.02);
+    }
+    100% {
+      opacity: 1;
+      filter: blur(0) saturate(1.06) brightness(1.04);
+      transform: translate3d(0,-16px,30px) scale(1.055) rotate(0deg);
+    }
+  }
+  .about-photo-card.is-active {
+    animation: premiumSceneEnter 1.05s cubic-bezier(.16,1,.3,1) both !important;
+    will-change: transform, opacity, filter;
+  }
+  .about-photo-card.is-back { transition: transform 0.95s cubic-bezier(.16,1,.3,1), opacity 0.8s ease, filter 0.8s ease; }
+  @media (prefers-reduced-motion: reduce) {
+    .about-photo-card.is-active { animation: none !important; }
+  }
+
 </style>
 </head>
 <body>
