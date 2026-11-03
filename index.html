@@ -3147,8 +3147,11 @@
     });
   });
 
-  stack.addEventListener('pointerenter', () => { paused = true; });
-  stack.addEventListener('pointerleave', () => { paused = false; });
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (canHover) {
+    stack.addEventListener('pointerenter', () => { paused = true; });
+    stack.addEventListener('pointerleave', () => { paused = false; });
+  }
   stack.addEventListener('focusin', () => { paused = true; });
   stack.addEventListener('focusout', () => { paused = false; });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) restartCycle(); });
