@@ -1664,6 +1664,31 @@
   .hero-left { position: relative !important; z-index: 3 !important; }
   .hero-note, .hero-badge { z-index: 4 !important; }
 
+  /* ── ESCENAS REALISTAS PARA PARALLAX Y FALLBACK ── */
+  .hero-still-layer {
+    position: absolute;
+    inset: -3% -2%;
+    z-index: 0;
+    overflow: hidden;
+    transform: scale(1.04);
+    will-change: transform;
+  }
+  .hero-still {
+    position: absolute;
+    inset: 0;
+    background-position: center;
+    background-size: cover;
+    opacity: 0;
+    transform: scale(1.02);
+    transition: opacity 2.2s ease;
+  }
+  .hero-still.active { opacity: 1; }
+  .hero-video { opacity: 0.88 !important; }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-still { transition: none; }
+    .hero-video { opacity: 0.94 !important; }
+  }
+
 </style>
 </head>
 <body>
@@ -1704,6 +1729,11 @@
 
   <!-- DERECHA: slideshow full -->
   <div class="hero-right">
+    <div class="hero-still-layer" id="hero-still-layer" aria-hidden="true">
+      <div class="hero-still active" style="background-image:url('Imagenes/hero-scene-warm.webp')"></div>
+      <div class="hero-still" style="background-image:url('Imagenes/hero-scene-fresh.webp')"></div>
+      <div class="hero-still" style="background-image:url('Imagenes/hero-scene-texture.webp')"></div>
+    </div>
     <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="Imagenes/hero-ambient-poster.jpg" aria-hidden="true">
       <source src="Imagenes/hero-ambient.mp4" type="video/mp4">
     </video>
@@ -2641,5 +2671,22 @@
 })();
 </script>
 
+<script>
+(function initHeroStills() {
+  const layer = document.getElementById('hero-still-layer');
+  const stills = layer ? [...layer.querySelectorAll('.hero-still')] : [];
+  if (stills.length < 2) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let active = 0;
+  function next() {
+    stills[active].classList.remove('active');
+    active = (active + 1) % stills.length;
+    stills[active].classList.add('active');
+  }
+  if (!reduce) window.setInterval(next, 8500);
+  const video = document.querySelector('.hero-video');
+  if (video) video.addEventListener('error', () => { video.style.display = 'none'; }, { once: true });
+})();
+</script>
 </body>
 </html>
