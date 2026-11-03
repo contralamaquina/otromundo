@@ -1956,7 +1956,9 @@
     0%, 100% { transform: rotate(1.5deg) translate3d(0,0,0); }
     50% { transform: rotate(1.5deg) translate3d(3px,3px,0); }
   }
-  .about-photo-stack:has(.about-photo-card.is-active) .about-photo-card:not(.is-active) { opacity: 0.64; filter: saturate(0.72) brightness(0.88); }
+  .about-photo-stack:has(.about-photo-card.is-active) .about-photo-card:not(.is-active),
+  .about-photo-card.is-back { opacity: 0.64; filter: saturate(0.72) brightness(0.88); }
+  .about-photo-card.is-back { animation-play-state: paused; transform: translate3d(0,8px,-10px) scale(0.97) rotate(0deg) !important; }
   .about-photo-card.is-active {
     z-index: 20 !important;
     opacity: 1 !important;
@@ -3012,6 +3014,7 @@
       cards.forEach(other => {
         const active = other === card;
         other.classList.toggle('is-active', active);
+        other.classList.toggle('is-back', !active);
         other.setAttribute('aria-pressed', active ? 'true' : 'false');
       });
     };
