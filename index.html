@@ -1631,6 +1631,31 @@
     .hero-badge strong { font-size: 1.15rem; }
   }
 
+  /* ── VIDEO AMBIENTE DEL HERO ── */
+  .hero-right { z-index: 0; }
+  .hero-video {
+    position: absolute;
+    inset: -3% -2%;
+    width: 104%;
+    height: 106%;
+    object-fit: cover;
+    z-index: 1;
+    filter: saturate(0.92) contrast(0.98);
+  }
+  .hero-slideshow { z-index: 0; }
+  .hero-right::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(8,14,7,0.80) 0%, rgba(8,14,7,0.48) 34%, rgba(8,14,7,0.10) 72%, rgba(8,14,7,0.18) 100%), linear-gradient(0deg, rgba(8,14,7,0.48), transparent 48%);
+  }
+  .hero-note, .hero-badge { z-index: 3; }
+  @media (max-width: 600px) {
+    .hero-right::after { background: linear-gradient(90deg, rgba(8,14,7,0.82) 0%, rgba(8,14,7,0.50) 60%, rgba(8,14,7,0.16) 100%), linear-gradient(0deg, rgba(8,14,7,0.54), transparent 52%); }
+  }
+
 </style>
 </head>
 <body>
@@ -1671,6 +1696,9 @@
 
   <!-- DERECHA: slideshow full -->
   <div class="hero-right">
+    <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="Imagenes/hero-ambient-poster.jpg" aria-hidden="true">
+      <source src="Imagenes/hero-ambient.mp4" type="video/mp4">
+    </video>
     <div class="hero-slideshow" id="hero-slideshow">
       <div class="hero-slide active"></div>
       <div class="hero-slide"></div>
