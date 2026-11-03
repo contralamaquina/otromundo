@@ -3099,12 +3099,26 @@
     const button = document.createElement('button');
     button.type = 'button';
     button.setAttribute('aria-label', `Mostrar ${card.querySelector('figcaption')?.textContent || `escena ${index + 1}`}`);
-    button.addEventListener('pointerdown', event => { event.stopPropagation(); activate(card); }, { passive: true });
+    button.addEventListener('pointerdown', event => { event.stopPropagation(); activate(card, true); }, { passive: true });
     switcher.appendChild(button);
     return button;
   });
 
-  function activate(card) {
+  let cycleTimer;
+  let paused = false;
+  const CYCLE_MS = 6500;
+
+  function restartCycle() {
+    clearInterval(cycleTimer);
+    cycleTimer = setInterval(() => {
+      if (!paused && !document.hidden) {
+        const current = cards.findIndex(card => card.classList.contains('is-active'));
+        activate(cards[(current + 1) % cards.length], false);
+      }
+    }, CYCLE_MS);
+  }
+
+  function activate(card, restart = false) {
     cards.forEach((other, index) => {
       const active = other === card;
       other.classList.toggle('is-active', active);
@@ -3112,6 +3126,7 @@
       other.setAttribute('aria-pressed', active ? 'true' : 'false');
       controls[index].classList.toggle('is-current', active);
     });
+    if (restart) restartCycle();
   }
 
   cards.forEach((card, index) => {
@@ -3121,17 +3136,25 @@
     card.addEventListener('pointerdown', event => {
       event.stopPropagation();
       const next = card.classList.contains('is-active') ? cards[(index + 1) % cards.length] : card;
-      activate(next);
+      activate(next, true);
     }, { passive: true });
     card.addEventListener('keydown', event => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         const next = card.classList.contains('is-active') ? cards[(index + 1) % cards.length] : card;
-        activate(next);
+        activate(next, true);
       }
     });
   });
+
+  stack.addEventListener('pointerenter', () => { paused = true; });
+  stack.addEventListener('pointerleave', () => { paused = false; });
+  stack.addEventListener('focusin', () => { paused = true; });
+  stack.addEventListener('focusout', () => { paused = false; });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) restartCycle(); });
+
   activate(cards[0]);
+  restartCycle();
 })();
 </script>
 </body>
