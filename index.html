@@ -1933,6 +1933,47 @@
     .catalogo::after, .macetas::after, .envios::before { opacity: 0.16; }
   }
 
+  /* ── SUPERPOSICIÓN PREMIUM INTERACTIVA ── */
+  .about-photo-stack { transform-style: preserve-3d; }
+  .about-photo-card {
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.9s cubic-bezier(.16,1,.3,1), box-shadow 0.9s cubic-bezier(.16,1,.3,1), opacity 0.65s ease, filter 0.65s ease;
+  }
+  .about-photo-a { animation: premiumFloatA 10s ease-in-out infinite; }
+  .about-photo-b { animation: premiumFloatB 8.5s ease-in-out 0.7s infinite; }
+  .about-photo-c { animation: premiumFloatC 9.5s ease-in-out 1.2s infinite; }
+  @keyframes premiumFloatA {
+    0%, 100% { transform: translate3d(0,0,0); }
+    50% { transform: translate3d(0,-5px,0); }
+  }
+  @keyframes premiumFloatB {
+    0%, 100% { transform: rotate(-1.5deg) translate3d(0,0,0); }
+    50% { transform: rotate(-1.5deg) translate3d(-3px,-4px,0); }
+  }
+  @keyframes premiumFloatC {
+    0%, 100% { transform: rotate(1.5deg) translate3d(0,0,0); }
+    50% { transform: rotate(1.5deg) translate3d(3px,3px,0); }
+  }
+  .about-photo-stack:has(.about-photo-card.is-active) .about-photo-card:not(.is-active) { opacity: 0.64; filter: saturate(0.72) brightness(0.88); }
+  .about-photo-card.is-active {
+    z-index: 20 !important;
+    opacity: 1 !important;
+    filter: saturate(1.06) brightness(1.04);
+    animation-play-state: paused;
+    transform: translate3d(0,-16px,30px) scale(1.055) rotate(0deg) !important;
+    box-shadow: 0 34px 90px rgba(0,0,0,0.34), 0 0 0 1px rgba(245,239,224,0.75);
+  }
+  .about-photo-card:focus-visible { outline: 2px solid var(--arena); outline-offset: 5px; }
+  @media (hover: hover) and (pointer: fine) {
+    .about-photo-card:hover { filter: saturate(1.02) brightness(1.03); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .about-photo-a, .about-photo-b, .about-photo-c { animation: none; }
+    .about-photo-card { transition-duration: 0.01ms; }
+  }
+
 </style>
 </head>
 <body>
@@ -2957,6 +2998,28 @@
   }
   update();
   window.addEventListener('scroll', () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } }, { passive: true });
+})();
+</script>
+<script>
+(function initPremiumPhotoStack() {
+  const cards = [...document.querySelectorAll('.about-photo-card')];
+  if (!cards.length) return;
+  cards.forEach((card, index) => {
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-pressed', 'false');
+    const activate = () => {
+      cards.forEach(other => {
+        const active = other === card;
+        other.classList.toggle('is-active', active);
+        other.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+    };
+    card.addEventListener('pointerdown', activate, { passive: true });
+    card.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); activate(); }
+    });
+  });
 })();
 </script>
 </body>
