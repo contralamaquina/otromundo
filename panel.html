@@ -724,6 +724,93 @@
   }
 
   .modal-field textarea.tall { min-height: 120px; }
+  /* ── PANEL RESPONSIVE / MOBILE FIRST ── */
+  .panel-tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+  .btn:focus-visible, .tab-btn:focus-visible, .filter-pill:focus-visible, .modal-close:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .toolbar .btn-accent { white-space: nowrap; }
+  .table-wrap { background: var(--surface); }
+  .modal-header { position: sticky; top: 0; z-index: 2; background: var(--surface); padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+  .modal-footer { position: sticky; bottom: 0; background: var(--surface); padding-bottom: 2px; }
+  .multi-img-hint { line-height: 1.45; }
+
+  @media (max-width: 700px) {
+    body { font-size: 14px; }
+    #login-screen { padding: 24px; align-items: flex-start; padding-top: 18vh; }
+    .login-box { width: min(100%, 360px); }
+    .login-logo { margin-bottom: 28px; }
+    .login-box h1 { margin-bottom: 24px; }
+
+    header { min-height: 64px; height: auto; padding: 12px 16px; gap: 10px; flex-wrap: wrap; }
+    .header-logo { font-size: 10px; flex: 1 1 170px; }
+    .header-right { flex: 1 1 100%; justify-content: space-between; gap: 10px; }
+    .header-stat { font-size: 10px; }
+    .header-right .btn { min-height: 38px; }
+    main { width: 100%; padding: 20px 14px 32px; }
+    .panel-tabs { margin-bottom: 18px; }
+    .tab-btn { flex: 1; min-height: 44px; padding: 10px 12px; }
+
+    .toolbar { align-items: stretch; flex-direction: column; gap: 12px; margin-bottom: 18px; }
+    .toolbar-left { flex-wrap: nowrap; overflow-x: auto; gap: 7px; padding-bottom: 4px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .toolbar-left::-webkit-scrollbar { display: none; }
+    .filter-pill { flex: 0 0 auto; min-height: 38px; padding: 8px 13px; }
+    .toolbar .btn-accent { width: 100%; justify-content: center; min-height: 44px; }
+
+    .table-wrap { border: 0; overflow: visible; background: transparent; }
+    table, thead, tbody, tr, th, td { display: block; }
+    thead { display: none; }
+    tbody tr:not(.state-row) {
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr) auto;
+      gap: 8px 12px;
+      align-items: center;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+    }
+    tbody tr:not(.state-row) td { border: 0; padding: 0; min-width: 0; }
+    tbody tr:not(.state-row) td:nth-child(1) { grid-column: 1; grid-row: 1 / span 3; }
+    tbody tr:not(.state-row) td:nth-child(2) { grid-column: 2 / 4; grid-row: 1; }
+    tbody tr:not(.state-row) td:nth-child(3) { grid-column: 2 / 4; grid-row: 2; white-space: normal; overflow: visible; text-overflow: clip; max-width: none; line-height: 1.4; }
+    tbody tr:not(.state-row) td:nth-child(4), tbody tr:not(.state-row) td:nth-child(5), tbody tr:not(.state-row) td:nth-child(6) { grid-row: 3; }
+    tbody tr:not(.state-row) td:nth-child(4) { grid-column: 2; }
+    tbody tr:not(.state-row) td:nth-child(5) { grid-column: 3; justify-self: end; }
+    tbody tr:not(.state-row) td:nth-child(6) { grid-column: 2 / 4; margin-top: 2px; }
+    tbody tr:not(.state-row) td:nth-child(7) { grid-column: 1 / -1; grid-row: 4; padding-top: 10px; margin-top: 4px; border-top: 1px solid var(--border); }
+    .td-img, .td-img-placeholder { width: 56px; height: 56px; border-radius: 9px; }
+    .td-nombre { font-size: 15px; }
+    .td-desc { font-size: 12px; }
+    .td-actions { gap: 6px; flex-wrap: wrap; justify-content: stretch; }
+    .td-actions .btn { flex: 1 1 30%; min-height: 38px; justify-content: center; padding: 7px 8px; }
+    .state-row td { padding: 44px 16px; }
+
+    .modal-overlay { align-items: flex-end; padding: 0; }
+    .modal { max-width: none; max-height: 94vh; border-radius: 16px 16px 0 0; border-bottom: 0; }
+    .modal-header { padding: 17px 18px 13px; }
+    .modal-body { padding: 16px 18px 22px; }
+    .modal-grid { grid-template-columns: 1fr; gap: 14px; }
+    .modal-field.full { grid-column: auto; }
+    .modal-field input, .modal-field textarea, .modal-field select { min-height: 44px; font-size: 16px; }
+    .modal-field textarea { min-height: 96px; }
+    .modal-field textarea.tall { min-height: 140px; }
+    .modal-footer { gap: 8px; margin-top: 14px; padding: 14px 0 2px; }
+    .modal-footer .btn { flex: 1; min-height: 44px; justify-content: center; }
+    .multi-img-add { flex-direction: column; align-items: stretch; }
+    .multi-img-upload-wrap, .multi-img-url-input { width: 100%; min-width: 0; }
+    .multi-img-upload-btn, .multi-img-url-input input, .multi-img-url-input button { min-height: 44px; font-size: 13px; }
+    .multi-img-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+    .multi-img-item .img-del { opacity: 1; width: 25px; height: 25px; }
+    #toast { left: 14px; right: 14px; bottom: 14px; text-align: center; }
+  }
+
+  @media (min-width: 701px) and (max-width: 980px) {
+    main { padding: 26px 20px; }
+    .td-desc { max-width: 180px; }
+    .td-actions { flex-wrap: wrap; }
+  }
+
 </style>
 </head>
 <body>
@@ -754,7 +841,7 @@
 
   <main>
     <!-- Tabs -->
-    <div style="display:flex;gap:4px;margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:0;">
+    <div class="panel-tabs">
       <button class="tab-btn active" id="tab-productos" onclick="setTab('productos',this)">Productos</button>
       <button class="tab-btn" id="tab-macetas" onclick="setTab('macetas',this)">Macetas</button>
     </div>
