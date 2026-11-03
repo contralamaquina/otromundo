@@ -2032,6 +2032,33 @@
     .about-photo-card.is-active { animation: none !important; }
   }
 
+  /* ── ESCENAS A SANGRE COMPLETA EN LOS FONDOS ── */
+  .featured::after {
+    inset: 0; width: auto; height: auto; border-radius: 0;
+    opacity: 0.28; filter: saturate(0.82) contrast(0.94);
+    background: linear-gradient(90deg, rgba(245,239,224,0.96) 0%, rgba(245,239,224,0.78) 35%, rgba(245,239,224,0.34) 72%, rgba(245,239,224,0.16) 100%), url('Imagenes/hero-scene-dawn.webp') center / cover no-repeat;
+  }
+  .catalogo::after {
+    inset: 0; opacity: 0.38; filter: saturate(0.82) contrast(1.02);
+    background-image: linear-gradient(90deg, rgba(20,29,18,0.97) 0%, rgba(20,29,18,0.82) 34%, rgba(20,29,18,0.46) 72%, rgba(20,29,18,0.28) 100%), url('Imagenes/hero-scene-dawn.webp');
+    background-position: center; background-size: cover;
+  }
+  .macetas::after {
+    inset: 0; opacity: 0.34; filter: saturate(0.78) contrast(1.02);
+    background-image: linear-gradient(90deg, rgba(20,29,18,0.97) 0%, rgba(20,29,18,0.80) 36%, rgba(20,29,18,0.42) 74%, rgba(20,29,18,0.24) 100%), url('Imagenes/hero-scene-sunset.webp');
+    background-position: center; background-size: cover;
+  }
+  .envios::before {
+    inset: 0; opacity: 0.30; filter: saturate(0.76) contrast(0.96);
+    background-image: linear-gradient(90deg, rgba(245,239,224,0.96) 0%, rgba(245,239,224,0.78) 35%, rgba(245,239,224,0.40) 72%, rgba(245,239,224,0.18) 100%), url('Imagenes/hero-scene-cloudy.webp');
+    background-position: center; background-size: cover;
+  }
+  @media (max-width: 900px) {
+    .featured::after, .catalogo::after, .macetas::after, .envios::before { inset: 0; }
+    .featured::after { opacity: 0.20; }
+    .catalogo::after, .macetas::after, .envios::before { opacity: 0.24; }
+  }
+
 </style>
 </head>
 <body>
