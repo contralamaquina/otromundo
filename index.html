@@ -1976,6 +1976,36 @@
     .about-photo-card { transition-duration: 0.01ms; }
   }
 
+  .photo-switcher {
+    position: absolute;
+    right: 22px;
+    bottom: 166px;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 10px;
+    border: 1px solid rgba(245,239,224,0.28);
+    border-radius: 999px;
+    background: rgba(20,29,18,0.52);
+    backdrop-filter: blur(12px);
+  }
+  .photo-switcher button {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(245,239,224,0.52);
+    cursor: pointer;
+    transition: width 0.45s cubic-bezier(.16,1,.3,1), background 0.45s ease, transform 0.45s ease;
+  }
+  .photo-switcher button:hover { transform: scale(1.35); background: var(--crema); }
+  .photo-switcher button.is-current { width: 22px; border-radius: 999px; background: var(--arena); }
+  .photo-switcher button:focus-visible { outline: 2px solid var(--crema); outline-offset: 4px; }
+  @media (max-width: 900px) { .photo-switcher { right: 18px; bottom: 204px; } }
+  @media (max-width: 600px) { .photo-switcher { right: 12px; bottom: 198px; } }
+
 </style>
 </head>
 <body>
@@ -3004,25 +3034,51 @@
 </script>
 <script>
 (function initPremiumPhotoStack() {
+  const stack = document.querySelector('.about-photo-stack');
   const cards = [...document.querySelectorAll('.about-photo-card')];
-  if (!cards.length) return;
+  if (!stack || !cards.length) return;
+
+  const switcher = document.createElement('div');
+  switcher.className = 'photo-switcher';
+  switcher.setAttribute('aria-label', 'Elegir atmósfera');
+  stack.appendChild(switcher);
+  const controls = cards.map((card, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.setAttribute('aria-label', `Mostrar ${card.querySelector('figcaption')?.textContent || `escena ${index + 1}`}`);
+    button.addEventListener('pointerdown', event => { event.stopPropagation(); activate(card); }, { passive: true });
+    switcher.appendChild(button);
+    return button;
+  });
+
+  function activate(card) {
+    cards.forEach((other, index) => {
+      const active = other === card;
+      other.classList.toggle('is-active', active);
+      other.classList.toggle('is-back', !active);
+      other.setAttribute('aria-pressed', active ? 'true' : 'false');
+      controls[index].classList.toggle('is-current', active);
+    });
+  }
+
   cards.forEach((card, index) => {
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-pressed', 'false');
-    const activate = () => {
-      cards.forEach(other => {
-        const active = other === card;
-        other.classList.toggle('is-active', active);
-        other.classList.toggle('is-back', !active);
-        other.setAttribute('aria-pressed', active ? 'true' : 'false');
-      });
-    };
-    card.addEventListener('pointerdown', activate, { passive: true });
+    card.addEventListener('pointerdown', event => {
+      event.stopPropagation();
+      const next = card.classList.contains('is-active') ? cards[(index + 1) % cards.length] : card;
+      activate(next);
+    }, { passive: true });
     card.addEventListener('keydown', event => {
-      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); activate(); }
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        const next = card.classList.contains('is-active') ? cards[(index + 1) % cards.length] : card;
+        activate(next);
+      }
     });
   });
+  activate(cards[0]);
 })();
 </script>
 </body>
