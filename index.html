@@ -1836,6 +1836,65 @@
     .about-photo-c { right: 0; width: 34%; }
   }
 
+  /* ── COMPOSICIÓN EDITORIAL PREMIUM PARA NOSOTROS ── */
+  @media (min-width: 901px) {
+    .about-visual { min-height: 560px; perspective: none; }
+    .about-photo-stack { inset: 0; }
+    .about-photo-card {
+      border: 1px solid rgba(245,239,224,0.70);
+      border-radius: 14px;
+      box-shadow: 0 20px 55px rgba(0,0,0,0.24);
+      transition: transform 0.65s cubic-bezier(.2,.7,.2,1), box-shadow 0.65s ease;
+    }
+    .about-photo-a { top: 0; right: 0; left: 18%; width: auto; height: 370px; transform: none; z-index: 1; }
+    .about-photo-b { top: 72px; left: 0; width: 29%; height: 190px; transform: rotate(-1.5deg); z-index: 3; }
+    .about-photo-c { left: 0; right: auto; bottom: 196px; width: 29%; height: 165px; transform: rotate(1.5deg); z-index: 3; }
+    .about-visual:hover .about-photo-a { transform: translateY(-5px); box-shadow: 0 28px 70px rgba(0,0,0,0.28); }
+    .about-visual:hover .about-photo-b { transform: translate(-3px,-4px) rotate(-1.5deg); }
+    .about-visual:hover .about-photo-c { transform: translate(-3px,4px) rotate(1.5deg); }
+    .about-visual .about-card {
+      left: 0; bottom: 0; width: 100%; height: 148px; box-sizing: border-box;
+      display: flex; align-items: center; justify-content: space-between; gap: 26px;
+      padding: 26px 30px; border-radius: 18px; margin: 0;
+      background: rgba(245,239,224,0.96); border: 1px solid rgba(92,61,46,0.14);
+      box-shadow: 0 18px 50px rgba(42,31,20,0.18); backdrop-filter: blur(14px);
+    }
+    .about-visual .about-card-title { font-size: 1.65rem; }
+    .about-visual .about-card-sub { margin: 5px 0 0; font-size: 0.86rem; }
+    .about-visual .stat-row { width: 53%; margin: 0; }
+    .about-visual .stat-num { font-size: 2rem; }
+    .about-visual .stat-label { font-size: 0.68rem; }
+    .about-photo-card figcaption { background: rgba(20,29,18,0.62); font-size: 0.61rem; }
+  }
+  @media (min-width: 901px) and (max-width: 1100px) {
+    .about-visual { min-height: 530px; }
+    .about-photo-a { height: 345px; }
+    .about-photo-b { width: 31%; }
+    .about-photo-c { width: 31%; bottom: 186px; }
+    .about-visual .about-card { height: 140px; padding: 22px; }
+  }
+  @media (max-width: 900px) {
+    .about-visual { min-height: 600px; }
+    .about-photo-a { top: 0; right: 0; left: 12%; width: auto; height: 330px; transform: none; }
+    .about-photo-b { top: 70px; left: 0; width: 30%; height: 175px; transform: rotate(-1deg); }
+    .about-photo-c { left: 0; right: auto; bottom: 220px; width: 30%; height: 150px; transform: rotate(1deg); }
+    .about-visual .about-card { left: 0; bottom: 0; width: 100%; min-height: 190px; height: auto; box-sizing: border-box; display: block; padding: 24px; }
+    .about-visual .about-card-sub { margin-bottom: 20px; }
+    .about-visual .stat-row { width: 100%; }
+  }
+  @media (max-width: 600px) {
+    .about-visual { min-height: 570px; }
+    .about-photo-a { left: 16%; height: 285px; }
+    .about-photo-b { top: 62px; width: 31%; height: 155px; }
+    .about-photo-c { bottom: 205px; width: 31%; height: 135px; }
+    .about-visual .about-card { padding: 20px 16px; min-height: 185px; }
+    .about-visual .about-card-title { font-size: 1.4rem; }
+    .about-visual .stat-num { font-size: 1.7rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .about-visual:hover .about-photo-a, .about-visual:hover .about-photo-b, .about-visual:hover .about-photo-c { transform: none; }
+  }
+
 </style>
 </head>
 <body>
