@@ -1895,6 +1895,44 @@
     .about-visual:hover .about-photo-a, .about-visual:hover .about-photo-b, .about-visual:hover .about-photo-c { transform: none; }
   }
 
+  /* ── FONDOS ATMOSFÉRICOS VISIBLES ── */
+  .about::before {
+    inset: 0;
+    opacity: 1;
+    filter: saturate(0.82) contrast(0.96);
+    background-position: center right;
+    background-image: linear-gradient(90deg, rgba(16,24,20,0.98) 0%, rgba(16,24,20,0.82) 32%, rgba(16,24,20,0.40) 68%, rgba(16,24,20,0.18) 100%), url('Imagenes/hero-scene-cloudy.webp');
+  }
+  .featured::after {
+    inset: 0 0 0 42%; width: auto; height: auto; border-radius: 0;
+    opacity: 0.20; filter: saturate(0.86) contrast(0.92);
+    background: linear-gradient(90deg, var(--crema) 0%, rgba(245,239,224,0.58) 36%, rgba(245,239,224,0.14) 100%), url('Imagenes/hero-scene-dawn.webp') center right / cover no-repeat;
+  }
+  .catalogo::after {
+    inset: -6% -3% 8% 50%;
+    opacity: 0.30;
+    filter: saturate(0.86) contrast(1.02);
+    background-image: linear-gradient(90deg, rgba(20,29,18,0.98) 0%, rgba(20,29,18,0.66) 36%, rgba(20,29,18,0.18) 100%), url('Imagenes/hero-scene-dawn.webp');
+  }
+  .macetas::after {
+    inset: 2% -3% -8% 48%;
+    opacity: 0.25;
+    filter: saturate(0.80) contrast(1.04);
+    background-image: linear-gradient(90deg, rgba(20,29,18,0.98) 0%, rgba(20,29,18,0.60) 42%, rgba(20,29,18,0.16) 100%), url('Imagenes/hero-scene-sunset.webp');
+  }
+  .envios::before {
+    inset: -18% 0 -18% 48%;
+    opacity: 0.20;
+    filter: saturate(0.78) contrast(0.96);
+    background-image: linear-gradient(90deg, rgba(245,239,224,0.98) 0%, rgba(245,239,224,0.62) 38%, rgba(245,239,224,0.12) 100%), url('Imagenes/hero-scene-cloudy.webp');
+  }
+  .cta-final::after { opacity: 0.82; background: linear-gradient(90deg, rgba(30,21,14,0.18), rgba(10,16,10,0.30)), radial-gradient(circle at 25% 20%, rgba(200,168,130,0.28), transparent 30%); }
+  @media (max-width: 900px) {
+    .about::before { background-position: 68% center; }
+    .featured::after { inset: 22% 0 0 0; opacity: 0.14; }
+    .catalogo::after, .macetas::after, .envios::before { opacity: 0.16; }
+  }
+
 </style>
 </head>
 <body>
