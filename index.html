@@ -1689,6 +1689,77 @@
     .hero-video { opacity: 0.94 !important; }
   }
 
+  /* ── SISTEMA PREMIUM DE PROFUNDIDAD PARA TODA LA PÁGINA ── */
+  .about, .featured, .catalogo, .macetas, .envios, .cta-final { isolation: isolate; }
+  .about > :not(.bg-canvas), .featured > *, .catalogo > :not(.bg-canvas), .macetas > :not(.bg-canvas), .envios > *, .cta-final > :not(.bg-canvas) { position: relative; z-index: 1; }
+  .about::before, .catalogo::after, .macetas::after, .envios::before {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    background-size: cover;
+    background-position: center;
+    filter: saturate(0.72) contrast(0.9);
+    opacity: 0.10;
+    will-change: transform;
+  }
+  .about::before {
+    inset: -12% -10% -12% 42%;
+    background-image: linear-gradient(90deg, var(--crema) 0%, rgba(245,239,224,0.42) 24%, transparent 65%), url('Imagenes/hero-scene-cloudy.webp');
+  }
+  .featured::before {
+    content: 'OTRO MUNDO';
+    position: absolute;
+    left: 8%; top: 22%;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(4rem, 12vw, 12rem);
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    color: rgba(92,61,46,0.045);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .catalogo::after {
+    inset: -10% -8% 20% 58%;
+    background-image: linear-gradient(90deg, var(--oscuro) 0%, rgba(20,29,18,0.35) 40%, transparent 78%), url('Imagenes/hero-scene-dawn.webp');
+  }
+  .macetas::after {
+    inset: 16% -10% -18% 55%;
+    background-image: linear-gradient(90deg, var(--oscuro) 0%, rgba(20,29,18,0.34) 45%, transparent 80%), url('Imagenes/hero-scene-sunset.webp');
+    opacity: 0.08;
+  }
+  .envios::before {
+    inset: -28% 0 -28% 58%;
+    background-image: linear-gradient(90deg, var(--crema) 0%, rgba(245,239,224,0.42) 45%, transparent 85%), url('Imagenes/hero-scene-cloudy.webp');
+    opacity: 0.07;
+  }
+  .featured-card, .envio-item, .about-card, .producto-img, .maceta-card .maceta-foto-wrap {
+    --drift-y: 0px;
+    will-change: transform;
+  }
+  .featured-card { transition: transform 0.6s cubic-bezier(.2,.7,.2,1), box-shadow 0.6s ease; }
+  .featured-card:hover { transform: translate3d(0, calc(var(--drift-y) - 8px), 0) rotate(-0.3deg); box-shadow: 0 24px 60px rgba(42,31,20,0.20); }
+  .featured-card img { transform: translate3d(0,var(--drift-y),0) scale(1.04); }
+  .featured-card:hover img { transform: translate3d(0,var(--drift-y),0) scale(1.09); }
+  .about-card { transition: transform 0.6s cubic-bezier(.2,.7,.2,1), box-shadow 0.6s ease; box-shadow: 0 24px 70px rgba(92,61,46,0.12); }
+  .about-card:hover { transform: translate3d(0,calc(var(--drift-y) - 6px),0) rotate(0.25deg); box-shadow: 0 32px 90px rgba(92,61,46,0.18); }
+  .envio-item { transition: transform 0.5s cubic-bezier(.2,.7,.2,1), border-color 0.4s ease, box-shadow 0.4s ease; }
+  .envio-item:hover { transform: translate3d(0,calc(var(--drift-y) - 5px),0); border-color: rgba(92,61,46,0.22); box-shadow: 0 18px 44px rgba(92,61,46,0.12); }
+  .maceta-card .maceta-foto-wrap { transform: translate3d(0,var(--drift-y),0); transition: transform 0.5s ease; }
+  .producto-img { transform: translate3d(0,var(--drift-y),0); transition: transform 0.5s ease, box-shadow 0.5s ease; }
+  .producto-card:hover .producto-img { transform: translate3d(0,calc(var(--drift-y) - 4px),0); box-shadow: 0 18px 40px rgba(0,0,0,0.22); }
+  .trust-item { transition: transform 0.45s ease, background 0.45s ease; }
+  .trust-item:hover { transform: translateY(-4px); background: rgba(255,250,240,0.98); }
+  @media (max-width: 900px) {
+    .about::before, .catalogo::after, .macetas::after, .envios::before { opacity: 0.055; }
+    .featured::before { font-size: 22vw; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .about::before, .catalogo::after, .macetas::after, .envios::before { transform: none !important; }
+    .featured-card:hover, .about-card:hover, .envio-item:hover { transform: none; }
+    .featured-card img, .maceta-card .maceta-foto-wrap, .producto-img { transform: none; }
+  }
+
 </style>
 </head>
 <body>
@@ -1730,9 +1801,9 @@
   <!-- DERECHA: slideshow full -->
   <div class="hero-right">
     <div class="hero-still-layer" id="hero-still-layer" aria-hidden="true">
-      <div class="hero-still active" style="background-image:url('Imagenes/hero-scene-warm.webp')"></div>
-      <div class="hero-still" style="background-image:url('Imagenes/hero-scene-fresh.webp')"></div>
-      <div class="hero-still" style="background-image:url('Imagenes/hero-scene-texture.webp')"></div>
+      <div class="hero-still active" style="background-image:url('Imagenes/hero-scene-dawn.webp')"></div>
+      <div class="hero-still" style="background-image:url('Imagenes/hero-scene-sunset.webp')"></div>
+      <div class="hero-still" style="background-image:url('Imagenes/hero-scene-cloudy.webp')"></div>
     </div>
     <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="Imagenes/hero-ambient-poster.jpg" aria-hidden="true">
       <source src="Imagenes/hero-ambient.mp4" type="video/mp4">
@@ -2686,6 +2757,32 @@
   if (!reduce) window.setInterval(next, 8500);
   const video = document.querySelector('.hero-video');
   if (video) video.addEventListener('error', () => { video.style.display = 'none'; }, { once: true });
+})();
+</script>
+<script>
+(function initPremiumSectionParallax() {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const touch = window.matchMedia('(pointer: coarse)').matches;
+  if (reduce || touch) return;
+  const targets = [
+    ...document.querySelectorAll('.featured-card img'),
+    ...document.querySelectorAll('.about-card, .envio-item, .producto-img, .maceta-card .maceta-foto-wrap')
+  ].map((el, i) => ({ el, speed: (i % 3 === 0 ? -1 : i % 3 === 1 ? 0.65 : 0.4) * 0.22 }));
+  if (!targets.length) return;
+  let ticking = false;
+  function update() {
+    const h = window.innerHeight;
+    targets.forEach(({el, speed}) => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < -80 || r.top > h + 80) return;
+      const progress = (h * 0.5 - (r.top + r.height * 0.5)) / h;
+      const y = Math.max(-12, Math.min(12, progress * speed * 100));
+      el.style.setProperty('--drift-y', `${y.toFixed(1)}px`);
+    });
+    ticking = false;
+  }
+  update();
+  window.addEventListener('scroll', () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } }, { passive: true });
 })();
 </script>
 </body>
